@@ -1,0 +1,56 @@
+<form [formGroup]="studentForm" (ngSubmit)="onSubmit()" class="form-container">
+    <mat-form-field appearance="fill">
+        <mat-label>First Name</mat-label>
+        <input matInput formControlName="firstName">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Last Name</mat-label>
+        <input matInput formControlName="lastName">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Phone Number</mat-label>
+        <input matInput formControlName="phoneNumber">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Date of Birth</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="dateOfBirth">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Place of Birth</mat-label>
+        <input matInput formControlName="placeOfBirth">
+    </mat-form-field>
+
+    <!-- For photo, we want to use a file input or a different component -->
+
+    <mat-form-field appearance="fill">
+        <mat-label>Level</mat-label>
+        <input matInput formControlName="level">
+    </mat-form-field>
+
+    <!-- For groupIds and tutorId, we should use a select or a different component -->
+
+    <mat-form-field appearance="fill">
+        <mat-label>Establishment</mat-label>
+        <input matInput formControlName="establishment">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Average Score</mat-label>
+        <input matInput formControlName="averageScore">
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" class="submit-button">Submit</button>
+    <button mat-raised-button color="primary" type="button" class="submit-button" (click)="onClearForm()">Clear</button>
+
+</form>

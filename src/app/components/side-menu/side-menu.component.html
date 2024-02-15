@@ -1,0 +1,71 @@
+<!-- side-menu.component.html -->
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #sidenav mode="side" [(opened)]="isOpen" class="sidenav">
+    <mat-nav-list>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>attach_money</mat-icon>
+            Inscription
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-action-list>
+          <mat-list-item [routerLink]="['/subscription']">Étudiants</mat-list-item>
+          <mat-list-item>Enseignants</mat-list-item>
+          <mat-list-item>Groupes</mat-list-item>
+        </mat-action-list>
+      </mat-expansion-panel>
+      
+      
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>attach_money</mat-icon>
+            Gestion Financière
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-action-list>
+          <mat-list-item>Paiements</mat-list-item>
+          <mat-list-item>Frais</mat-list-item>
+        </mat-action-list>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>book</mat-icon>
+            Suivi Académique
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-action-list>
+          <mat-list-item>Présences</mat-list-item>
+          <mat-list-item>Sessions</mat-list-item>
+          <mat-list-item>Séries</mat-list-item>
+        </mat-action-list>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>more_horiz</mat-icon>
+            Ressources Académiques
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-action-list>
+          <mat-list-item>Niveaux</mat-list-item>
+          <mat-list-item>Salles</mat-list-item>
+          <mat-list-item>Matières</mat-list-item>
+          <mat-list-item>Types de Groupes</mat-list-item>
+          <mat-list-item>Tarification</mat-list-item>
+        </mat-action-list>
+      </mat-expansion-panel>
+
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="main-content">
+    <button mat-icon-button (click)="toggleSidenav()">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </mat-sidenav-content>
+</mat-sidenav-container>

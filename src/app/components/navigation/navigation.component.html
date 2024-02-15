@@ -1,0 +1,27 @@
+<mat-toolbar color="primary">
+  <div class="spacer">
+  <button mat-icon-button (click)="toggleSidenav()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <img src="path-to-your-logo" alt="School Logo" class="logo">
+</div>
+
+  
+<div>
+  <mat-icon>face</mat-icon> <!-- Icône pour 'student' -->
+  <mat-icon>group</mat-icon> <!-- Icône pour 'group' -->
+  <mat-icon>person_outline</mat-icon> <!-- Icône pour 'teacher' -->
+</div>
+
+<div class="search-container">
+  <mat-icon class="search-icon">search</mat-icon>
+  
+    <input matInput placeholder="Search for...">
+ 
+</div>
+
+  <div class="user-info">
+    <img [src]="userPhoto" alt="User Photo" class="user-photo">
+    <span class="user-name">Mr. Robinson</span>
+  </div>
+</mat-toolbar>

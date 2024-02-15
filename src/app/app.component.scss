@@ -1,0 +1,36 @@
+/* styles.scss */
+.all-content {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  min-height: 100vh;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+app-navigation {
+  width: 100%;
+  z-index: 2;
+}
+  
+.main-container {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+}
+
+.content-area {
+  overflow-y: auto;
+  flex: 1;
+}
+  
+  app-side-menu {
+  flex-basis: 250px; /* Adjust width as needed */
+  flex-shrink: 0; /* Prevents the side menu from shrinking */
+  overflow-y: auto; /* Adds scroll to side menu if content exceeds view height */
+  }
+  app-student-search {
+    flex-grow: 1;
+  }
+  

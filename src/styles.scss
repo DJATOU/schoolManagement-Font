@@ -1,1 +1,33 @@
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background: linear-gradient(to top, #accbee 0%, #e7f0fd 100%); }
+
+/* Ajoutez vos styles globaux ici */
+
+/* styles.scss ou un fichier SCSS global */
+
+
+/* styles.scss */
+.all-content {
+  display: flex; // Utilisez flex pour permettre le centrage facile
+  flex-direction: column; // Les éléments s'empilent verticalement
+  max-width: 1200px; // Largeur maximale pour l'ensemble du contenu
+  margin-left: auto; // Ces marges automatiques centreront votre
+  margin-right: auto; // conteneur sur les grands écrans
+  overflow-x: hidden; // Empêche le défilement horizontal
+  min-height: 100vh; // S'assurer que la hauteur est au moins celle de la fenêtre de visualisation
+}
+
+.app-navigation {
+  width: 100%; // La barre de navigation prend la largeur définie par .all-content
+  // Ajoutez ici tout autre style que vous pourriez avoir pour la barre de navigation
+}
+
+.main-container {
+  flex-grow: 1; // Permet au conteneur principal de remplir l'espace disponible
+  display: flex; // Utilisez flex ici si vous voulez que le side-menu et le student-search soient côte à côte
+  // Ajoutez ici tout autre style que vous pourriez avoir pour le main-container
+}
+
+// Styles pour le side-menu et student-search peuvent rester comme vous les avez définis

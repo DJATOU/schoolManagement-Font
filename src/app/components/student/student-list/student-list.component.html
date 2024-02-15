@@ -1,0 +1,12 @@
+<!-- student-list.component.html -->
+<mat-list-item class="student-list-item">
+  <div class="student-avatar">
+    <img [src]="student.photo" alt="Photo de l'étudiant">
+  </div>
+  <div class="student-details">
+    <h3>{{ student.firstName }} {{ student.lastName }}</h3>
+    <p>ID : {{ student.email }}</p>
+    <button mat-button>Contact</button>
+  </div>
+</mat-list-item>
+

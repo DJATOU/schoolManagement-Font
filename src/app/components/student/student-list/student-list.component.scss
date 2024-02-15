@@ -1,0 +1,48 @@
+.student-list-item {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  margin-bottom: 10px;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  width: 100%;
+}
+  .student-avatar {
+    margin-right: 16px;
+
+    img {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+}
+
+  
+  .student-details {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-grow: 1;
+
+    h3, p {
+        margin: 0;
+    }
+
+    h3 {
+        font-size: 1rem;
+        color: #333;
+        flex-grow: 1;
+    }
+
+    p {
+        font-size: 0.875rem;
+        color: #666;
+    }
+  
+    button {
+      margin-left: auto;
+    }
+  }
+  

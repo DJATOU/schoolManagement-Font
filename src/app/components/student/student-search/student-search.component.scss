@@ -1,0 +1,17 @@
+.student-view {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 16px;
+}
+  
+app-student-card,
+app-student-list {
+  flex: 1 0 200px;
+}
+  
+mat-toolbar {
+  justify-content: end;
+  background-color: transparent;
+}

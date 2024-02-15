@@ -1,0 +1,91 @@
+/* side-menu.component.scss */
+.sidenav-container {
+  display: flex;
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+.mat-sidenav {
+  width: 250px; // Set the width of the sidenav
+  background-color: #fff; // Set the background color to white
+  color: #333; // Default text color
+}
+
+.mat-nav-list .mat-expansion-panel {
+  margin-bottom: 0;
+  border-bottom: 1px solid #ececec; // Adds a subtle separation
+  box-shadow: none; // Removes material shadow
+}
+
+.mat-expansion-panel-header {
+  color: #333;
+  font-size: 16px;
+  background-color: #f5f5f5; // Background color for the headers
+  padding-left: 24px; // Aligns text with the icons
+  .mat-panel-title {
+    font-weight: bold;
+  }
+  .mat-icon {
+    color: #555;
+    margin-right: 8px; // Adds space between the icon and text
+  }
+  &:hover {
+    background-color: #e8e8e8; // Slight variation on hover
+  }
+}
+
+.mat-expansion-panel-content {
+  padding: 0; // Removes default padding
+}
+
+.mat-action-list .mat-list-item {
+  color: #333;
+  padding-left: 48px; // Indents the sub-items to align with the title text
+  &:hover {
+    background-color: #e0e0e0;
+  }
+}
+
+.main-content {
+  display: flex;
+  justify-content: flex-start; // Change as needed
+  align-items: center;
+  min-height: 100vh;
+}
+
+@media (max-width: 768px) {
+  .sidenav {
+    position: absolute;
+    z-index: 100;
+    width: 75%; // Size for mobile screens
+  }
+}
+
+// Styles to improve the visibility of active elements
+.mat-list-item[routerLinkActive] {
+  background-color: #dedede; // Change as needed
+  font-weight: bold;
+}
+
+// Custom styles for sidenav toggle button
+button.mat-icon-button {
+  margin: 16px; // Adjust as needed for spacing
+  color: #333; // Button icon color
+}
+
+// Add a custom scrollbar style that matches the design
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

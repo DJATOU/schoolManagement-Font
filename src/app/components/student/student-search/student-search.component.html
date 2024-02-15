@@ -1,0 +1,15 @@
+<!-- student-search.component.html -->
+<mat-toolbar>
+    <button mat-button (click)="changeViewMode('card')">Grid</button>
+    <button mat-button (click)="changeViewMode('list')">List</button>
+</mat-toolbar>
+  
+  <div class="student-view">
+    <ng-container *ngIf="viewMode === 'card'">
+      <app-student-card *ngFor="let student of students" [student]="student"></app-student-card>
+    </ng-container>
+    <ng-container *ngIf="viewMode === 'list'">
+      <app-student-list *ngFor="let student of students" [student]="student"></app-student-list>
+    </ng-container>
+  </div>
+  
