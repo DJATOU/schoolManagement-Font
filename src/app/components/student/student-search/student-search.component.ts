@@ -1,45 +1,51 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { StudentCardComponent } from '../student-card/student-card.component';
 import { StudentListComponent } from '../student-list/student-list.component';
 import { CommonModule } from '@angular/common';
 import { Student } from '../../../models/student/student';
+import { StudentService } from '../../../services/student.service';
+import { ActivatedRoute } from '@angular/router';
+import { FormControl } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-student-search',
   standalone: true,
-  imports: [MatToolbarModule,StudentCardComponent,StudentListComponent,CommonModule],
+  imports: [MatToolbarModule, StudentCardComponent, StudentListComponent, CommonModule],
   templateUrl: './student-search.component.html',
-  styleUrl: './student-search.component.scss'
+  styleUrls: ['./student-search.component.scss']
 })
-export class StudentSearchComponent {
+export class StudentSearchComponent implements OnInit {
   viewMode = 'card'; // 'card' ou 'list'
-  students: Student[] = [
-    {
-      firstName: 'Student Name 1',
-      lastName: 'Last Name 1',
-      email: 'email1@example.com',
-      phoneNumber: '123-456-7890',
-      dateOfBirth: new Date(2000, 0, 1),
-      placeOfBirth: 'Place 1',
-      photo: 'path-to-avatar-1',
-      level: 'Level 1',
-      establishment: 'Establishment 1'
-    },
-    {
-      firstName: 'Student Name 2',
-      lastName: 'Last Name 2',
-      email: 'email2@example.com',
-      phoneNumber: '123-456-7890',
-      dateOfBirth: new Date(2000, 0, 1),
-      placeOfBirth: 'Place 2',
-      photo: 'path-to-avatar-2',
-      level: 'Level 2',
-      establishment: 'Establishment 2'
-    },
-    // ...more students
-  ];
-  changeViewMode(mode: string) {
+  students: Student[] = [];
+  searchControl = new FormControl('');
+  
+  constructor(private studentService: StudentService, private route: ActivatedRoute) {}
+
+  ngOnInit(): void {
+    this.route.queryParams.pipe(
+      filter(params => !!params['search']),
+      switchMap(params => {
+        const searchTerm = params['search'] || '';
+        return this.studentService.searchStudents(searchTerm);
+      })
+    ).subscribe(students => {
+      this.students = students;
+    });
+
+    // Assurez-vous que le filtre retourne un booléen explicite
+    this.searchControl.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      filter(term => !!term && term.length > 0), // Correction ici
+      switchMap(searchTerm => this.studentService.searchStudents(searchTerm || ''))
+    ).subscribe(students => {
+      this.students = students;
+    });
+  }
+
+  changeViewMode(mode: string): void {
     this.viewMode = mode;
   }
 }

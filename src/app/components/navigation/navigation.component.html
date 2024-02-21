@@ -7,16 +7,14 @@
 </div>
 
 <div>
-  <mat-icon>face</mat-icon> <!-- Icône pour 'student' -->
+  <mat-icon tabindex="0" (click)="navigateToStudentSearch()" (keyup.enter)="navigateToStudentSearch()">face</mat-icon>
   <mat-icon>group</mat-icon> <!-- Icône pour 'group' -->
   <mat-icon>person_outline</mat-icon> <!-- Icône pour 'teacher' -->
 </div>
 
 <div class="search-container">
-  <mat-icon class="search-icon">search</mat-icon>
-  
-    <input matInput placeholder="Search for...">
- 
+  <mat-icon class="search-icon" (click)="searchStudents()">search</mat-icon>
+  <input matInput placeholder="Search for..." [(ngModel)]="searchTerm" (keyup.enter)="searchStudents()">
 </div>
 
   <div class="user-info">

@@ -27,4 +27,12 @@ export class StudentService {
   updateStudent(id: number, student: Student): Observable<Student> {
     return this.http.put<Student>(`${this.apiUrl}/${id}`, student);
   }
+
+  searchStudents(searchTerm: string): Observable<Student[]> {
+    console.log('Searching for students with term:', searchTerm);
+    return this.http.get<Student[]>(`${this.apiUrl}/search`, {
+      params: { term: searchTerm }
+    });
+  }
+
 }
