@@ -1,0 +1,51 @@
+<form [formGroup]="levelForm" (ngSubmit)="onSubmit()" class="form-container">
+    <mat-form-field appearance="fill">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Level code</mat-label>
+        <input matInput formControlName="levelCode">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Creation Date</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="dateCreation">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Update date</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="dateUpdate">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <!-- For createdBy and updatedBy, we should use a select or a different component -->
+    <mat-form-field appearance="fill">
+        <mat-label>Created by</mat-label>
+        <input matInput formControlName="createdBy">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Updated By</mat-label>
+        <input matInput formControlName="updatedBy">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Active</mat-label>
+        <input matInput formControlName="active">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description"></textarea>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" class="submit-button">Submit</button>
+    <button mat-raised-button color="primary" type="button" class="submit-button" (click)="onClearForm()">Clear</button>
+
+</form>
+
