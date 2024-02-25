@@ -1,76 +1,99 @@
-mat-toolbar {
-    display: flex;
-    justify-content: space-between;
-    .spacer, .search-container, .user-info {
-        display: flex;
-        align-items: center;
-    }
+/* Ensure Material Icons are included */
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
-    .logo {
-        height: 50px;
-    }
-    .search-container {
-        flex-grow: 2;
-        max-width: 500px;
-        position: relative;
-        margin: 4px 16px;
-      
-        .search-icon {
-            position: absolute;
-    
-            top: calc(50% - 12px);
-            color: #666;
-        }
-    
-        input {
-            border: 2px solid;
-            border-radius: 25px;
-            width: calc(100% - 24px); // Subtract the width of the icon and its padding
-            padding-left: 40px; // Make room for the icon
-            height: 2rem;
-        }
-    }
-
-    .spacer {
-        //margin-top: -1rem;
-    }
-
-    mat-form-field {
-        width: 100%;
-        max-width: 500px;
-        margin: 0 16px;
-
-        .mat-form-field-wrapper {
-            padding: 0 12px;
-           
-        }
-
-        input.mat-input-element {
-            padding: 12px 0px;
-            border-radius: 50px;
-        }
-    }
-
-    .user-info {
-
-        .user-photo {
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-
-        .user-name {
-            font-weight: bold;
-        }
-    }
-
-    mat-icon {
-        font-size: 24px;
-        margin: 0 8px;
-    }
+.mat-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.mat-toolbar-container-background-color{
-    color:red;
+.spacer, .user-info {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 50px;
+}
+
+.search-container {
+  flex-grow: 2;
+  max-width: 500px;
+  position: relative;
+  margin: 0 16px;
+}
+
+mat-form-field {
+  width: 100%;
+  max-height: 4rem;
+  margin-bottom: -1rem;
+}
+
+.mat-form-field-wrapper {
+  padding: 0 4px;
+}
+
+input.mat-input-element {
+  padding: 12px 12px 12px 40px;
+  height: auto;
+  border-radius: 25px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  border: none;
+  background-color: #f5f5f5;
+}
+
+input.mat-input-element:focus {
+  outline: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.search-icon {
+  transform: translateY(-50%);
+  color: #666;
+  font-family: 'Material Icons';
 }
 
 
+.search-icon:before {
+  content: 'search'; 
+  font-size: 24px; 
+  color: rgba(0,0,0,0.54); 
+}
+
+mat-autocomplete {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  border-radius: 4px; 
+  background-color: #fff; 
+}
+
+.mat-option {
+  padding: 10px 15px; 
+  font-size: 16px; 
+}
+
+.mat-option:hover {
+  background-color: #e8e8e8; 
+}
+
+.mat-option.mat-active,
+.mat-option.mat-selected {
+  background-color: #dae0e5;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-photo {
+  border-radius: 50%; 
+  margin-right: 8px;
+}
+
+.user-name {
+  font-weight: bold;
+}
+
+mat-icon {
+  margin: 0 8px;
+}

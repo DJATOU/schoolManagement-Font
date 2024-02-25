@@ -1,21 +1,28 @@
 <mat-toolbar color="primary">
   <div class="spacer">
-  <button mat-icon-button (click)="toggleSidenav()">
-    <mat-icon>menu</mat-icon>
-  </button>
-  <img src="path-to-your-logo" alt="School Logo" class="logo">
-</div>
+    <button mat-icon-button (click)="toggleSidenav()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <img src="path-to-your-logo" alt="School Logo" class="logo">
+  </div>
 
-<div>
-  <mat-icon tabindex="0" (click)="navigateToStudentSearch()" (keyup.enter)="navigateToStudentSearch()">face</mat-icon>
-  <mat-icon>group</mat-icon> <!-- Icône pour 'group' -->
-  <mat-icon>person_outline</mat-icon> <!-- Icône pour 'teacher' -->
-</div>
+  <div>
+    <mat-icon tabindex="0" (click)="navigateToStudentSearch()" (keyup.enter)="navigateToStudentSearch()">face</mat-icon>
+    <mat-icon>group</mat-icon> <!-- Icône pour 'group' -->
+    <mat-icon>person_outline</mat-icon> <!-- Icône pour 'teacher' -->
+  </div>
 
-<div class="search-container">
-  <mat-icon class="search-icon" (click)="searchStudents()">search</mat-icon>
-  <input matInput placeholder="Search for..." [(ngModel)]="searchTerm" (keyup.enter)="searchStudents()">
-</div>
+  <div class="search-container">
+    <mat-icon class="search-icon" (click)="searchStudents()">search</mat-icon>
+    <mat-form-field>
+      <input matInput placeholder="Search for..." [formControl]="searchControl" [matAutocomplete]="auto">
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelect($event.option.value)">
+        <mat-option *ngFor="let suggestion of filteredSuggestions | async" [value]="suggestion">
+          {{ suggestion }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
 
   <div class="user-info">
     <img [src]="userPhoto" alt="User Photo" class="user-photo">
