@@ -1,5 +1,8 @@
 Level
-    - Form
     - Card
     - List
     - Search
+
+LevelService
+
+- changer select vers toggle pour le champs 'active' de la table 'level' dans le formulaire

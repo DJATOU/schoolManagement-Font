@@ -11,16 +11,16 @@
 
     <mat-form-field appearance="fill">
         <mat-label>Creation Date</mat-label>
-        <input matInput [matDatepicker]="picker" formControlName="dateCreation">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
+        <input matInput [matDatepicker]="CreationPicker" formControlName="dateCreation">
+        <mat-datepicker-toggle matSuffix [for]="CreationPicker"></mat-datepicker-toggle>
+        <mat-datepicker #CreationPicker></mat-datepicker>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
         <mat-label>Update date</mat-label>
-        <input matInput [matDatepicker]="picker" formControlName="dateUpdate">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
+        <input matInput [matDatepicker]="updatePicker" formControlName="dateUpdate">
+        <mat-datepicker-toggle matSuffix [for]="updatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #updatePicker></mat-datepicker>
     </mat-form-field>
 
     <!-- For createdBy and updatedBy, we should use a select or a different component -->
@@ -36,8 +36,16 @@
 
     <mat-form-field appearance="fill">
         <mat-label>Active</mat-label>
-        <input matInput formControlName="active">
+        <mat-select formControlName="active">
+            <mat-option [value]="true">
+              Active
+            </mat-option>
+            <mat-option [value]="false">
+              Inactive
+            </mat-option>
+        </mat-select>
     </mat-form-field>
+    
 
     <mat-form-field appearance="fill">
         <mat-label>Description</mat-label>

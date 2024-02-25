@@ -6,6 +6,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatSelectModule} from '@angular/material/select';
 import { RouterModule } from '@angular/router';
 import { LevelService } from '../../../services/level.service';
 import { Level } from '../../../models/level/level';
@@ -18,17 +19,19 @@ import { Level } from '../../../models/level/level';
     MatFormFieldModule, 
     MatInputModule, 
     MatDatepickerModule,
+    MatSelectModule,
     HttpClientModule,
     MatNativeDateModule,RouterModule,MatStepperModule],
   templateUrl: './level-form.component.html',
   styleUrl: './level-form.component.scss'
 })
 export class LevelFormComponent {
+
   levelForm = this.fb.group({
     name: ['', Validators.required],
     levelCode: ['', Validators.required],
-    dateCreation: ['', Validators.required],
-    dateUpdate: ['', Validators.required],
+    dateCreation: [''],
+    dateUpdate: [''],
     createdBy: [''],
     updatedBy: [''],
     active: ['', Validators.required],
@@ -54,7 +57,7 @@ export class LevelFormComponent {
         active: formValue.active == 'true',
         description: formValue.description ?? ''
       };
-  
+      
       this.levelService.createLevel(level).subscribe({
         next: (level) => {
           console.log('Level created:', level);
