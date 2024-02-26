@@ -5,11 +5,11 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
-import { MatSelectModule} from '@angular/material/select';
 import { RouterModule } from '@angular/router';
-import { LevelService } from '../../../services/level.service';
 import { Level } from '../../../models/level/level';
+import { LevelService } from '../../../services/level.service';
 
 @Component({
   selector: 'app-level-form',
@@ -34,7 +34,7 @@ export class LevelFormComponent {
     dateUpdate: [''],
     createdBy: [''],
     updatedBy: [''],
-    active: ['', Validators.required],
+    active: [''],
     description: ['']
   });
 
@@ -54,7 +54,7 @@ export class LevelFormComponent {
         dateUpdate: formValue.dateUpdate ? new Date(formValue.dateUpdate) : new Date(),
         createdBy: formValue.createdBy ?? '',
         updatedBy: formValue.updatedBy ?? '',
-        active: formValue.active == 'true',
+        active: formValue.active != 'false',
         description: formValue.description ?? ''
       };
       
