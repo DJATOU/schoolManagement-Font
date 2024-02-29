@@ -1,51 +1,82 @@
 import { Component, OnInit } from '@angular/core';
+import { StudentService } from '../../../services/student.service';
+import { Student } from '../../../models/student/student';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { StudentCardComponent } from '../student-card/student-card.component';
 import { StudentListComponent } from '../student-list/student-list.component';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { CommonModule } from '@angular/common';
-import { Student } from '../../../models/student/student';
-import { StudentService } from '../../../services/student.service';
-import { ActivatedRoute } from '@angular/router';
-import { FormControl } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs';
+import { SearchService } from '../../../services/SearchService ';
 
 @Component({
   selector: 'app-student-search',
   standalone: true,
-  imports: [MatToolbarModule, StudentCardComponent, StudentListComponent, CommonModule],
   templateUrl: './student-search.component.html',
-  styleUrls: ['./student-search.component.scss']
+  styleUrls: ['./student-search.component.scss'],
+  imports: [
+    CommonModule, MatToolbarModule, MatPaginatorModule, StudentCardComponent, StudentListComponent
+  ]
 })
 export class StudentSearchComponent implements OnInit {
-  viewMode = 'card'; // 'card' ou 'list'
+  viewMode = 'card'; // 'card' or 'list'
   students: Student[] = [];
-  searchControl = new FormControl('');
-  
-  constructor(private studentService: StudentService, private route: ActivatedRoute) {}
+  filteredStudents: Student[] = [];
+  currentPageStudents: Student[] = [];
+  totalStudents: number = 0;
+  pageSize: number = 10; // Adjust as needed
+  pageSizeOptions: number[] = [5, 10, 20]; // Adjust as needed
+
+  constructor(
+    private studentService: StudentService, 
+    private searchService: SearchService
+  ) {}
 
   ngOnInit(): void {
-    this.route.queryParams.pipe(
-      filter(params => !!params['search']),
-      switchMap(params => {
-        const searchTerm = params['search'] || '';
-        return this.studentService.searchStudents(searchTerm);
-      })
-    ).subscribe(students => {
-      this.students = students;
-    });
+    this.listenToSearchEvents();
+    this.loadAllStudents(); // Load all students initially
+  }
 
-    // Assurez-vous que le filtre retourne un booléen explicite
-    this.searchControl.valueChanges.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      filter(term => !!term && term.length > 0), // Correction ici
-      switchMap(searchTerm => this.studentService.searchStudents(searchTerm || ''))
-    ).subscribe(students => {
-      this.students = students;
+  listenToSearchEvents(): void {
+    this.searchService.getSearch().subscribe((searchTerm: string) => {
+      console.log('Received search term in StudentSearchComponent:', searchTerm);
+      this.handleSearch(searchTerm);
     });
+  }
+  
+  handleSearch(searchTerm: string): void {
+    console.log('Handling search for:', searchTerm);
+    if (!searchTerm) {
+      this.loadAllStudents(); // Load all students if no search term is specified.
+    } else {
+      this.studentService.searchStudentsByNameStartingWith(searchTerm).subscribe(students => {
+        console.log('Search results:', students);
+        this.filteredStudents = students;
+        this.updatePageStudents();
+      });
+    }
+  }
+  
+  loadAllStudents(): void {
+    this.studentService.getStudents().subscribe(students => {
+      this.filteredStudents = students;
+      this.totalStudents = students.length;
+      this.updatePageStudents();
+    });
+  }
+
+  changePage(event: PageEvent) {
+    const startIndex = event.pageIndex * event.pageSize;
+    const endIndex = startIndex + event.pageSize;
+    this.currentPageStudents = this.filteredStudents.slice(startIndex, endIndex);
   }
 
   changeViewMode(mode: string): void {
     this.viewMode = mode;
+  }
+
+  // Helper method to update the students on the current page
+  private updatePageStudents() {
+    this.totalStudents = this.filteredStudents.length;
+    this.currentPageStudents = this.filteredStudents.slice(0, this.pageSize);
   }
 }

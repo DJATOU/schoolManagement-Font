@@ -14,13 +14,6 @@ mat-toolbar {
         max-width: 500px;
         position: relative;
         margin: 4px 16px;
-      
-        .search-icon {
-            position: absolute;
-    
-            top: calc(50% - 12px);
-            color: #666;
-        }
     
         input {
             border: 2px solid;
@@ -73,4 +66,20 @@ mat-toolbar {
     color:red;
 }
 
+.search-icon {
+    position: absolute;
 
+    transform: translateY(-50%);
+    color: black; /* ou toute autre couleur pour le contraste */
+    z-index: 10;
+}
+
+.clear-button {
+    position: absolute;
+    right: 10px; /* ajustez si nécessaire pour positionner la croix */
+    top: 50%;
+    transform: translateY(-50%);
+    color: black; /* ou toute autre couleur pour le contraste */
+    z-index: 10;
+    font-size: 24px; /* ajustez la taille de la croix */
+}
