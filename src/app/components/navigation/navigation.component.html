@@ -7,20 +7,21 @@
   </div>
 
   <div>
-    <mat-icon tabindex="0" (click)="navigateToStudentSearch()" (keyup.enter)="navigateToStudentSearch()">face</mat-icon>
-    <mat-icon>group</mat-icon> <!-- Icône pour 'group' -->
-    <mat-icon>person_outline</mat-icon> <!-- Icône pour 'teacher' -->
+    <mat-icon tabindex="0" (click)="setSearchType('student')">face</mat-icon>
+    <mat-icon tabindex="0" (click)="setSearchType('group')">group</mat-icon>
+    <mat-icon tabindex="0" (click)="setSearchType('teacher')">person_outline</mat-icon>
   </div>
 
   <div class="search-container">
-    <mat-icon class="search-icon" (click)="searchStudents()">search</mat-icon>
     <mat-form-field>
-      <input matInput placeholder="Search for..." [formControl]="searchControl" [matAutocomplete]="auto">
+      <mat-icon matPrefix class="search-icon" (click)="onSearch()">search</mat-icon>
+      <input matInput [placeholder]="placeholder" [formControl]="searchControl" [matAutocomplete]="auto">
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelect($event.option.value)">
         <mat-option *ngFor="let suggestion of filteredSuggestions | async" [value]="suggestion">
           {{ suggestion }}
         </mat-option>
       </mat-autocomplete>
+      <mat-icon matSuffix *ngIf="searchControl.value" (click)="searchControl.setValue('')">close</mat-icon>
     </mat-form-field>
   </div>
 

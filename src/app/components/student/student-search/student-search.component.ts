@@ -1,83 +1,82 @@
 import { Component, OnInit } from '@angular/core';
+import { StudentService } from '../../../services/student.service';
+import { Student } from '../../../models/student/student';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { StudentCardComponent } from '../student-card/student-card.component';
 import { StudentListComponent } from '../student-list/student-list.component';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { CommonModule } from '@angular/common';
-import { Student } from '../../../models/student/student';
-import { StudentService } from '../../../services/student.service';
-import { ActivatedRoute } from '@angular/router';
-import { FormControl } from '@angular/forms';
-import { combineLatest, debounceTime, distinctUntilChanged, startWith, switchMap, take } from 'rxjs';
+import { SearchService } from '../../../services/SearchService ';
 
 @Component({
   selector: 'app-student-search',
   standalone: true,
-  imports: [MatToolbarModule, StudentCardComponent, StudentListComponent, CommonModule],
   templateUrl: './student-search.component.html',
-  styleUrls: ['./student-search.component.scss']
+  styleUrls: ['./student-search.component.scss'],
+  imports: [
+    CommonModule, MatToolbarModule, MatPaginatorModule, StudentCardComponent, StudentListComponent
+  ]
 })
 export class StudentSearchComponent implements OnInit {
-  viewMode = 'card'; // 'card' ou 'list'
+  viewMode = 'card'; // 'card' or 'list'
   students: Student[] = [];
+  filteredStudents: Student[] = [];
+  currentPageStudents: Student[] = [];
+  totalStudents: number = 0;
+  pageSize: number = 10; // Adjust as needed
+  pageSizeOptions: number[] = [5, 10, 20]; // Adjust as needed
 
-  // Define form controls for each search parameter
-  firstNameControl = new FormControl('');
-  lastNameControl = new FormControl('');
+  constructor(
+    private studentService: StudentService, 
+    private searchService: SearchService
+  ) {}
 
-
-  constructor(private studentService: StudentService, private route: ActivatedRoute) {}
- 
   ngOnInit(): void {
-    this.route.queryParams.pipe(
-      // Pas de take(1) ici, car nous voulons continuer à écouter les changements
-      debounceTime(300), // Optionnel, pour limiter la fréquence des mises à jour
-    ).subscribe(params => {
-      const searchParam = params['search'] ?? '';
-      // Mettre à jour les FormControl avec le nouveau paramètre de recherche
-      this.firstNameControl.setValue(searchParam);
-      this.lastNameControl.setValue(searchParam);
-  
-      // Effectuer la recherche immédiatement avec les nouveaux paramètres
-      this.searchWithCurrentValues();
-    });
-  
-    // Initialiser la souscription pour la recherche combinée
-    this.initializeSearchSubscription();
+    this.listenToSearchEvents();
+    this.loadAllStudents(); // Load all students initially
   }
-  
-  // Séparer la logique de souscription pour la recherche dans une nouvelle méthode
-  initializeSearchSubscription(): void {
-    combineLatest([
-      this.firstNameControl.valueChanges.pipe(startWith(this.firstNameControl.value)),
-      this.lastNameControl.valueChanges.pipe(startWith(this.lastNameControl.value))
-    ])
-    .pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      switchMap(([firstName, lastName]) => {
-        return this.studentService.getStudentsByFirstNameAndLastName(firstName ?? '', lastName ?? '');
-      })
-    )
-    .subscribe(students => {
-      this.students = students;
+
+  listenToSearchEvents(): void {
+    this.searchService.getSearch().subscribe((searchTerm: string) => {
+      console.log('Received search term in StudentSearchComponent:', searchTerm);
+      this.handleSearch(searchTerm);
     });
   }
   
-  // Effectuer la recherche immédiatement avec les valeurs actuelles des FormControl
-  searchWithCurrentValues(): void {
-    this.studentService.getStudentsByFirstNameAndLastName(
-      this.firstNameControl.value ?? '', 
-      this.lastNameControl.value ?? ''
-    ).subscribe(students => {
-      this.students = students;
-    });
+  handleSearch(searchTerm: string): void {
+    console.log('Handling search for:', searchTerm);
+    if (!searchTerm) {
+      this.loadAllStudents(); // Load all students if no search term is specified.
+    } else {
+      this.studentService.searchStudentsByNameStartingWith(searchTerm).subscribe(students => {
+        console.log('Search results:', students);
+        this.filteredStudents = students;
+        this.updatePageStudents();
+      });
+    }
   }
   
-  
-  
- 
+  loadAllStudents(): void {
+    this.studentService.getStudents().subscribe(students => {
+      this.filteredStudents = students;
+      this.totalStudents = students.length;
+      this.updatePageStudents();
+    });
+  }
+
+  changePage(event: PageEvent) {
+    const startIndex = event.pageIndex * event.pageSize;
+    const endIndex = startIndex + event.pageSize;
+    this.currentPageStudents = this.filteredStudents.slice(startIndex, endIndex);
+  }
 
   changeViewMode(mode: string): void {
     this.viewMode = mode;
+  }
+
+  // Helper method to update the students on the current page
+  private updatePageStudents() {
+    this.totalStudents = this.filteredStudents.length;
+    this.currentPageStudents = this.filteredStudents.slice(0, this.pageSize);
   }
 }

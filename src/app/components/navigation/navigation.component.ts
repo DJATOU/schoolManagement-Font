@@ -1,67 +1,103 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Observable, debounceTime, map, of, startWith, switchMap } from 'rxjs';
+import { StudentService } from '../../services/student.service';
+import { CommonModule } from '@angular/common';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { Router } from '@angular/router';
+import { SearchService } from '../../services/SearchService ';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { StudentService } from '../../services/student.service';
-import { Observable, debounceTime, map, startWith, switchMap } from 'rxjs';
-import { CommonModule } from '@angular/common';
+
 @Component({
   selector: 'app-navigation',
   standalone: true,
-  imports: [CommonModule,MatFormFieldModule,
-    MatInputModule, MatIcon, MatToolbarModule,FormsModule,MatAutocompleteModule,ReactiveFormsModule ],
+  imports: [
+    // Ensure all used Material modules and CommonModule are imported here
+    CommonModule, MatFormFieldModule, MatInputModule, MatIcon, MatToolbarModule, FormsModule, MatAutocompleteModule, ReactiveFormsModule
+  ],
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss']
 })
-export class NavigationComponent {
+export class NavigationComponent implements OnInit {
+userPhoto: any;
+toggleSidenav() {
+throw new Error('Method not implemented.');
+}
 
-  searchTerm: string = '';
-  searchControl = new FormControl();
+  searchControl = new FormControl('');
   filteredSuggestions: Observable<string[]> | undefined;
-  constructor(private router: Router, private searchService: StudentService) {}
-  
-  userPhoto = 'path/to/photo.jpg';
-  toggleSidenav(){
+  placeholder: string = 'Search for students...';
+  currentSearchType: string = 'student';
 
-  }
+  @Output() searchEvent = new EventEmitter<string>();
+
+  constructor(
+    private router: Router,
+    private studentService: StudentService, 
+    private searchService: SearchService
+  ) {}
 
   ngOnInit() {
-    // Initialisation de l'observable pour les suggestions d'autocomplétion
     this.filteredSuggestions = this.searchControl.valueChanges.pipe(
-      debounceTime(300), // Attend 300ms après chaque frappe avant de procéder
-      startWith(''), // Commence avec une chaîne vide pour avoir un état initial
-      switchMap(value => this.search(value)) // Transforme l'entrée en appel de service
+      debounceTime(300),
+      startWith(''),
+      switchMap(value => this.determineSearchLogic(value ?? ''))
     );
   }
-  
-  search(value: string): Observable<string[]> {
-    // Call the service and get the students
-    return this.searchService.searchStudentsByNameStartingWith(value).pipe(
-      // Transform the Student[] array into a string[] array
-      map(students => students.map(student => student.firstName + ' ' + student.lastName))
+
+  setSearchType(type: string): void {
+    this.currentSearchType = type;
+    this.placeholder = this.getPlaceholderByType(type);
+    this.searchService.setSearch(type); // Assuming SearchService can handle different types of searches.
+  }
+
+  onSearch(): void {
+    console.log('Emitting search term:', this.searchControl.value);
+    this.searchEvent.emit(this.searchControl.value ?? '');
+    this.searchService.setSearch(this.searchControl.value ?? '');
+    // Navigate based on the search type if needed.
+    this.router.navigate([`/${this.currentSearchType}`], { queryParams: { search: this.searchControl.value } });
+  }
+
+  clearSearch(): void {
+    this.searchControl.setValue('');
+  }
+
+  private determineSearchLogic(value: string): Observable<string[]> {
+    if (!value) return of([]);
+    switch (this.currentSearchType) {
+      case 'student':
+        return this.performStudentSearch(value);
+      case 'group':
+      case 'teacher':
+        // Placeholder for other types of searches
+        return of([]);
+      default:
+        return of([]);
+    }
+  }
+
+  private performStudentSearch(value: string): Observable<string[]> {
+    return this.studentService.searchStudentsByNameStartingWith(value).pipe(
+      map(students => students.map(student => `${student.firstName} ${student.lastName}`))
     );
+  }
+
+  private getPlaceholderByType(type: string): string {
+    switch (type) {
+      case 'student': return 'Search for students...';
+      case 'group': return 'Search for groups...';
+      case 'teacher': return 'Search for teachers...';
+      default: return 'Search...';
+    }
   }
 
   onSelect(suggestion: string): void {
-    // Gère la sélection d'une suggestion par l'utilisateur
-    console.log(`Vous avez sélectionné ${suggestion}`);
-    // Optionnel : Naviguer vers un composant de détail ou effectuer une autre action
+    console.log('User selected:', suggestion);
+    this.searchControl.setValue(suggestion);
+    this.onSearch();
   }
-
-  searchStudents(): void {
-    // Gère la soumission de la recherche par l'utilisateur
-    this.router.navigate(['/students'], { queryParams: { search: this.searchControl.value } });
-  }
-  
-
-  navigateToStudentSearch() {
-    console.log('Attempting to navigate to /students');
-    this.router.navigate(['/students']);
-  }
-  
-
 }
