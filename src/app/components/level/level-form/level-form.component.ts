@@ -30,11 +30,6 @@ export class LevelFormComponent {
   levelForm = this.fb.group({
     name: ['', Validators.required],
     levelCode: ['', Validators.required],
-    dateCreation: [''],
-    dateUpdate: [''],
-    createdBy: [''],
-    updatedBy: [''],
-    active: [''],
     description: ['']
   });
 
@@ -47,14 +42,8 @@ export class LevelFormComponent {
       const formValue = this.levelForm.value;
   
       const level: Level = {
-        id: 0,
         name: formValue.name ?? '',
         levelCode: formValue.levelCode ?? '',
-        dateCreation: formValue.dateCreation ? new Date(formValue.dateCreation) : new Date(),
-        dateUpdate: formValue.dateUpdate ? new Date(formValue.dateUpdate) : new Date(),
-        createdBy: formValue.createdBy ?? '',
-        updatedBy: formValue.updatedBy ?? '',
-        active: formValue.active != 'false',
         description: formValue.description ?? ''
       };
       

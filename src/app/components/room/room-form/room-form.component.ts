@@ -32,11 +32,6 @@ export class RoomFormComponent {
   roomForm = this.fb.group({
     name: ['', Validators.required],
     capacity: ['', [Validators.required, Validators.min(0)]],
-    dateCreation: [''],
-    dateUpdate: [''],
-    createdBy: [''],
-    updatedBy: [''],
-    active: [''],
     description: ['']
   });
 
@@ -50,12 +45,6 @@ export class RoomFormComponent {
   
       const room: Room = {
         base: {
-          id: 0,
-          dateCreation: formValue.dateCreation ? new Date(formValue.dateCreation) : new Date(),
-          dateUpdate: formValue.dateUpdate ? new Date(formValue.dateUpdate) : new Date(),
-          createdBy: formValue.createdBy ?? '',
-          updatedBy: formValue.updatedBy ?? '',
-          active: formValue.active != 'false',
           description: formValue.description ?? ''
         },
         name: formValue.name ?? '',
