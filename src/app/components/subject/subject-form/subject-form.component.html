@@ -1,0 +1,14 @@
+<form [formGroup]="subjectForm" (ngSubmit)="onSubmit()" class="form-container">
+    <mat-form-field appearance="fill">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description"></textarea>
+    </mat-form-field>
+    
+    <button mat-raised-button color="primary" type="submit" class="submit-button">Submit</button>
+    <button mat-raised-button color="primary" type="button" class="submit-button" (click)="onClearForm()">Clear</button>
+</form>
