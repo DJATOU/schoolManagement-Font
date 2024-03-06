@@ -1,4 +1,10 @@
 <!-- student-search.component.html -->
+<mat-paginator [length]="totalStudents"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        (page)="changePage($event)">
+</mat-paginator>
+
 <mat-toolbar>
     <button mat-button (click)="changeViewMode('card')">Grid</button>
     <button mat-button (click)="changeViewMode('list')">List</button>
@@ -6,10 +12,10 @@
   
   <div class="student-view">
     <ng-container *ngIf="viewMode === 'card'">
-      <app-student-card *ngFor="let student of filteredStudents" [student]="student"></app-student-card>
+      <app-student-card *ngFor="let student of currentPageStudents" [student]="student"></app-student-card>
     </ng-container>
     <ng-container *ngIf="viewMode === 'list'">
-      <app-student-list *ngFor="let student of filteredStudents" [student]="student"></app-student-list>
+      <app-student-list *ngFor="let student of currentPageStudents" [student]="student"></app-student-list>
     </ng-container>
   </div>
   <mat-paginator [length]="totalStudents"
