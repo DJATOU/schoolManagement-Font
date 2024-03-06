@@ -1,12 +1,12 @@
 export interface Pricing {
-    id: number;
+    id?:number;
     price: number;
-    dateCreation: string;
-    dateUpdate: string;
+    dateCreation?: string;
+    dateUpdate?: string;
     createdBy?: string;
     updatedBy?: string;
-    active: boolean;
+    active?: boolean;
     description?: string;
-    effectiveDate: string;
-    expirationDate: string;
+    effectiveDate: Date;
+    expirationDate: Date;
 }

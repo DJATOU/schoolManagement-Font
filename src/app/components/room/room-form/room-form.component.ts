@@ -1,12 +1,8 @@
 import { HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatStepperModule } from '@angular/material/stepper';
 import { RouterModule } from '@angular/router';
 import { Room } from '../../../models/room/room';
 import { RoomService } from '../../../services/room.service';
@@ -17,13 +13,9 @@ import { RoomService } from '../../../services/room.service';
   imports: [
     ReactiveFormsModule, 
     MatFormFieldModule, 
-    MatInputModule, 
-    MatDatepickerModule,
-    MatSelectModule,
+    MatInputModule,
     HttpClientModule,
-    MatNativeDateModule,
-    RouterModule,
-    MatStepperModule
+    RouterModule
   ],
   templateUrl: './room-form.component.html',
   styleUrl: './room-form.component.scss'
@@ -50,7 +42,7 @@ export class RoomFormComponent {
         name: formValue.name ?? '',
         capacity: formValue.capacity ? parseInt(formValue.capacity) : 0
       };
-      console.log(room);
+      
       this.roomService.createRoom(room).subscribe({
         next: (room) => {
           console.log('room created:', room);

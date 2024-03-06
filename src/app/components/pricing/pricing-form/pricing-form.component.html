@@ -1,0 +1,24 @@
+<form [formGroup]="pricingForm" (ngSubmit)="onSubmit()" class="form-container">
+    <mat-form-field appearance="fill">
+        <mat-label>Price</mat-label>
+        <input matInput formControlName="price" type="number"/>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Enter a date range</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+          <input matStartDate placeholder="Effective date" formControlName="effectiveDate">
+          <input matEndDate placeholder="Expiration date" formControlName="expirationDate">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description"></textarea>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" class="submit-button">Submit</button>
+    <button mat-raised-button color="primary" type="button" class="submit-button" (click)="onClearForm()">Clear</button>
+</form>
