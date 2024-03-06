@@ -1,12 +1,8 @@
 import { HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatStepperModule } from '@angular/material/stepper';
 import { RouterModule } from '@angular/router';
 import { Level } from '../../../models/level/level';
 import { LevelService } from '../../../services/level.service';
@@ -17,11 +13,10 @@ import { LevelService } from '../../../services/level.service';
   imports: [
     ReactiveFormsModule, 
     MatFormFieldModule, 
-    MatInputModule, 
-    MatDatepickerModule,
-    MatSelectModule,
+    MatInputModule,
     HttpClientModule,
-    MatNativeDateModule,RouterModule,MatStepperModule],
+    RouterModule
+  ],
   templateUrl: './level-form.component.html',
   styleUrl: './level-form.component.scss'
 })
