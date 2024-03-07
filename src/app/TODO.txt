@@ -1,3 +1,8 @@
+Questions:
+    -   What is the difference betweed Teacher and Tutor
+    -   How to name router links
+    -   The date format is it good ?
+
 Remarques:
     -   est ce que rendre les attributs comme id et active optionnel est une bonne pratique?
     -   Je remarque que les styles pour les formulaires sont les même, est-ce qu'on les copient oubien les mettres dans app les styles en commun?

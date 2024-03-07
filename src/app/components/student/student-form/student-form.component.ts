@@ -20,7 +20,9 @@ import {MatStepperModule} from '@angular/material/stepper';
     MatInputModule, 
     MatDatepickerModule,
     HttpClientModule,
-    MatNativeDateModule,RouterModule,MatStepperModule],
+    MatNativeDateModule,
+    MatStepperModule,
+    RouterModule],
   templateUrl: './student-form.component.html',
   styleUrls: ['./student-form.component.scss'],
   providers: [

@@ -7,6 +7,7 @@ import { PricingFormComponent } from './components/pricing/pricing-form/pricing-
 import { StudentFormComponent } from './components/student/student-form/student-form.component';
 import { StudentSearchComponent } from './components/student/student-search/student-search.component';
 import { SubjectFormComponent } from './components/subject/subject-form/subject-form.component';
+import { TeacherFormComponent } from './components/teacher/teacher-form/teacher-form.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -16,7 +17,8 @@ export const routes: Routes = [
     { path: 'pricing/new', component: PricingFormComponent},
     { path: 'subscription', component: StudentFormComponent },
     { path: 'student', component: StudentSearchComponent },
-    { path: 'subject/new', component: SubjectFormComponent }
+    { path: 'subject/new', component: SubjectFormComponent },
+    { path: 'teacher/new', component: TeacherFormComponent }
   ];
   
   @NgModule({
