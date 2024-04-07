@@ -10,6 +10,16 @@
         <input matInput formControlName="lastName">
     </mat-form-field>
 
+    <mat-form-field appearance="fill" class="photo">
+        <mat-label>Upload Photo</mat-label>
+        <input matInput readonly [value]="selectedFile?.name" placeholder="No file chosen">
+        <input type="file" (change)="onFileSelected($event)" accept="image/*" hidden #photoInput>
+        <button mat-icon-button (click)="photoInput.click()">
+            <mat-icon>attach_file</mat-icon> Choose a picture
+        </button>
+    </mat-form-field>
+    
+
     <mat-form-field appearance="fill">
         <mat-label>Email</mat-label>
         <input matInput formControlName="email">

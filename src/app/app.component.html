@@ -1,10 +1,12 @@
 <!-- app.component.html -->
-<div class="all-content"> 
-  <app-navigation></app-navigation>
+<div class="all-content">
+  <app-navigation></app-navigation> <!-- Your top navigation -->
   <div class="main-container">
-    <app-side-menu></app-side-menu>
+    <div class="side-menu">
+      <app-side-menu></app-side-menu>
+    </div>
     <div class="content-area">
-      <router-outlet></router-outlet>
+      <router-outlet></router-outlet> <!-- Main content will be injected here -->
     </div>
   </div>
 </div>

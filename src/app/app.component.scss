@@ -1,36 +1,32 @@
-/* styles.scss */
 .all-content {
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  min-height: 100vh;
-  overflow-x: hidden;
   display: flex;
   flex-direction: column;
-}
+  height: 100vh;
 
-app-navigation {
-  width: 100%;
-  z-index: 2;
-}
-  
-.main-container {
-  display: flex;
-  flex-direction: row;
-  flex-grow: 1;
-}
 
-.content-area {
-  overflow-y: auto;
-  flex: 1;
-}
-  
-  app-side-menu {
-  flex-basis: 250px; /* Adjust width as needed */
-  flex-shrink: 0; /* Prevents the side menu from shrinking */
-  overflow-y: auto; /* Adds scroll to side menu if content exceeds view height */
-  }
-  app-student-search {
+  .main-container {
+    display: flex;
     flex-grow: 1;
-  }
+    border: 1px solid red; // Temporary border to see the container edges
+
+    .side-menu {
+      //width: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start; // Align items to the start of the flex-direction column
   
+
+      app-side-menu {
+        // If app-side-menu is a custom component, ensure it renders correctly
+        border: 1px solid green; // Temporary border to see the edges
+      }
+    }
+
+    .content-area {
+      flex-grow: 1;
+      overflow-y: auto;
+      border: 1px solid yellow; // Temporary border to see the container edges
+    }
+  }
+}

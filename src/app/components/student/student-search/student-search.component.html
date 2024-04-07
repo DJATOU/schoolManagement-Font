@@ -1,15 +1,22 @@
 <!-- student-search.component.html -->
-<mat-paginator [length]="totalStudents"
-        [pageSize]="pageSize"
-        [pageSizeOptions]="pageSizeOptions"
-        (page)="changePage($event)">
-</mat-paginator>
+<div class="content-container">
 
-<mat-toolbar>
-    <button mat-button (click)="changeViewMode('card')">Grid</button>
-    <button mat-button (click)="changeViewMode('list')">List</button>
-</mat-toolbar>
+  <mat-toolbar class="view-toggle-toolbar">
+    <button mat-button
+            [class.active]="viewMode === 'card'"
+            (click)="changeViewMode('card')">
+      <mat-icon>view_comfy</mat-icon>
+      Grid
+    </button>
+    <button mat-button
+            [class.active]="viewMode === 'list'"
+            (click)="changeViewMode('list')">
+      <mat-icon>view_list</mat-icon>
+      List
+    </button>
+  </mat-toolbar>
   
+
   <div class="student-view">
     <ng-container *ngIf="viewMode === 'card'">
       <app-student-card *ngFor="let student of currentPageStudents" [student]="student"></app-student-card>
@@ -18,8 +25,11 @@
       <app-student-list *ngFor="let student of currentPageStudents" [student]="student"></app-student-list>
     </ng-container>
   </div>
+
   <mat-paginator [length]="totalStudents"
-               [pageSize]="pageSize"
-               [pageSizeOptions]="pageSizeOptions"
-               (page)="changePage($event)">
-</mat-paginator>
+                 [pageSize]="pageSize"
+                 [pageSizeOptions]="pageSizeOptions"
+                 (page)="changePage($event)">
+  </mat-paginator>
+  
+</div>

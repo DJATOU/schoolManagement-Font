@@ -2,13 +2,14 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Student } from '../models/student/student';
+import { API_BASE_URL } from '../app.config';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class StudentService {
-  private apiUrl = 'http://localhost:8080/api/students';
+  private apiUrl = `${API_BASE_URL}/api/students`;
 
   constructor(private http: HttpClient) { }
 
@@ -20,8 +21,8 @@ export class StudentService {
     return this.http.get<Student>(`${this.apiUrl}/id/${id}`);
   }
 
-  createStudent(student: Student): Observable<Student> {
-    return this.http.post<Student>(this.apiUrl, student);
+  createStudent(studentData: FormData): Observable<Student> {
+    return this.http.post<Student>(`${this.apiUrl}/createStudent`, studentData);
   }
 
   updateStudent(id: number, student: Student): Observable<Student> {
@@ -54,7 +55,7 @@ getStudentsByFirstNameAndLastName(firstName?: string, lastName?: string): Observ
 }
   
 searchStudentsByNameStartingWith(searchTerm: string) {
-  return this.http.get<Student[]>(`http://localhost:8080/api/students/searchByNames`, { params: { search: searchTerm } });
+  return this.http.get<Student[]>(`${this.apiUrl}/searchByNames`, { params: { search: searchTerm } });
 }
 
 

@@ -1,11 +1,14 @@
 <!-- student-card.component.html -->
 <mat-card class="student-card">
-  <mat-card-header>
-    <img mat-card-avatar [src]="student.photo" alt="Photo de l'étudiant">
-    <mat-card-title>{{ student.firstName }}</mat-card-title>
-    <mat-card-subtitle>ID : {{ student.lastName }}</mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-actions>
-    <button mat-button>Contact</button>
-  </mat-card-actions>
+  <div class="student-card-content">
+    <img mat-card-avatar [src]="student.photo" alt="Photo de l'étudiant" class="student-photo">
+    <div class="student-info">
+      <mat-card-title class="student-name">{{ student.firstName }} {{ student.lastName }}</mat-card-title>
+      <mat-card-subtitle class="student-id">Level: {{ student.level }}</mat-card-subtitle>
+    </div>
+    <mat-card-actions class="card-actions">
+      <button mat-button class="contact-button email-button"><i class="material-icons">email</i></button>
+      <button mat-button class="contact-button phone-button"><i class="material-icons">phone</i></button>
+    </mat-card-actions>
+  </div>
 </mat-card>

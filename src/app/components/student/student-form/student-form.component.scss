@@ -56,4 +56,20 @@
   form {
     margin-bottom: 40px;
   }
+  /* Style the button */
+  .photo button {
+    color: #3f51b5; /* Change the color of the button text and icon */
+    background-color: #e0e0e0; /* Change the background color of the button */
+    border-radius: 5px; /* Make the corners of the button rounded */
+    padding: 10px; /* Add some space around the text and icon */
+    float: right; /* Align the button to the right */
+    margin-top: -50px; /* Adjust the vertical position of the button */
+    transition: background-color 0.3s ease; /* Add a transition effect when the background color changes */
+  }
+
+  /* Change the background color of the button when it's hovered over */
+  .photo button:hover {
+    background-color: #d0d0d0;
+  }
+
   

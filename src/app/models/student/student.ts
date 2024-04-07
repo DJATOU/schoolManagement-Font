@@ -5,7 +5,7 @@ export interface Student {
     phoneNumber: string;
     dateOfBirth: Date;
     placeOfBirth: string;
-    photo: unknown;
+    photo: number[];
     level: string;
     groupIds?: number[];  // optional
     tutorId?: number;  // optional

@@ -7,6 +7,7 @@ import { StudentListComponent } from '../student-list/student-list.component';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { CommonModule } from '@angular/common';
 import { SearchService } from '../../../services/SearchService ';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-student-search',
@@ -14,7 +15,7 @@ import { SearchService } from '../../../services/SearchService ';
   templateUrl: './student-search.component.html',
   styleUrls: ['./student-search.component.scss'],
   imports: [
-    CommonModule, MatToolbarModule, MatPaginatorModule, StudentCardComponent, StudentListComponent
+    CommonModule, MatToolbarModule, MatPaginatorModule, StudentCardComponent, StudentListComponent,MatIconModule 
   ]
 })
 export class StudentSearchComponent implements OnInit {
@@ -23,8 +24,8 @@ export class StudentSearchComponent implements OnInit {
   filteredStudents: Student[] = [];
   currentPageStudents: Student[] = [];
   totalStudents: number = 0;
-  pageSize: number = 10; // Adjust as needed
-  pageSizeOptions: number[] = [5, 10, 20]; // Adjust as needed
+  pageSize: number = 8; // Adjust as needed
+  pageSizeOptions: number[] = [4, 8]; // Adjust as needed
 
   constructor(
     private studentService: StudentService, 

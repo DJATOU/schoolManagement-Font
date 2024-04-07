@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { HttpClientModule } from '@angular/common/http';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
 import { StudentService } from '../../../services/student.service';
-import { Student } from '../../../models/student/student';
 import { RouterModule } from '@angular/router';
 import {MatStepperModule} from '@angular/material/stepper';
+import { MatIconModule } from '@angular/material/icon';
+import { Student } from '../../../models/student/student';
 
 @Component({
   selector: 'app-student',
@@ -20,7 +20,7 @@ import {MatStepperModule} from '@angular/material/stepper';
     MatInputModule, 
     MatDatepickerModule,
     HttpClientModule,
-    MatNativeDateModule,RouterModule,MatStepperModule],
+    MatNativeDateModule,RouterModule,MatStepperModule, MatIconModule],
   templateUrl: './student-form.component.html',
   styleUrls: ['./student-form.component.scss'],
   providers: [
@@ -42,7 +42,11 @@ import {MatStepperModule} from '@angular/material/stepper';
     }
   ]
 })
-export class StudentFormComponent  {
+
+
+export class StudentFormComponent {
+  selectedFile: File | null = null;
+
   studentForm = this.fb.group({
     firstName: ['', Validators.required],
     lastName: ['', Validators.required],
@@ -50,54 +54,52 @@ export class StudentFormComponent  {
     phoneNumber: [''],
     dateOfBirth: ['', Validators.required],
     placeOfBirth: [''],
-    photo: [''],
     level: ['', Validators.required],
-    groupIds: [''],
+    groupIds: [''], // Assurez-vous de gérer ce champ correctement côté backend si c'est un tableau
     tutorId: [''],
     establishment: [''],
     averageScore: ['']
   });
 
-  constructor(private fb: FormBuilder,private studentService: StudentService) { }
+  constructor(private fb: FormBuilder, private studentService: StudentService) {}
 
-  
-
-  onSubmit(): void {
-    if (this.studentForm.valid) {
-      const formValue = this.studentForm.value;
-  
-      const student: Student = {
-        firstName: formValue.firstName ?? '',
-        lastName: formValue.lastName ?? '',
-        email: formValue.email ?? '',
-        phoneNumber: formValue.phoneNumber ?? '',
-        dateOfBirth: formValue.dateOfBirth ? new Date(formValue.dateOfBirth) : new Date(),
-        placeOfBirth: formValue.placeOfBirth ?? '',
-        photo: formValue.photo,
-        level: formValue.level ?? '',
-        groupIds: formValue.groupIds ? formValue.groupIds.split(',').map(Number) : [], // Remove the array fallback
-        tutorId: formValue.tutorId ? Number(formValue.tutorId) : undefined,
-        establishment: formValue.establishment ?? '',
-        averageScore: formValue.averageScore !== null && formValue.averageScore ? Number(formValue.averageScore) : undefined,
-      };
-  
-      this.studentService.createStudent(student).subscribe({
-        next: (student) => {
-          console.log('Student created:', student);
-          // Handle successful response
-        },
-        error: (error) => {
-          console.error('Error creating student:', error);
-          // Handle error response
-        }
-      });
-    } else {
-      console.warn('Form is not valid');
+  onFileSelected(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    if (target && target.files && target.files.length > 0) {
+      this.selectedFile = target.files[0];
     }
   }
 
-  onClearForm() {
-    this.studentForm.reset();
+  onSubmit(): void {
+    if (this.studentForm.valid) {
+      const formData = new FormData();
+      if (this.selectedFile) {
+        formData.append('file', this.selectedFile, this.selectedFile.name);
+      }
+      Object.keys(this.studentForm.value).forEach(key => {
+        const value = this.studentForm.get(key)?.value;
+        formData.append(key, value);
+      });
+  
+      // Appel direct avec formData
+      this.studentService.createStudent(formData).subscribe({
+        next: (response) => {
+          console.log('Student created:', response);
+          this.onClearForm();
+        },
+        error: (error) => {
+          console.error('Error creating student:', error);
+        }
+      });
+    } else {
+      console.warn('The form is not valid or the file is not selected.');
+    }
   }
   
+  
+
+  onClearForm(): void {
+    this.studentForm.reset();
+    this.selectedFile = null;
+  }
 }
