@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -23,7 +23,8 @@ import { LevelService } from '../../../services/level.service';
     HttpClientModule,
     MatNativeDateModule,RouterModule,MatStepperModule],
   templateUrl: './level-form.component.html',
-  styleUrl: './level-form.component.scss'
+  styleUrl: './level-form.component.scss',
+  encapsulation: ViewEncapsulation.None 
 })
 export class LevelFormComponent {
 

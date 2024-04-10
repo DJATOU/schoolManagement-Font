@@ -21,8 +21,6 @@ constructor(private router: Router) {}
   isOpen = true; // État initial du sidenav
 
   toggleSidenav() {
-    console.log('Before toggle:', this.isOpen);
     this.isOpen = !this.isOpen;
-    console.log('After toggle:', this.isOpen);
   }
 }

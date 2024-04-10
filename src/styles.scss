@@ -1,4 +1,10 @@
-/* You can add global styles to this file, and also import other style files */
+/* import other style files */
+@import 'styles/variables';
+@import 'styles/mixins';
+@import 'styles/base';
+@import 'styles/layout';
+@import 'styles/buttons';
+@import 'styles/forms';
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background: linear-gradient(to top, #accbee 0%, #e7f0fd 100%); }
@@ -6,5 +12,3 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background:
 /* Ajoutez vos styles globaux ici */
 
 /* styles.scss ou un fichier SCSS global */
-
-

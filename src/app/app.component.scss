@@ -2,31 +2,30 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
+}
 
+.app-navigation {
+  height: 64px; // Hauteur de la barre de navigation, ajustez selon vos besoins
+  // Autres styles de la barre de navigation...
+}
 
-  .main-container {
-    display: flex;
-    flex-grow: 1;
-    border: 1px solid red; // Temporary border to see the container edges
+.main-container {
+  display: flex;
+  flex-direction: row; // Changez cela pour empiler verticalement
+  flex-grow: 1; // Permet à main-container de remplir l'espace après la navigation
+  overflow: hidden; // Empêche le contenu débordant de dépasser
+}
 
-    .side-menu {
-      //width: 200px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-start; // Align items to the start of the flex-direction column
-  
+.side-menu {
+  flex-grow: 0; // Ne grandit pas au-delà du contenu du menu
+  width: 200px; // Largeur fixe pour le side menu, ajustez selon vos besoins
+  z-index: 1000; 
+  // Autres styles de side-menu...
+}
 
-      app-side-menu {
-        // If app-side-menu is a custom component, ensure it renders correctly
-        border: 1px solid green; // Temporary border to see the edges
-      }
-    }
-
-    .content-area {
-      flex-grow: 1;
-      overflow-y: auto;
-      border: 1px solid yellow; // Temporary border to see the container edges
-    }
-  }
+.content-area {
+  flex-grow: 1; // Prend tout l'espace restant
+  overflow-y: auto; // Si le contenu dépasse, il sera défilable
+  margin-left: 73px;
+  // Autres styles de content-area...
 }

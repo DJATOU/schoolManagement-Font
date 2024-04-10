@@ -1,0 +1,19 @@
+// Exemple de contenu pour _layout.scss
+.header {
+    @include flex-center;
+    padding: $padding;
+  }
+  
+  .footer {
+    padding: $padding;
+    text-align: center;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 $padding;
+  }
+  
+  // Ajoutez d'autres éléments de layout ici...
+  

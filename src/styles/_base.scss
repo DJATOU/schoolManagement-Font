@@ -1,0 +1,43 @@
+mat-form-field {
+    width: 100%; // Assurez-vous que les champs de saisie utilisent toute la largeur disponible
+    margin-bottom: 1rem; // Espace uniforme entre les champs
+  
+    &.appearance-fill {
+      .mat-form-field-wrapper {
+        background: #f2f2f2; // Couleur de fond pour l'apparence "fill"
+        border-radius: 0.25rem; // Bordures arrondies
+      }
+    }
+  }
+  
+  textarea {
+    min-height: 5rem; // Hauteur minimale pour les textareas
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    padding: 0;
+    font-weight: normal;
+  }
+  
+  p {
+    margin: 0 0 1rem 0;
+  }
+  
+  a {
+    color: $primary-color;
+    text-decoration: none;
+  
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  
+  // Style pour les éléments de formulaire par défaut
+  input, button, textarea, select {
+    font: inherit;
+    color: inherit;
+  }
+  
+  // Vous pouvez ajouter plus de styles de base ici...
+  

@@ -1,4 +1,36 @@
-mat-sidenav
-{
-  margin-top: 4rem;
+.sidenav-container {
+  .sidenav-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 8px;
+    // Ajoutez une couleur de fond et des styles de bordure selon votre thème
+    background-color: #eee;
+    border-bottom: 1px solid #ddd;
+  }
+  .sidenav {
+    box-shadow: 3px 0 6px rgba(0,0,0,.24); // Ombre pour donner de la profondeur
+  }
+  
+  mat-icon {
+    margin-right: 8px; // Espacement entre l'icône et le texte
+  }
+  .mat-expansion-panel-header {
+    // Personnalisez selon vos besoins
+    background-color: #f0f0f0;
+    &:hover {
+      background-color: #e7e7e7;
+    }
+  }
+  .mat-action-list mat-list-item {
+    // Styles pour les éléments de liste, ajustez au besoin
+    border-bottom: 1px solid #e0e0e0;
+    &:hover {
+      background-color: #f5f5f5;
+    }
+  }
+}
+
+::ng-deep .mat-drawer-container .mat-sidenav {
+  top: 64px !important; // Ajustez la hauteur en fonction de la hauteur de votre barre de navigation
 }

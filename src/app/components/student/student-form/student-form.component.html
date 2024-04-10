@@ -61,7 +61,9 @@
         <input matInput formControlName="averageScore">
     </mat-form-field>
 
-    <button mat-raised-button color="primary" type="submit" class="submit-button">Submit</button>
-    <button mat-raised-button color="primary" type="button" class="submit-button" (click)="onClearForm()">Clear</button>
-
+    <div class="button-container">
+        <button mat-raised-button color="primary" type="submit" class="submit-button">Submit</button>
+        <button mat-raised-button color="primary" type="button" class="submit-button" (click)="onClearForm()">Clear</button>
+    </div>
+    
 </form>

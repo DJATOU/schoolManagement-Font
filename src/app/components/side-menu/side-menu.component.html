@@ -1,5 +1,8 @@
 <!-- side-menu.component.html -->
 <mat-sidenav-container class="sidenav-container">
+   
+  
+  <mat-sidenav #sidenav mode="side" [(opened)]="isOpen" class="sidenav" fixedInViewport="true">
     <!-- Sidenav Header for Logo and Toggle Button -->
     <div class="sidenav-header">
       <button mat-icon-button (click)="toggleSidenav()" class="sidenav-toggle-button">
@@ -7,9 +10,6 @@
         <mat-icon>{{ isOpen ? 'chevron_left' : 'chevron_right' }}</mat-icon>
       </button>
     </div>
-  
-  <mat-sidenav #sidenav mode="side" [(opened)]="isOpen" class="sidenav" fixedInViewport="true">
-   
     <!-- Sidenav List -->
     <mat-nav-list>
    

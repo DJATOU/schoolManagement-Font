@@ -1,12 +1,12 @@
-<!-- app.component.html -->
-<div class="all-content">
-  <app-navigation></app-navigation> <!-- Your top navigation -->
-  <div class="main-container">
-    <div class="side-menu">
+<div class="all-content" fxLayout="column">
+  <app-navigation></app-navigation>
+  <div class="main-container" fxLayout="row">
+    <div class="side-menu" fxFlex="0 0 200px">
       <app-side-menu></app-side-menu>
     </div>
-    <div class="content-area">
-      <router-outlet></router-outlet> <!-- Main content will be injected here -->
+    <div class="content-area" fxFlex="1 1 auto">
+      <router-outlet></router-outlet>
     </div>
   </div>
+  
 </div>
