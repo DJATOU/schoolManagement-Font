@@ -1,0 +1,15 @@
+
+.photo button {
+  color: #3f51b5;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  padding: 10px;
+  float: right;
+  margin-top: -50px;
+  transition: background-color 0.3s ease;
+}
+
+.photo button:hover {
+  background-color: #d0d0d0;
+}
+

@@ -7,7 +7,13 @@
 @import 'styles/forms';
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background: linear-gradient(to top, #accbee 0%, #e7f0fd 100%); }
+body { 
+    max-width: 95rem;
+    margin: 0rem auto; font-family: Roboto, "Helvetica Neue", sans-serif; 
+    background: linear-gradient(to top, #accbee 0%, #e7f0fd 100%); 
+
+
+}
 
 /* Ajoutez vos styles globaux ici */
 

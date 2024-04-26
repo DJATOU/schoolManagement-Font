@@ -23,6 +23,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 })
 export class NavigationComponent implements OnInit {
 userPhoto: any;
+hideSearch: boolean = false;
 toggleSidenav() {
 throw new Error('Method not implemented.');
 }
@@ -49,6 +50,7 @@ throw new Error('Method not implemented.');
   }
 
   setSearchType(type: string): void {
+    this.clearSearch();
     this.currentSearchType = type;
     this.placeholder = this.getPlaceholderByType(type);
     this.searchService.setSearch(type); // Assuming SearchService can handle different types of searches.

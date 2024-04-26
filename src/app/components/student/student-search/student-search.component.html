@@ -17,7 +17,7 @@
   </mat-toolbar>
   
 
-  <div class="student-view">
+  <div class="student-view" [ngClass]="{'card-view': viewMode === 'card', 'list-view': viewMode === 'list'}">
     <ng-container *ngIf="viewMode === 'card'">
       <app-student-card *ngFor="let student of currentPageStudents" [student]="student"></app-student-card>
     </ng-container>
@@ -25,6 +25,7 @@
       <app-student-list *ngFor="let student of currentPageStudents" [student]="student"></app-student-list>
     </ng-container>
   </div>
+  
 
   <mat-paginator [length]="totalStudents"
                  [pageSize]="pageSize"

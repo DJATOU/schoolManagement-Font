@@ -7,7 +7,13 @@ export interface Teacher {
   gender: string;
   email: string;
   phoneNumber: string;
-  dateOfBirth: string; // Representing Date as string
+  dateOfBirth: Date | string;  // Consider using Date type or providing a utility to convert to Date when needed
   placeOfBirth: string;
-  groups: Group[]; // Using an array to represent the Set of GroupDTOs
+  address?: string;            // Optional based on your usage
+  photo?: string;              // Optional
+  communicationPreference?: string; // Optional
+  specialization?: string;     // Optional
+  qualifications?: string;     // Optional
+  yearsOfExperience?: number;  // Optional, could be null if not set
+  groups: Group[];             // Array to handle multiple groups, matching the backend "Set"
 }

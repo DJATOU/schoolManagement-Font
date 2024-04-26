@@ -9,7 +9,8 @@ import { StudentService } from '../../../services/student.service';
 import { RouterModule } from '@angular/router';
 import {MatStepperModule} from '@angular/material/stepper';
 import { MatIconModule } from '@angular/material/icon';
-import { Student } from '../../../models/student/student';
+import { MatTabsModule } from '@angular/material/tabs';
+
 
 @Component({
   selector: 'app-student',
@@ -20,7 +21,7 @@ import { Student } from '../../../models/student/student';
     MatInputModule, 
     MatDatepickerModule,
     HttpClientModule,
-    MatNativeDateModule,RouterModule,MatStepperModule, MatIconModule],
+    MatNativeDateModule,RouterModule,MatStepperModule, MatIconModule,MatTabsModule],
   templateUrl: './student-form.component.html',
   styleUrls: ['./student-form.component.scss'],
   providers: [

@@ -45,8 +45,9 @@ html {
   margin-top: 64px; // Adjust this value to match the height of your fixed header
 }
 
+
 // Student card view styling
-.student-view {
+.card-view  {
   padding: 1rem;
   display: flex;
   flex-wrap: wrap;
@@ -54,6 +55,13 @@ html {
   justify-content: space-around;
   align-items: flex-start;
 }
+
+.list-view{
+  padding: 1rem;
+  display: grid;
+}
+
+
 
 // Student cards and list item styling
 app-student-card,

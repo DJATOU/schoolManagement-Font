@@ -6,16 +6,20 @@
     <img src="path-to-your-logo" alt="School Logo" class="logo">
   </div>
 
-  <div>
+  <div class="icone-search">
     <mat-icon tabindex="0" (click)="setSearchType('student')">face</mat-icon>
     <mat-icon tabindex="0" (click)="setSearchType('group')">group</mat-icon>
     <mat-icon tabindex="0" (click)="setSearchType('teacher')">person_outline</mat-icon>
   </div>
 
-  <div class="search-container">
+  <div class="search-container" [class.hide-search]="hideSearch">
     <mat-form-field>
       <mat-icon matPrefix class="search-icon" (click)="onSearch()">search</mat-icon>
-      <input matInput [placeholder]="placeholder" [formControl]="searchControl" [matAutocomplete]="auto">
+      <input matInput 
+             [placeholder]="placeholder" 
+             [formControl]="searchControl" 
+             [matAutocomplete]="auto"
+             (keydown.enter)="onSearch()"> <!-- Added keydown.enter event here -->
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelect($event.option.value)">
         <mat-option *ngFor="let suggestion of filteredSuggestions | async" [value]="suggestion">
           {{ suggestion }}
@@ -24,6 +28,7 @@
       <mat-icon matSuffix *ngIf="searchControl.value" (click)="searchControl.setValue('')">close</mat-icon>
     </mat-form-field>
   </div>
+  
 
   <div class="user-info">
     <img [src]="userPhoto" alt="User Photo" class="user-photo">

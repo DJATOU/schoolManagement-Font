@@ -1,85 +1,35 @@
-mat-toolbar {
+.mat-toolbar {
     display: flex;
     justify-content: space-between;
-    .spacer, .search-container, .user-info {
-        display: flex;
-        align-items: center;
-    }
-
-    .logo {
-        height: 50px;
-    }
-    .search-container {
-        flex-grow: 2;
-        max-width: 500px;
-        position: relative;
-        margin: 4px 16px;
-    
-        input {
-            border: 2px solid;
-            border-radius: 25px;
-            width: calc(100% - 24px); // Subtract the width of the icon and its padding
-            padding-left: 40px; // Make room for the icon
-            height: 2rem;
-        }
-    }
 
     .spacer {
-        //margin-top: -1rem;
+      flex-grow: 1; 
+    }
+  
+    .search-container {
+      flex-grow: 2; 
+      max-width: 40rem; 
+      margin: 2.5rem 5rem 0rem 5rem;
     }
 
-    mat-form-field {
-        width: 100%;
-        max-width: 500px;
-        margin: 0 16px;
+  }
+  
+  .mat-icon{
+    color: black;
+    cursor: pointer; 
+  }
 
-        .mat-form-field-wrapper {
-            padding: 0 12px;
-           
-        }
-
-        input.mat-input-element {
-            padding: 12px 0px;
-            border-radius: 50px;
-        }
-    }
-
-    .user-info {
-
-        .user-photo {
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-
-        .user-name {
-            font-weight: bold;
-        }
-    }
-
+  .icone-search {
+    display: flex; // Cette ligne assure que les icônes sont alignées horizontalement
+    justify-content: center; // Cette ligne centre les icônes dans le div .icone-search
+    gap: 1rem;
+  
     mat-icon {
-        font-size: 24px;
-        margin: 0 8px;
+      cursor: pointer; // Rend les icônes cliquables plus intuitivement avec la main au survol
+      // Ajouter un effet visuel pour les clics et les survols pourrait être une bonne idée
+      &:hover {
+        color: #666; // Change la couleur au survol, choisissez une couleur qui correspond à votre design
+      }
     }
-}
-
-.mat-toolbar-container-background-color{
-    color:red;
-}
-
-.search-icon {
-    position: absolute;
-
-    transform: translateY(-50%);
-    color: black; /* ou toute autre couleur pour le contraste */
-    z-index: 10;
-}
-
-.clear-button {
-    position: absolute;
-    right: 10px; /* ajustez si nécessaire pour positionner la croix */
-    top: 50%;
-    transform: translateY(-50%);
-    color: black; /* ou toute autre couleur pour le contraste */
-    z-index: 10;
-    font-size: 24px; /* ajustez la taille de la croix */
-}
+  }
+  

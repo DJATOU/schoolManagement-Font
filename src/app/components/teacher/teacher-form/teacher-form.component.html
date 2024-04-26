@@ -1,0 +1,89 @@
+<form [formGroup]="teacherForm" (ngSubmit)="onSubmit()" class="form-container">
+  <mat-tab-group>
+    <mat-tab label="Basic Information">
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>First Name</mat-label>
+          <input matInput formControlName="firstName">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Last Name</mat-label>
+          <input matInput formControlName="lastName">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Gender</mat-label>
+          <mat-select formControlName="gender">
+            <mat-option value="male">Male</mat-option>
+            <mat-option value="female">Female</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="photo">
+          <mat-label>Upload Photo</mat-label>
+          <input matInput readonly [value]="selectedFile?.name" placeholder="No file chosen">
+          <input type="file" (change)="onFileSelected($event)" accept="image/*" hidden #photoInput>
+          <button mat-icon-button (click)="photoInput.click()">
+            <mat-icon>attach_file</mat-icon> Choose a picture
+          </button>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Phone Number</mat-label>
+          <input matInput formControlName="phoneNumber">
+        </mat-form-field>
+      </div>
+    </mat-tab>
+    <mat-tab label="Professional Details">
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>Date of Birth</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="dateOfBirth">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Place of Birth</mat-label>
+          <input matInput formControlName="placeOfBirth">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Address</mat-label>
+          <input matInput formControlName="address">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Communication Preferences</mat-label>
+          <input matInput formControlName="communicationPreference">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Specialization</mat-label>
+          <input matInput formControlName="specialization">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Qualifications</mat-label>
+          <textarea matInput formControlName="qualifications"></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Years of Experience</mat-label>
+          <input matInput type="number" formControlName="yearsOfExperience">
+        </mat-form-field>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
+  <div class="button-container">
+    <button mat-raised-button color="primary" type="submit" class="submit-button">Submit</button>
+    <button mat-raised-button color="primary" type="button" class="submit-button" (click)="onClearForm()">Clear</button>
+  </div>
+</form>
