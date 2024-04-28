@@ -1,7 +1,7 @@
 import { Group } from '../group/group';
 
 export interface Teacher {
-  id: number;
+  id?: number;
   firstName: string;
   lastName: string;
   gender: string;

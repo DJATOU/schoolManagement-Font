@@ -1,0 +1,56 @@
+/* Container for the entire form */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    background-color: white;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+  
+/* Style for each form field */
+.mat-form-field {
+    width: 100%;
+    .mat-form-field-flex {
+      border-bottom: 2px solid #3f51b5; /* Color of the underline */
+    }
+}
+  
+/* Style for the input elements inside form fields */
+.mat-input-element {
+    padding: 8px 5px;
+}
+  
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .mat-form-field {
+      width: 100%;
+    }
+}
+  
+/* Submit Button Styles */
+.submit-button {
+    align-self: center; /* Center the button */
+    padding: 10px 30px;
+    font-size: 16px;
+    border-radius: 20px;
+    background-color: #3f51b5; /* Button background color */
+    color: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: background-color 0.3s, box-shadow 0.3s;
+  
+    &:hover {
+      background-color: #303f9f; /* Darker shade on hover */
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    }
+}
+
+form {
+    margin-bottom: 40px;
+}

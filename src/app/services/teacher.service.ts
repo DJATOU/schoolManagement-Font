@@ -28,6 +28,7 @@ export class TeacherService {
     return this.http.put<Teacher>(`${this.apiUrl}/${id}`, teacher);
   }
 
+
   searchTeachersByName(firstName: string, lastName: string): Observable<Teacher[]> {
     return this.http.get<Teacher[]>(`${this.apiUrl}/search`, {
       params: new HttpParams()
@@ -39,3 +40,4 @@ export class TeacherService {
 
 }
   
+

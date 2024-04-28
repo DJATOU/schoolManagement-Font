@@ -1,6 +1,9 @@
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { NgModule } from '@angular/core';
+import { LevelFormComponent } from './components/level/level-form/level-form.component';
+import { RoomFormComponent } from './components/room/room-form/room-form.component';
+import { PricingFormComponent } from './components/pricing/pricing-form/pricing-form.component';
 import { StudentFormComponent } from './components/student/student-form/student-form.component';
 import { StudentSearchComponent } from './components/student/student-search/student-search.component';
 import { LevelFormComponent } from './components/level/level-form/level-form.component';
@@ -10,11 +13,14 @@ import { TeacherFormComponent } from './components/teacher/teacher-form/teacher-
 export const routes: Routes = [
     { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     { path: 'dashboard', component: DashboardComponent },
+    { path: 'level/new', component: LevelFormComponent },
+    { path: 'room/new', component: RoomFormComponent },
+    { path: 'pricing/new', component: PricingFormComponent},
     { path: 'subscription', component: StudentFormComponent },
     { path: 'student', component: StudentSearchComponent },
     { path: 'level/new', component: LevelFormComponent },
     { path: 'room/new', component: RoomFormComponent },
-    { path: 'teacher/new', component: TeacherFormComponent } 
+    { path: 'teacher/new', component: TeacherFormComponent }  
   ];
   
   @NgModule({
