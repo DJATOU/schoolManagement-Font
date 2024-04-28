@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { LevelFormComponent } from './components/level/level-form/level-form.component';
-import { RoomFormComponent } from './components/room/room-form/room-form.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component'
 import { PricingFormComponent } from './components/pricing/pricing-form/pricing-form.component';
 import { StudentFormComponent } from './components/student/student-form/student-form.component';
 import { StudentSearchComponent } from './components/student/student-search/student-search.component';
