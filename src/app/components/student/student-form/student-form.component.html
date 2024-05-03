@@ -11,6 +11,14 @@
             <mat-label>Last Name</mat-label>
             <input matInput formControlName="lastName">
           </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Gender</mat-label>
+            <mat-select formControlName="gender">
+              <mat-option value="male">Male</mat-option>
+              <mat-option value="female">Female</mat-option>
+            </mat-select>
+          </mat-form-field>
   
           <mat-form-field appearance="fill" class="photo">
             <mat-label>Upload Photo</mat-label>

@@ -1,0 +1,79 @@
+<form [formGroup]="groupForm" (ngSubmit)="onSubmit()" class="form-container">
+    <mat-tab-group>
+      <mat-tab label="Basic Details">
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name">
+          </mat-form-field>
+  
+          <mat-form-field appearance="fill">
+            <mat-label>Group Type</mat-label>
+            <mat-select formControlName="groupTypeId">
+              <mat-option *ngFor="let type of groupTypes" [value]="type.id">{{ type.name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+  
+          <mat-form-field appearance="fill">
+            <mat-label>Level</mat-label>
+            <mat-select formControlName="levelId">
+              <mat-option *ngFor="let level of levels" [value]="level.id">{{ level.name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+  
+          <mat-form-field appearance="fill">
+            <mat-label>Subject</mat-label>
+            <mat-select formControlName="subjectId">
+              <mat-option *ngFor="let subject of subjects" [value]="subject.id">{{ subject.name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+  
+          <mat-form-field appearance="fill">
+            <mat-label>Session Number Per Serie</mat-label>
+            <input matInput formControlName="sessionNumberPerSerie">
+          </mat-form-field>
+  
+          <mat-form-field appearance="fill">
+            <mat-label>Price</mat-label>
+            <mat-select formControlName="priceId">
+              <mat-option *ngFor="let price of prices" [value]="price.id">
+                {{ price.price | currency }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          
+  
+        </div>
+      </mat-tab>
+      <mat-tab label="Additional Details">
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description"></textarea>
+          </mat-form-field>
+  
+          <mat-form-field appearance="fill">
+            <mat-label>Teacher</mat-label>
+            <mat-select formControlName="teacherId">
+              <mat-option *ngFor="let teacher of teachers" [value]="teacher.id">
+                {{ teacher.firstName }} {{ teacher.lastName }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          
+  
+          <!-- Assuming a method to handle Set<number> for studentIds 
+          <mat-form-field appearance="fill">
+            <mat-label>Student</mat-label>
+            <input matInput formControlName="studentIds">
+          </mat-form-field>-->
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  
+    <div class="button-container">
+      <button mat-raised-button color="primary" type="submit" class="submit-button">Save Group</button>
+      <button mat-raised-button color="primary" type="button" class="submit-button" (click)="onClearForm()">Clear</button>
+    </div>
+  </form>
+  

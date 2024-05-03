@@ -4,12 +4,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { HttpClientModule } from '@angular/common/http';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule, NativeDateAdapter } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule, MatOption, NativeDateAdapter } from '@angular/material/core';
 import { StudentService } from '../../../services/student.service';
 import { RouterModule } from '@angular/router';
-import {MatStepperModule} from '@angular/material/stepper';
+import { MatStepperModule} from '@angular/material/stepper';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatSelectModule } from '@angular/material/select';
 
 
 @Component({
@@ -21,7 +22,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatInputModule, 
     MatDatepickerModule,
     HttpClientModule,
-    MatNativeDateModule,RouterModule,MatStepperModule, MatIconModule,MatTabsModule],
+    MatNativeDateModule,RouterModule,MatStepperModule, MatIconModule,MatTabsModule,MatOption, MatSelectModule],
   templateUrl: './student-form.component.html',
   styleUrls: ['./student-form.component.scss'],
   providers: [
@@ -51,6 +52,7 @@ export class StudentFormComponent {
   studentForm = this.fb.group({
     firstName: ['', Validators.required],
     lastName: ['', Validators.required],
+    gender: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     phoneNumber: [''],
     dateOfBirth: ['', Validators.required],

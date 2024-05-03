@@ -1,6 +1,6 @@
 export interface BaseModel {
     id?: number;
-    dateCreation?: Date; // Assuming you're using string to represent LocalDateTime
+    dateCreation?: Date;
     dateUpdate?: Date;
     createdBy?: string;
     updatedBy?: string;
