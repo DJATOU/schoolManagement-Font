@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -79,7 +79,6 @@ export class GroupFormComponent implements OnInit {
     private levelService: LevelService,
     private subjectService: SubjectService,
     private teacherService: TeacherService,
-    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {

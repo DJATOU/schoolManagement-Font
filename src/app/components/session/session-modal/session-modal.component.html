@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>{{ sessionData.title }}</h2>
+<mat-dialog-content>
+    <p><strong>Session Type:</strong> {{ sessionData.sessionType }}</p>
+    <p><strong>Group Name:</strong> {{ sessionData.groupName }}</p>
+    <p><strong>Room Name:</strong> {{ sessionData.roomName }}</p>
+    <p><strong>Teacher Name:</strong> {{ sessionData.teacherName }}</p>
+    <p><strong>Start:</strong> {{ sessionData.start | date: 'medium' }}</p>
+    <p><strong>End:</strong> {{ sessionData.end | date: 'medium' }}</p>
+    <p><strong>Feedback Link:</strong> {{ sessionData.feedbackLink }}</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button (click)="onValidateSession()">Validate Session</button>
+    <button mat-button (click)="dialogRef.close()">Close</button>
+</mat-dialog-actions>

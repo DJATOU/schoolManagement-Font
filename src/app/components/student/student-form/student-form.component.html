@@ -56,7 +56,9 @@
         <div>
           <mat-form-field appearance="fill">
             <mat-label>Level</mat-label>
-            <input matInput formControlName="level">
+            <mat-select formControlName="levelId">
+              <mat-option *ngFor="let level of levels" [value]="level.id">{{ level.name }}</mat-option>
+            </mat-select>
           </mat-form-field>
   
           <mat-form-field appearance="fill">

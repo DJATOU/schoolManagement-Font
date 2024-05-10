@@ -8,5 +8,9 @@
     align-items: center;
     justify-content: center;
   }
-  // Plus de mixins...
-  
+
+ // _mixins.scss
+@mixin font-base($fonts...) {
+  font-family: $fonts;
+}
+

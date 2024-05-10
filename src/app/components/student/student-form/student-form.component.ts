@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,6 +11,9 @@ import { MatStepperModule} from '@angular/material/stepper';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSelectModule } from '@angular/material/select';
+import { Level } from '../../../models/level/level';
+import { LevelService } from '../../../services/level.service';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
@@ -22,7 +25,14 @@ import { MatSelectModule } from '@angular/material/select';
     MatInputModule, 
     MatDatepickerModule,
     HttpClientModule,
-    MatNativeDateModule,RouterModule,MatStepperModule, MatIconModule,MatTabsModule,MatOption, MatSelectModule],
+    MatNativeDateModule,
+    RouterModule,
+    MatStepperModule,
+     MatIconModule,
+     MatTabsModule,
+     MatOption, 
+     MatSelectModule,
+     CommonModule],
   templateUrl: './student-form.component.html',
   styleUrls: ['./student-form.component.scss'],
   providers: [
@@ -46,10 +56,13 @@ import { MatSelectModule } from '@angular/material/select';
 })
 
 
-export class StudentFormComponent {
+export class StudentFormComponent implements OnInit {
   selectedFile: File | null = null;
-
-  studentForm = this.fb.group({
+  levels: Level[] = [];
+  studentForm!: FormGroup;
+  
+  ngOnInit(): void {
+  this.studentForm = this.fb.group({
     firstName: ['', Validators.required],
     lastName: ['', Validators.required],
     gender: ['', Validators.required],
@@ -57,14 +70,26 @@ export class StudentFormComponent {
     phoneNumber: [''],
     dateOfBirth: ['', Validators.required],
     placeOfBirth: [''],
-    level: ['', Validators.required],
+    levelId: [null, Validators.required],
     groupIds: [''], // Assurez-vous de gérer ce champ correctement côté backend si c'est un tableau
     tutorId: [''],
     establishment: [''],
     averageScore: ['']
   });
 
-  constructor(private fb: FormBuilder, private studentService: StudentService) {}
+  this.loadSelectOptions();
+
+}
+ 
+loadSelectOptions(): void {
+  this.levelService.getLevels().subscribe(data => this.levels = data);
+}
+
+  constructor(
+    private fb: FormBuilder, 
+    private studentService: StudentService,
+    private levelService: LevelService
+    ) {}
 
   onFileSelected(event: Event): void {
     const target = event.target as HTMLInputElement;

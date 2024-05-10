@@ -1,0 +1,100 @@
+<form [formGroup]="sessionForm" (ngSubmit)="onSubmit()" class="form-container">
+    <mat-tab-group>
+      <mat-tab label="Session Details">
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Title</mat-label>
+            <input matInput formControlName="title">
+          </mat-form-field>
+  
+          <mat-form-field appearance="fill">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description"></textarea>
+          </mat-form-field>
+  
+          <mat-form-field appearance="fill">
+            <mat-label>Session Type</mat-label>
+            <input matInput formControlName="sessionType">
+          </mat-form-field>
+  
+          <mat-form-field appearance="fill">
+            <mat-label>Feedback Link</mat-label>
+            <input matInput formControlName="feedbackLink">
+          </mat-form-field>
+        </div>
+      </mat-tab>
+      <mat-tab label="Session Timing">
+        <div>
+          <!-- Session Start Datetime -->
+          <mat-form-field appearance="fill">
+            <mat-label>Session Start Date</mat-label>
+            <input matInput [matDatepicker]="startDatePicker" placeholder="Choose a date" formControlName="sessionDateStart">
+            <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #startDatePicker></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Session Start Time</mat-label>
+            <input matInput [ngxTimepicker]="startTimePicker" readonly placeholder="Select Time" formControlName="sessionTimeStart">
+            <ngx-material-timepicker-toggle [for]="startTimePicker" matSuffix></ngx-material-timepicker-toggle>
+            <ngx-material-timepicker #startTimePicker></ngx-material-timepicker>
+          </mat-form-field>
+        
+          <!-- Session End Datetime -->
+          <mat-form-field appearance="fill">
+            <mat-label>Session End Date</mat-label>
+            <input matInput [matDatepicker]="endDatePicker" placeholder="Choose a date" formControlName="sessionDateEnd">
+            <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #endDatePicker></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Session End Time</mat-label>
+            <input matInput [ngxTimepicker]="endTimePicker" readonly placeholder="Select Time" formControlName="sessionTimeEnd">
+            <ngx-material-timepicker-toggle [for]="endTimePicker" matSuffix></ngx-material-timepicker-toggle>
+            <ngx-material-timepicker #endTimePicker></ngx-material-timepicker>
+          </mat-form-field>
+        </div>
+        
+        
+        
+      </mat-tab>
+      <mat-tab label="Identifiers">
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Group</mat-label>
+            <mat-select formControlName="groupId">
+              <mat-option *ngFor="let group of groups" [value]="group.id">{{ group.name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+  
+          <mat-form-field appearance="fill">
+            <mat-label>Room</mat-label>
+            <mat-select formControlName="roomId">
+              <mat-option *ngFor="let room of rooms" [value]="room.id">{{ room.name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+  
+          <!--<mat-form-field appearance="fill">
+            <mat-label>Series</mat-label>
+            <mat-select formControlName="session_series_id">
+              <mat-option *ngFor="let series of series" [value]="series.id">{{ series.title }}</mat-option>
+            </mat-select>
+          </mat-form-field>-->
+  
+          <mat-form-field appearance="fill">
+            <mat-label>Teacher</mat-label>
+            <mat-select formControlName="teacherId">
+              <mat-option *ngFor="let teacher of teachers" [value]="teacher.id">
+                {{ teacher.firstName }} {{ teacher.lastName }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  
+    <div class="button-container">
+        <button mat-raised-button color="primary" type="submit" class="submit-button">Submit</button>
+        <button mat-raised-button color="primary" type="button" class="submit-button" (click)="onClearForm()">Clear</button>
+    </div>
+  </form>
+  
