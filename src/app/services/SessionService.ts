@@ -3,12 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { API_BASE_URL } from '../app.config';
 import { Session } from '../models/session/session';
+import { Student } from '../models/student/student';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SessionService {
   private apiUrl = `${API_BASE_URL}/api/sessions`;
+  private apiUrl2 = `${API_BASE_URL}/api/student-groups`;
 
   constructor(private http: HttpClient) { }
 
@@ -41,5 +43,14 @@ export class SessionService {
     return this.http.patch<Session>(`${this.apiUrl}/${id}`, session);
   }
 
+  getStudentsByGroupId(groupId: number): Observable<Student[]> {
+    return this.http.get<Student[]>(`${this.apiUrl2}/${groupId}/students`).pipe(
+      tap(student => console.log('students fetched detail:', student))
+    );
+  }
+
+  markSessionAsFinished(sessionId: number): Observable<Session> {
+    return this.http.patch<Session>(`${this.apiUrl}/${sessionId}/finish`, {});
+  }
  
 }

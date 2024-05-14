@@ -1,5 +1,6 @@
 export interface Student {
     firstName: string;
+    id?: number;
     lastName: string;
     gender: string;
     email: string;
@@ -12,4 +13,6 @@ export interface Student {
     tutorId?: number;  // optional
     establishment: string;
     averageScore?: number;  // optional
+    isPresent?:boolean,
+    description?: string;
 }

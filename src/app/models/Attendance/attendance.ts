@@ -3,7 +3,7 @@ export interface Attendance {
     studentId: number;
     sessionId: number;
     isPresent: boolean;
-    sessionSeriesId: number;
+    sessionSeriesId?: number;
     groupId: number;
     dateCreation: Date;
     dateUpdate: Date;

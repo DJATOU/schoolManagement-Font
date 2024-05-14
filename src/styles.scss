@@ -1,4 +1,4 @@
-/* import other style files */
+/* Import other style files */
 @import 'styles/variables';
 @import 'styles/mixins';
 @import 'styles/base';
@@ -6,120 +6,165 @@
 @import 'styles/buttons';
 @import 'styles/forms';
 
-html, body { height: 100%; }
-body { 
-    max-width: 95rem;
-    margin: 0rem auto; font-family: Roboto, "Helvetica Neue", sans-serif; 
-    background: linear-gradient(to top, #accbee 0%, #e7f0fd 100%); 
+html, body {
+  height: 100%;
+}
 
-
+body {
+  max-width: 95rem;
+  margin: 0 auto;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background: linear-gradient(to top, #accbee 0%, #e7f0fd 100%);
 }
 
 /* Adjust the calendar size */
 .fc {
-    max-width: 900px;
-    margin: 0 auto;
-    font-size: 16px; /* Adjust font size as needed */
+  max-width: 900px;
+  margin: 0 auto;
+  font-size: 16px; /* Adjust font size as needed */
 }
 
 /* Event styling for contrast against the cell background */
 .fc-event {
-    background: linear-gradient(180.5deg, rgb(0, 128, 128) 8.5%, rgb(174, 206, 100) 118.2%);
-    color: white; /* White text for readability */
-    border: none; /* No border for a cleaner look */
-    border-radius: 4px; /* Rounded corners */
-    cursor: pointer;
-    overflow: hidden; /* Prevent text from spilling out */
-    text-overflow: ellipsis; /* End with ellipsis if text is too long */
-    white-space: nowrap; /* Keep text in a single line */
-    position: relative; /* Position relative for the tooltip */
+  background: linear-gradient(180.5deg, rgb(0, 128, 128) 8.5%, rgb(174, 206, 100) 118.2%);
+  color: white; /* White text for readability */
+  border: none; /* No border for a cleaner look */
+  border-radius: 4px; /* Rounded corners */
+  cursor: pointer;
+  overflow: hidden; /* Prevent text from spilling out */
+  text-overflow: ellipsis; /* End with ellipsis if text is too long */
+  white-space: nowrap; /* Keep text in a single line */
+  position: relative; /* Position relative for the tooltip */
 }
 
 /* Tooltip styling */
 .fc-event:hover::after {
-    content: attr(data-tooltip); /* Use a custom attribute for tooltip text */
-    position: absolute;
-    width: max-content;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.7);
-    color: #81cbd8;
-    text-align: center;
-    border-radius: 4px;
-    padding: 5px 10px;
-    font-size: 14px;
-    z-index: 100;
-    white-space: nowrap;
-    display: block;
+  content: attr(data-tooltip); /* Use a custom attribute for tooltip text */
+  position: absolute;
+  width: max-content;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: #81cbd8;
+  text-align: center;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 14px;
+  z-index: 100;
+  white-space: nowrap;
+  display: block;
 }
 
+/* Calendar adjustments */
 .fc-daygrid-day-events {
-    display: flex;
-    flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .fc-daygrid-day-top {
-    position: relative;
+  position: relative;
 }
 
 .fc-daygrid-day {
-    height: 120px; /* Fixed height for days to accommodate more events */
+  height: 120px; /* Fixed height for days to accommodate more events */
 }
 
-/* Specific event styling by adding custom classes in your event data */
-.green-event {
-    //background-color: #4CAF50;
-    
-    color: white;
-    cursor: pointer;
-}
-
-.amber-event {
-    background-color: #FFC107;
-    color: #212121;
-}
-
-/* Calendar grid */
 .fc .fc-daygrid-day {
-    border-color: #e0e0e0; /* Lighter borders for the grid */
+  border-color: #e0e0e0; /* Lighter borders for the grid */
+  background-color: #f9f9f9; /* Light gray background for cells */
+  border: 1px solid #e0e0e0; /* Slight border for definition */
 }
 
 /* Calendar header */
 .fc-header-toolbar {
-    background-color: #f5f5f5; /* Light grey background */
-    color: #333; /* Dark text for contrast */
-    padding: 10px; /* Padding for better spacing */
-    border-bottom: 2px solid #ddd; /* Subtle separation from the calendar */
+  background-color: #f5f5f5; /* Light grey background */
+  color: #333; /* Dark text for contrast */
+  padding: 10px; /* Padding for better spacing */
+  border-bottom: 2px solid #ddd; /* Subtle separation from the calendar */
 }
 
-.fc .fc-daygrid-day {
-    background-color: #f9f9f9; /* Light gray background for cells */
-    border: 1px solid #e0e0e0; /* Slight border for definition */
-}
-
-/* Optional: Style for today's date for emphasis */
+/* Style for today's date for emphasis */
 .fc .fc-daygrid-day.fc-day-today {
-    background-color: #e8f0fe; /* Light blue for today's date */
-    border-color: #c6d2f5; /* Matching border color */
+  background-color: #e8f0fe; /* Light blue for today's date */
+  border-color: #c6d2f5; /* Matching border color */
 }
 
 /* Ensure global styles don't interfere */
 .fc-event-title, .fc-event-title-container {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 /* Ensure event titles within buttons are also truncated */
 .fc-event .fc-event-title {
-    max-width: 100%;  // Limit width to the parent container
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  max-width: 100%; /* Limit width to the parent container */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
+/* Specific event styling by adding custom classes in your event data */
+.green-event {
+  /* background-color: #4CAF50; */
+  color: white;
+  cursor: pointer;
+}
 
-/* Ajoutez vos styles globaux ici */
+.amber-event {
+  background-color: #FFC107;
+  color: #212121;
+}
 
-/* styles.scss ou un fichier SCSS global */
+mat-dialog-content p {
+  margin: 5px 0;
+  font-size: 0.95rem;
+}
+
+mat-dialog-content p strong {
+  font-weight: bold;
+}
+
+/* Modal content styles */
+.modal-content {
+  .session-card, .students-card {
+    margin-bottom: 1rem;
+  }
+
+  .student-list-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .student-checkbox {
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  .description-input {
+    flex: 2;
+    margin-left: 1rem;
+    min-width: 200px;
+  }
+
+  .check-all {
+    margin-bottom: 1rem;
+  }
+}
+
+mat-card-header {
+  background-color: #e1f5fe;
+}
+
+mat-card-title {
+  color: #0d47a1;
+}
+
+/* Style for finished events */
+.fc-event.is-finished {
+  background: linear-gradient(98.3deg, rgb(0, 0, 0) 10.6%, rgb(255, 0, 0) 97.7%);
+  color: #fff; /* Ensure text remains readable */
+}

@@ -8,7 +8,7 @@ export interface Session {
     feedbackLink?: string;  // Optional field
     sessionTimeStart: Date;
     sessionTimeEnd: Date;
-    group_id: string;
+    groupId: string;
     room_id: string;
     session_series_id?: string;
     teacher_id: string;
@@ -20,5 +20,6 @@ export interface Session {
     groupName?: string;   // Human-readable group name
     roomName?: string;   // Human-readable room name
     teacherName?: string; // Human-readable teacher name
+    isFinished?: string;
   }
   

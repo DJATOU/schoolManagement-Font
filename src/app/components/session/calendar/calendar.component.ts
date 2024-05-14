@@ -14,7 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
   imports: [FullCalendarModule,  MatDialogModule,MatButtonModule, SessionModalComponent], // Include MatDialog and SessionModalComponent here
-  standalone: true
+standalone: true
 })
 export class CalendarComponent implements OnInit {
   calendarOptions: any;
@@ -48,39 +48,68 @@ export class CalendarComponent implements OnInit {
         start: new Date(session.sessionTimeStart),
         end: new Date(session.sessionTimeEnd),
         extendedProps: {
-         
-        id: session.id, // Ensure 'id' is explicitly included if not already part of session
-        groupName: session.groupName,
-        roomName: session.roomName,
-        teacherName: session.teacherName,
-        feedbackLink: session.feedbackLink,
-        sessionType: session.sessionType,
-        start: new Date(session.sessionTimeStart),
-        end: new Date(session.sessionTimeEnd),
-        //isFinished: session.isFinished,
-        title: session.title // Duplicate here for consistency
-        }
+          id: session.id,
+          groupName: session.groupName,
+          roomName: session.roomName,
+          teacherName: session.teacherName,
+          feedbackLink: session.feedbackLink,
+          sessionType: session.sessionType,
+          start: new Date(session.sessionTimeStart),
+          end: new Date(session.sessionTimeEnd),
+          groupId: session.groupId,
+          isFinished: session.isFinished
+        },
+        classNames: session.isFinished ? ['is-finished'] : []
       }));
     });
-    console.log("Event data after mapping:", this.calendarOptions.events);
   }
 
-  handleEventClick(clickInfo: any) {
-    console.log("Event data:", clickInfo.event.extendedProps);
-    if (clickInfo.event.extendedProps.id) {
-      const dialogRef = this.dialog.open(SessionModalComponent, {
-        data: clickInfo.event.extendedProps
-      });
   
-      dialogRef.afterClosed().subscribe(result => {
-        if (result && result.isFinished) {
-          clickInfo.event.setProp('backgroundColor', 'red');
-          clickInfo.event.setExtendedProp('isFinished', true);
-        }
-      });
-    } else {
-      console.error('No session ID provided for the event');
+  handleEventClick(clickInfo: any) {
+    console.log("Clicked event data:", clickInfo.event.extendedProps);
+
+    if (!clickInfo.event.extendedProps.groupId) {
+      console.error('Group ID is undefined for the clicked event', clickInfo.event.extendedProps);
+      return; // Exit the function or handle this case appropriately
     }
-  }
+
+    // Fetch students based on group ID
+    this.sessionService.getStudentsByGroupId(clickInfo.event.extendedProps.groupId).subscribe({
+      next: (students) => {
+        const sessionData = {
+          ...clickInfo.event.extendedProps,
+          students: students.map(s => {
+            return { ...s, id: s.id, isPresent: true };  // Ensure 'id' is correctly mapped
+          })
+        };
+
+        // Open the dialog with custom dimensions
+        const dialogRef = this.dialog.open(SessionModalComponent, {
+          data: sessionData,
+          width: '600px',
+          maxHeight: '90vh'
+        });
+
+        // Handling after the dialog is closed
+        dialogRef.afterClosed().subscribe(result => {
+          if (result && result.isFinished) {
+            // Change the background color of the session
+            clickInfo.event.setProp('backgroundColor', 'linear-gradient(98.3deg, rgb(0, 0, 0) 10.6%, rgb(255, 0, 0) 97.7%)');
+            clickInfo.event.setExtendedProp('isFinished', true);
+            console.log('Session validated and marked as finished on the calendar.');
+          }
+        });
+      },
+      error: (error) => {
+        console.error('Error fetching students:', error);
+        // Optionally show an error message or user notification here
+      }
+    });
+}
+
+
+  
+  
+  
   
 }
