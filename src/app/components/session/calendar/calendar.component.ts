@@ -9,12 +9,11 @@ import { SessionService } from '../../../services/SessionService';
 import { SessionModalComponent } from '../session-modal/session-modal.component';
 import { MatButtonModule } from '@angular/material/button';
 
-
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
-  imports: [FullCalendarModule,  MatDialogModule,MatButtonModule, SessionModalComponent], // Include MatDialog and SessionModalComponent here
-standalone: true
+  imports: [FullCalendarModule, MatDialogModule, MatButtonModule, SessionModalComponent], // Include MatDialog and SessionModalComponent here
+  standalone: true
 })
 export class CalendarComponent implements OnInit {
   calendarOptions: any;
@@ -64,7 +63,6 @@ export class CalendarComponent implements OnInit {
     });
   }
 
-  
   handleEventClick(clickInfo: any) {
     console.log("Clicked event data:", clickInfo.event.extendedProps);
 
@@ -93,8 +91,8 @@ export class CalendarComponent implements OnInit {
         // Handling after the dialog is closed
         dialogRef.afterClosed().subscribe(result => {
           if (result && result.isFinished) {
-            // Change the background color of the session
-            clickInfo.event.setProp('backgroundColor', 'linear-gradient(98.3deg, rgb(0, 0, 0) 10.6%, rgb(255, 0, 0) 97.7%)');
+            // Apply the is-finished class
+            clickInfo.event.setProp('classNames', ['is-finished']);
             clickInfo.event.setExtendedProp('isFinished', true);
             console.log('Session validated and marked as finished on the calendar.');
           }
@@ -105,11 +103,5 @@ export class CalendarComponent implements OnInit {
         // Optionally show an error message or user notification here
       }
     });
-}
-
-
-  
-  
-  
-  
+  }
 }

@@ -4,20 +4,19 @@ import { Observable } from 'rxjs';
 import { Student } from '../models/student/student';
 import { API_BASE_URL } from '../app.config';
 
-
 @Injectable({
   providedIn: 'root'
 })
 export class StudentService {
   private apiUrl = `${API_BASE_URL}/api/students`;
-
+  private apiUrl2 = `${API_BASE_URL}/api/student-groups`;
   constructor(private http: HttpClient) { }
 
   getStudents(): Observable<Student[]> {
     return this.http.get<Student[]>(this.apiUrl);
   }
 
-  getStudent(id: number): Observable<Student> {
+  getStudentById(id: number): Observable<Student> {
     return this.http.get<Student>(`${this.apiUrl}/id/${id}`);
   }
 
@@ -30,7 +29,6 @@ export class StudentService {
   }
 
   searchStudents(firstName: string, lastName: string, level: string, groupId: string, establishment: string): Observable<Student[]> {
-    console.log('Searching for students with firstName:', firstName, 'and lastName:', lastName);
     return this.http.get<Student[]>(`${this.apiUrl}/search`, {
       params: new HttpParams()
         .set('firstName', firstName)
@@ -41,22 +39,26 @@ export class StudentService {
     });
   }
 
-  // Dans StudentService
-getStudentsByFirstNameAndLastName(firstName?: string, lastName?: string): Observable<Student[]> {
-  let params = new HttpParams();
-  if (firstName) {
-    params = params.set('firstName', firstName);
-  }
-  if (lastName) {
-    params = params.set('lastName', lastName);
+  getStudentsByFirstNameAndLastName(firstName?: string, lastName?: string): Observable<Student[]> {
+    let params = new HttpParams();
+    if (firstName) {
+      params = params.set('firstName', firstName);
+    }
+    if (lastName) {
+      params = params.set('lastName', lastName);
+    }
+
+    return this.http.get<Student[]>(`${this.apiUrl}/searchByNames`, { params });
   }
 
-  return this.http.get<Student[]>(`${this.apiUrl}/searchByNames`, { params });
-}
-  
-searchStudentsByNameStartingWith(searchTerm: string) {
-  return this.http.get<Student[]>(`${this.apiUrl}/searchByNames`, { params: { search: searchTerm } });
-}
+  searchStudentsByNameStartingWith(searchTerm: string): Observable<Student[]> {
+    return this.http.get<Student[]>(`${this.apiUrl}/searchByNames`, {
+      params: new HttpParams().set('search', searchTerm)
+    });
+  }
 
+  addGroupsToStudent(studentId: number, groupIds: number[]): Observable<any> {
+    return this.http.post(`${this.apiUrl2}/${studentId}/addGroups`, { groupIds });
+}
 
 }

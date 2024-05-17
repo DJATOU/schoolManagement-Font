@@ -14,6 +14,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { Level } from '../../../models/level/level';
 import { LevelService } from '../../../services/level.service';
 import { CommonModule } from '@angular/common';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { SummaryDialogComponent } from '../../summary-dialog/summary-dialog.component';
 
 
 @Component({
@@ -28,16 +30,18 @@ import { CommonModule } from '@angular/common';
     MatNativeDateModule,
     RouterModule,
     MatStepperModule,
-     MatIconModule,
-     MatTabsModule,
-     MatOption, 
-     MatSelectModule,
-     CommonModule],
+    MatIconModule,
+    MatTabsModule,
+    MatOption, 
+    MatSelectModule,
+    CommonModule,
+    MatDialogModule
+  ],
   templateUrl: './student-form.component.html',
   styleUrls: ['./student-form.component.scss'],
   providers: [
-    StudentService ,
-    { provide: DateAdapter, useClass: NativeDateAdapter  },
+    StudentService,
+    { provide: DateAdapter, useClass: NativeDateAdapter },
     { provide: MAT_DATE_LOCALE, useValue: 'us-US' }, 
     {
       provide: MAT_DATE_FORMATS, useValue: {
@@ -54,42 +58,40 @@ import { CommonModule } from '@angular/common';
     }
   ]
 })
-
-
 export class StudentFormComponent implements OnInit {
   selectedFile: File | null = null;
   levels: Level[] = [];
   studentForm!: FormGroup;
   
-  ngOnInit(): void {
-  this.studentForm = this.fb.group({
-    firstName: ['', Validators.required],
-    lastName: ['', Validators.required],
-    gender: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
-    phoneNumber: [''],
-    dateOfBirth: ['', Validators.required],
-    placeOfBirth: [''],
-    levelId: [null, Validators.required],
-    groupIds: [''], // Assurez-vous de gérer ce champ correctement côté backend si c'est un tableau
-    tutorId: [''],
-    establishment: [''],
-    averageScore: ['']
-  });
-
-  this.loadSelectOptions();
-
-}
- 
-loadSelectOptions(): void {
-  this.levelService.getLevels().subscribe(data => this.levels = data);
-}
-
   constructor(
     private fb: FormBuilder, 
     private studentService: StudentService,
-    private levelService: LevelService
-    ) {}
+    private levelService: LevelService,
+    public dialog: MatDialog
+  ) {}
+
+  ngOnInit(): void {
+    this.studentForm = this.fb.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      gender: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      phoneNumber: [''],
+      dateOfBirth: ['', Validators.required],
+      placeOfBirth: [''],
+      levelId: [null, Validators.required],
+      groupIds: [''], // Assurez-vous de gérer ce champ correctement côté backend si c'est un tableau
+      tutorId: [''],
+      establishment: [''],
+      averageScore: ['']
+    });
+
+    this.loadSelectOptions();
+  }
+ 
+  loadSelectOptions(): void {
+    this.levelService.getLevels().subscribe(data => this.levels = data);
+  }
 
   onFileSelected(event: Event): void {
     const target = event.target as HTMLInputElement;
@@ -100,31 +102,40 @@ loadSelectOptions(): void {
 
   onSubmit(): void {
     if (this.studentForm.valid) {
-      const formData = new FormData();
-      if (this.selectedFile) {
-        formData.append('file', this.selectedFile, this.selectedFile.name);
-      }
-      Object.keys(this.studentForm.value).forEach(key => {
-        const value = this.studentForm.get(key)?.value;
-        formData.append(key, value);
+      const dialogRef = this.dialog.open(SummaryDialogComponent, {
+        data: { ...this.studentForm.value, photo: this.selectedFile?.name }
       });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          // Prepare form data for submission
+          const formData = new FormData();
+          if (this.selectedFile) {
+            formData.append('file', this.selectedFile, this.selectedFile.name);
+          }
+          Object.keys(this.studentForm.value).forEach(key => {
+            const value = this.studentForm.get(key)?.value;
+            formData.append(key, value);
+          });
   
-      // Appel direct avec formData
-      this.studentService.createStudent(formData).subscribe({
-        next: (response) => {
-          console.log('Student created:', response);
-          this.onClearForm();
-        },
-        error: (error) => {
-          console.error('Error creating student:', error);
+          // Submit the form data
+          this.studentService.createStudent(formData).subscribe({
+            next: (response) => {
+              console.log('Student created:', response);
+              this.onClearForm();
+            },
+            error: (error) => {
+              console.error('Error creating student:', error);
+            }
+          });
+        } else {
+          console.warn('Form submission was cancelled.');
         }
       });
     } else {
       console.warn('The form is not valid or the file is not selected.');
     }
   }
-  
-  
 
   onClearForm(): void {
     this.studentForm.reset();

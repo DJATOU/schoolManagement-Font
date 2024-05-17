@@ -1,0 +1,70 @@
+/* student-profile.component.scss */
+.student-profile-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.student-card {
+  margin-bottom: 2rem;
+}
+
+.student-photo {
+  background-size: cover;
+  background-position: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+}
+
+.student-info {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.info-section {
+  flex: 1 1 45%;
+  margin-bottom: 1rem;
+}
+
+h3 {
+  margin-top: 0;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+button {
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+
+/* styles.scss or global stylesheet */
+.success-snackbar {
+  background-color: #4caf50; /* Green */
+  color: #fff;
+}
+
+.warning-snackbar {
+  background-color: #ff9800; /* Orange */
+  color: #fff;
+}
+
+.error-snackbar {
+  background-color: #f44336; /* Red */
+  color: #fff;
+}

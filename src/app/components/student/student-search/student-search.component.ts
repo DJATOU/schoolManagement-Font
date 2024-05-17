@@ -6,8 +6,9 @@ import { StudentCardComponent } from '../student-card/student-card.component';
 import { StudentListComponent } from '../student-list/student-list.component';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { CommonModule } from '@angular/common';
-import { SearchService } from '../../../services/SearchService ';
 import { MatIconModule } from '@angular/material/icon';
+import { Router } from '@angular/router';
+import { SearchService } from '../../../services/SearchService ';
 
 @Component({
   selector: 'app-student-search',
@@ -15,7 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './student-search.component.html',
   styleUrls: ['./student-search.component.scss'],
   imports: [
-    CommonModule, MatToolbarModule, MatPaginatorModule, StudentCardComponent, StudentListComponent,MatIconModule 
+    CommonModule, MatToolbarModule, MatPaginatorModule, StudentCardComponent, StudentListComponent, MatIconModule
   ]
 })
 export class StudentSearchComponent implements OnInit {
@@ -29,7 +30,8 @@ export class StudentSearchComponent implements OnInit {
 
   constructor(
     private studentService: StudentService, 
-    private searchService: SearchService
+    private searchService: SearchService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -39,20 +41,21 @@ export class StudentSearchComponent implements OnInit {
 
   listenToSearchEvents(): void {
     this.searchService.getSearch().subscribe((searchTerm: string) => {
-      console.log('Received search term in StudentSearchComponent:', searchTerm);
       this.handleSearch(searchTerm);
     });
   }
   
   handleSearch(searchTerm: string): void {
-    console.log('Handling search for:', searchTerm);
     if (!searchTerm) {
       this.loadAllStudents(); // Load all students if no search term is specified.
     } else {
       this.studentService.searchStudentsByNameStartingWith(searchTerm).subscribe(students => {
-        console.log('Search results:', students);
-        this.filteredStudents = students;
-        this.updatePageStudents();
+        if (students.length === 1) {
+          this.router.navigate(['/student', students[0].id]);
+        } else {
+          this.filteredStudents = students;
+          this.updatePageStudents();
+        }
       });
     }
   }

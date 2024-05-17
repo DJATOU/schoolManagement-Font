@@ -1,6 +1,5 @@
 <!-- student-search.component.html -->
 <div class="content-container">
-
   <mat-toolbar class="view-toggle-toolbar">
     <button mat-button
             [class.active]="viewMode === 'card'"
@@ -15,7 +14,6 @@
       List
     </button>
   </mat-toolbar>
-  
 
   <div class="student-view" [ngClass]="{'card-view': viewMode === 'card', 'list-view': viewMode === 'list'}">
     <ng-container *ngIf="viewMode === 'card'">
@@ -25,12 +23,10 @@
       <app-student-list *ngFor="let student of currentPageStudents" [student]="student"></app-student-list>
     </ng-container>
   </div>
-  
 
   <mat-paginator [length]="totalStudents"
                  [pageSize]="pageSize"
                  [pageSizeOptions]="pageSizeOptions"
                  (page)="changePage($event)">
   </mat-paginator>
-  
 </div>

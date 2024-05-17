@@ -1,16 +1,16 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SessionService } from '../../../services/SessionService';
-import { Attendance } from '../../../models/Attendance/attendance';
 import { AttendanceService } from '../../../services/attendance.service';
 import { Student } from '../../../models/student/student';
-import { FormsModule } from '@angular/forms'; // Import FormsModule
-import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle } from '@angular/material/card';
-import { MatTab, MatTabGroup } from '@angular/material/tabs';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCardModule } from '@angular/material/card';
+import { MatTabsModule } from '@angular/material/tabs';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-session-modal',
@@ -22,15 +22,9 @@ import { MatTab, MatTabGroup } from '@angular/material/tabs';
     MatButtonModule,
     MatCheckboxModule,
     FormsModule,
-    MatLabel,
-    MatFormField,
-    MatCard,
-    MatCardContent,
-    MatCardHeader,
-    MatCardTitle,
-    MatCardSubtitle,
-    MatTab,
-    MatTabGroup
+    MatFormFieldModule,
+    MatCardModule,
+    MatTabsModule,
   ]
 })
 export class SessionModalComponent implements OnInit {
@@ -42,63 +36,54 @@ export class SessionModalComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.attendanceService.getAttendanceBySessionId(this.sessionData.id).subscribe(attendances => {
-      this.sessionData.students.forEach((student: any) => {
-        const attendance = attendances.find(a => a.studentId === student.id);
-        if (attendance) {
-          student.isPresent = attendance.isPresent;
-          student.description = attendance.description;
-        } else {
-          student.isPresent = false;
-          student.description = '';
-        }
-        student.disabled = true; // Désactiver la case à cocher
+    if (!this.sessionData.students) {
+      this.sessionService.getStudentsByGroupId(this.sessionData.groupId).subscribe(students => {
+        this.sessionData.students = students.map(s => ({
+          ...s,
+          isPresent: s.isPresent ?? true,
+          description: s.description ?? ''
+        }));
+      }, error => {
+        console.error('Error fetching students:', error);
       });
-    }, error => {
-      console.error('Error fetching attendances:', error);
-    });
+    }
   }
 
   onValidateSession() {
-    const attendanceUpdates: Attendance[] = this.sessionData.students.map((student: Student) => ({
-        studentId: student.id,
-        sessionId: this.sessionData.id,
-        groupId: this.sessionData.groupId,
-        isPresent: student.isPresent !== undefined ? student.isPresent : true,
-        description: student.description
+    const attendanceUpdates = this.sessionData.students.map((student: Student) => ({
+      studentId: student.id,
+      sessionId: this.sessionData.id,
+      groupId: this.sessionData.groupId,
+      isPresent: student.isPresent !== undefined ? student.isPresent : true,
+      description: student.description
     }));
 
     this.attendanceService.submitAttendance(attendanceUpdates).subscribe({
-        next: (response) => {
-            console.log('Attendance submitted successfully', response);
-            this.markSessionAsFinished();
-        },
-        error: (error) => {
-            console.error('Failed to submit attendance', error);
-            alert(error.message); // Display the error message
-        }
+      next: (response) => {
+        console.log('Attendance submitted successfully', response);
+        this.markSessionAsFinished();
+      },
+      error: (error) => {
+        console.error('Failed to submit attendance', error);
+        alert(error.message);
+      }
     });
   }
 
   markSessionAsFinished() {
     this.sessionService.markSessionAsFinished(this.sessionData.id).subscribe({
-        next: (response) => {
-            console.log('Session marked as finished', response);
-            this.dialogRef.close({ isFinished: true }); // Close the dialog with the updated data
-        },
-        error: (error) => {
-            console.error('Failed to mark session as finished', error);
-            alert(error.message); // Display the error message
-        }
+      next: (response) => {
+        console.log('Session marked as finished', response);
+        this.dialogRef.close({ isFinished: true });
+      },
+      error: (error) => {
+        console.error('Failed to mark session as finished', error);
+        alert(error.message);
+      }
     });
   }
 
   toggleAllStudents(isChecked: boolean) {
-    this.sessionData.students.forEach((student: { isPresent: boolean; }) => student.isPresent = isChecked);
-  }
-
-  onCheckboxChange(student: { firstName: string; lastName: string; isPresent: boolean; }, event: { checked: any; }) {
-    console.log(`Attendance for ${student.firstName} ${student.lastName}: ${event.checked}`);
-    student.isPresent = event.checked;
+    this.sessionData.students.forEach((student: { isPresent: boolean }) => student.isPresent = isChecked);
   }
 }

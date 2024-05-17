@@ -12,6 +12,7 @@ import { GroupFormComponent } from './components/group/group-form/group-form.com
 import { GroupTypeFormComponent } from './components/groupType/group-type-form/group-type-form.component';
 import { SessionFormComponent } from './components/session/session-form/session-form.component';
 import { CalendarComponent } from './components/session/calendar/calendar.component';
+import { StudentProfileComponent } from './components/student/student-profile/student-profile.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -26,7 +27,9 @@ export const routes: Routes = [
     { path: 'group/new', component: GroupFormComponent },
     { path: 'groupType/new', component: GroupTypeFormComponent },
     { path: 'session/new', component: SessionFormComponent },
-    { path: 'calendar/new', component: CalendarComponent }
+    { path: 'calendar/new', component: CalendarComponent },
+    { path: 'student/:id', component: StudentProfileComponent },
+    {path: 'search', component: StudentSearchComponent}
   ];
   
   @NgModule({

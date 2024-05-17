@@ -1,20 +1,26 @@
 .sidenav-container {
-  .sidenav-header {
+  height: 100vh;
+
+  .sidenav-toolbar {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    padding: 8px;
-    // Ajoutez une couleur de fond et des styles de bordure selon votre thème
-    background-color: #eee;
-    border-bottom: 1px solid #ddd;
+    justify-content: space-between;
+    padding: 0 16px;
+
+    .toolbar-title {
+      flex-grow: 1;
+      text-align: center;
+    }
   }
+
   .sidenav {
-    box-shadow: 3px 0 6px rgba(0,0,0,.24); // Ombre pour donner de la profondeur
+    box-shadow: 3px 0 6px rgba(0, 0, 0, 0.24); // Ombre pour donner de la profondeur
   }
-  
+
   mat-icon {
     margin-right: 8px; // Espacement entre l'icône et le texte
   }
+
   .mat-expansion-panel-header {
     // Personnalisez selon vos besoins
     background-color: #f0f0f0;
@@ -22,6 +28,7 @@
       background-color: #e7e7e7;
     }
   }
+
   .mat-action-list mat-list-item {
     // Styles pour les éléments de liste, ajustez au besoin
     border-bottom: 1px solid #e0e0e0;

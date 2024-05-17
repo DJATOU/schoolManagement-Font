@@ -56,6 +56,32 @@ body {
   display: block;
 }
 
+/* Ensuring the background gradient changes on hover */
+.fc-event:hover {
+  background: linear-gradient(180.5deg, rgb(0, 128, 128) 0%, rgb(174, 206, 100) 80%);
+  color: white; /* Ensure text remains readable */
+}
+
+/* Style for finished events */
+.fc-event.is-finished {
+  background: linear-gradient(98.3deg, rgb(0, 0, 0) 10.6%, rgb(255, 0, 0) 97.7%);
+  color: white; /* Ensure text remains readable */
+}
+
+/* Override FullCalendar list view event hover for finished events */
+.fc-event.is-finished:hover td,
+.fc-event.is-finished:hover {
+  background: linear-gradient(98.3deg, rgb(0, 0, 0) 10.6%, rgb(255, 0, 0) 97.7%) !important;
+  color: white !important;
+}
+
+/* Override FullCalendar list view event hover for not finished events */
+.fc-event:not(.is-finished):hover td,
+.fc-event:not(.is-finished):hover {
+  background: linear-gradient(180.5deg, rgb(0, 128, 128) 0%, rgb(174, 206, 100) 80%) !important;
+  color: white !important;
+}
+
 /* Calendar adjustments */
 .fc-daygrid-day-events {
   display: flex;
@@ -99,7 +125,7 @@ body {
 
 /* Ensure event titles within buttons are also truncated */
 .fc-event .fc-event-title {
-  max-width: 100%; /* Limit width to the parent container */
+  max-width: 100%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -107,7 +133,6 @@ body {
 
 /* Specific event styling by adding custom classes in your event data */
 .green-event {
-  /* background-color: #4CAF50; */
   color: white;
   cursor: pointer;
 }
@@ -117,6 +142,7 @@ body {
   color: #212121;
 }
 
+/* MatDialog content styles */
 mat-dialog-content p {
   margin: 5px 0;
   font-size: 0.95rem;
@@ -163,8 +189,25 @@ mat-card-title {
   color: #0d47a1;
 }
 
-/* Style for finished events */
-.fc-event.is-finished {
-  background: linear-gradient(98.3deg, rgb(0, 0, 0) 10.6%, rgb(255, 0, 0) 97.7%);
-  color: #fff; /* Ensure text remains readable */
+/* Additional styles for modal */
+.modal-header {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.modal-subheader {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.modal-note {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #757575;
+}
+
+.checkbox-disabled {
+  pointer-events: none;
+  opacity: 0.6;
 }

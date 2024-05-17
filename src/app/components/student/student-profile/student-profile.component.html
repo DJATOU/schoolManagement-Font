@@ -1,0 +1,53 @@
+<div class="student-profile-container" *ngIf="!loading; else loadingSpinner">
+  <mat-card class="student-card">
+    <mat-card-header>
+      <div mat-card-avatar class="student-photo"><img mat-card-image [src]="student?.photo" alt="Photo de l'étudiant"></div>
+      <mat-card-title>{{ student?.firstName }} {{ student?.lastName }}</mat-card-title>
+      <mat-card-subtitle>{{ student?.level }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="student-info">
+        <div class="info-section">
+          <h3>Personal Information</h3>
+          <p><strong>Gender:</strong> {{ student?.gender }}</p>
+          <p><strong>Email:</strong> {{ student?.email }}</p>
+          <p><strong>Phone Number:</strong> {{ student?.phoneNumber }}</p>
+          <p><strong>Date of Birth:</strong> {{ student?.dateOfBirth | date: 'mediumDate' }}</p>
+          <p><strong>Place of Birth:</strong> {{ student?.placeOfBirth }}</p>
+        </div>
+        <div class="info-section">
+          <h3>Academic Information</h3>
+          <p><strong>Level:</strong> {{ student?.level }}</p>
+          <p><strong>Establishment:</strong> {{ student?.establishment }}</p>
+          <p><strong>Average Score:</strong> {{ student?.averageScore }}</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  
+  <mat-card class="group-card">
+    <mat-card-content>
+      <h3>Manage Groups</h3>
+      <form [formGroup]="groupForm" (ngSubmit)="onSubmitGroups()">
+        <mat-form-field appearance="fill">
+          <mat-label>Select Groups</mat-label>
+          <mat-select formControlName="groupIds" multiple>
+            <mat-option *ngFor="let group of groups" [value]="group.id">{{ group.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit">Add Groups</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="button-container">
+    <button mat-raised-button color="primary" (click)="onEdit()">Edit</button>
+    <button mat-raised-button color="warn" (click)="onDelete()">Delete</button>
+  </div>
+</div>
+
+<ng-template #loadingSpinner>
+  <div class="loading-spinner">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+</ng-template>
