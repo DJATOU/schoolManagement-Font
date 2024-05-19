@@ -1,4 +1,5 @@
 <form [formGroup]="teacherForm" (ngSubmit)="onSubmit()" class="form-container">
+  <h2 class="form-title">Teacher Registration Form</h2>
   <mat-tab-group>
     <mat-tab label="Basic Information">
       <div>
@@ -24,7 +25,7 @@
           <mat-label>Upload Photo</mat-label>
           <input matInput readonly [value]="selectedFile?.name" placeholder="No file chosen">
           <input type="file" (change)="onFileSelected($event)" accept="image/*" hidden #photoInput>
-          <button mat-icon-button (click)="photoInput.click()">
+          <button mat-raised-button color="accent" (click)="photoInput.click()" class="upload-button">
             <mat-icon>attach_file</mat-icon> Choose a picture
           </button>
         </mat-form-field>
@@ -84,6 +85,6 @@
 
   <div class="button-container">
     <button mat-raised-button color="primary" type="submit" class="submit-button">Submit</button>
-    <button mat-raised-button color="primary" type="button" class="submit-button" (click)="onClearForm()">Clear</button>
+    <button mat-raised-button color="accent" type="button" class="submit-button" (click)="onClearForm()">Clear</button>
   </div>
 </form>

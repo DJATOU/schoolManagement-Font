@@ -3,6 +3,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, debounceTime, map, of, startWith, switchMap } from 'rxjs';
 import { StudentService } from '../../services/student.service';
+import { TeacherService } from '../../services/teacher.service';  // Import TeacherService
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatInputModule } from '@angular/material/input';
@@ -34,7 +35,8 @@ export class NavigationComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private studentService: StudentService, 
+    private studentService: StudentService,
+    private teacherService: TeacherService,
     private searchService: SearchService
   ) {}
 
@@ -74,8 +76,9 @@ export class NavigationComponent implements OnInit {
       case 'student':
         return this.performStudentSearch(value);
       case 'group':
+        return of([]);  // Implement group search logic here if needed
       case 'teacher':
-        return of([]);
+        return this.performTeacherSearch(value);  // Add teacher search logic
       default:
         return of([]);
     }
@@ -84,6 +87,12 @@ export class NavigationComponent implements OnInit {
   private performStudentSearch(value: string): Observable<string[]> {
     return this.studentService.searchStudentsByNameStartingWith(value).pipe(
       map(students => students.map(student => `${student.firstName} ${student.lastName}`))
+    );
+  }
+
+  private performTeacherSearch(value: string): Observable<string[]> {  // New method for teacher search
+    return this.teacherService.searchTeachersByNameStartingWith(value).pipe(
+      map(teachers => teachers.map(teacher => `${teacher.firstName} ${teacher.lastName}`))
     );
   }
 

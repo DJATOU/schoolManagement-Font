@@ -1,0 +1,88 @@
+// Base font-size for responsiveness
+html {
+    font-size: 100%;
+    @media (max-width: 768px) {
+      font-size: 87.5%; // Decrease the font size for smaller screens
+    }
+  }
+  
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  
+  // Set the container to fill at least the height of the viewport
+  .content-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; // Minimum height is the full viewport height
+    margin-top: -64px; // If there is a fixed header, you might need to offset for the header height
+  
+    // The first child (toolbar) does not grow but can shrink
+    // The teacher view grows and shrinks with flexbox
+    // The pagination does not grow but can shrink
+    // This ensures that pagination is at the bottom when there is little content
+    > * {
+      flex-shrink: 0;
+    }
+  
+    > .teacher-view {
+      flex-grow: 1;
+      overflow-y: auto; // Allows scrolling within the teacher view only
+    }
+  
+    > mat-paginator {
+      flex-shrink: 0;
+    }
+  }
+  
+  // Toolbar at the top
+  .view-toggle-toolbar {
+    justify-content: flex-end;
+    background-color: transparent;
+    padding-bottom: 0.625rem;
+    // Apply the margin-top to offset the negative margin of the container
+    margin-top: 64px; // Adjust this value to match the height of your fixed header
+  }
+  
+  // Teacher card view styling
+  .card-view  {
+    padding: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-around;
+    align-items: flex-start;
+  }
+  
+  .list-view{
+    padding: 1rem;
+    display: grid;
+  }
+  
+  // Teacher cards and list item styling
+  app-teacher-card,
+  app-teacher-list {
+    flex: 0 1 12.5rem; // Basis of 12.5rem, allows shrinking
+    margin-bottom: 1rem;
+  }
+  
+  // Paginator styling
+  mat-paginator {
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem;
+    box-shadow: 0 -2px 4px -1px rgba(0,0,0,0.2);
+  }
+  
+  // Responsive design adjustments
+  @media (max-width: 768px) {
+    mat-paginator {
+      flex-wrap: wrap;
+    }
+  
+    .teacher-view {
+      // Adjust for smaller screens, if necessary
+    }
+  }
+  

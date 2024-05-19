@@ -37,6 +37,11 @@ export class TeacherService {
     });
   }
 
+  searchTeachersByNameStartingWith(searchTerm: string): Observable<Teacher[]> {
+    return this.http.get<Teacher[]>(`${this.apiUrl}/searchByNames`, {
+      params: new HttpParams().set('search', searchTerm)
+    });
+  }
 
 }
   

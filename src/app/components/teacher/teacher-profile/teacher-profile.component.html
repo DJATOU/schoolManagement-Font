@@ -1,0 +1,41 @@
+
+<div class="teacher-profile-container" *ngIf="!loading; else loadingSpinner">
+  <mat-card class="teacher-card">
+    <mat-card-header>
+      <div mat-card-avatar class="teacher-photo"><img mat-card-image [src]="teacher?.photo" alt="Photo de l'enseignant"></div>
+      <mat-card-title>{{ teacher?.firstName }} {{ teacher?.lastName }}</mat-card-title>
+      <mat-card-subtitle>{{ teacher?.specialization }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="teacher-info">
+        <div class="info-section">
+          <h3>Personal Information</h3>
+          <p><strong>Gender:</strong> {{ teacher?.gender }}</p>
+          <p><strong>Email:</strong> {{ teacher?.email }}</p>
+          <p><strong>Phone Number:</strong> {{ teacher?.phoneNumber }}</p>
+          <p><strong>Date of Birth:</strong> {{ teacher?.dateOfBirth | date: 'mediumDate' }}</p>
+          <p><strong>Place of Birth:</strong> {{ teacher?.placeOfBirth }}</p>
+          <p><strong>Address:</strong> {{ teacher?.address }}</p>
+          <p><strong>Communication Preferences:</strong> {{ teacher?.communicationPreference }}</p>
+        </div>
+        <div class="info-section">
+          <h3>Professional Information</h3>
+          <p><strong>Specialization:</strong> {{ teacher?.specialization }}</p>
+          <p><strong>Qualifications:</strong> {{ teacher?.qualifications }}</p>
+          <p><strong>Years of Experience:</strong> {{ teacher?.yearsOfExperience }}</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  
+  <div class="button-container">
+    <button mat-raised-button color="primary" (click)="onEdit()">Edit</button>
+    <button mat-raised-button color="warn" (click)="onDelete()">Delete</button>
+  </div>
+</div>
+
+<ng-template #loadingSpinner>
+  <div class="loading-spinner">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+</ng-template>
