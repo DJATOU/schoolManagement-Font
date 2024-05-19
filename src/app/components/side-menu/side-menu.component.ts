@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
@@ -23,4 +23,6 @@ constructor(private router: Router) {}
   toggleSidenav() {
     this.isOpen = !this.isOpen;
   }
+
+  @Input() isSidenavOpen = false;
 }

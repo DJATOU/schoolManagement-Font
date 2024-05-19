@@ -1,43 +1,68 @@
-.sidenav-container {
-  height: 100vh;
-
-  .sidenav-toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 16px;
-
-    .toolbar-title {
-      flex-grow: 1;
-      text-align: center;
-    }
-  }
-
-  .sidenav {
-    box-shadow: 3px 0 6px rgba(0, 0, 0, 0.24); // Ombre pour donner de la profondeur
-  }
-
-  mat-icon {
-    margin-right: 8px; // Espacement entre l'icône et le texte
-  }
-
-  .mat-expansion-panel-header {
-    // Personnalisez selon vos besoins
-    background-color: #f0f0f0;
-    &:hover {
-      background-color: #e7e7e7;
-    }
-  }
-
-  .mat-action-list mat-list-item {
-    // Styles pour les éléments de liste, ajustez au besoin
-    border-bottom: 1px solid #e0e0e0;
-    &:hover {
-      background-color: #f5f5f5;
-    }
-  }
+.sidenav {
+  background: linear-gradient(95.2deg, rgb(173, 252, 234) 26.8%, rgb(192, 229, 246) 64%);
+  color: #333;
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.15);
+  overflow: hidden; /* Avoid horizontal scroll bar */
 }
 
-::ng-deep .mat-drawer-container .mat-sidenav {
-  top: 64px !important; // Ajustez la hauteur en fonction de la hauteur de votre barre de navigation
+.custom-accordion .mat-expansion-panel {
+  background-color: transparent;
+  border: none;
+  margin: 0; /* Removed margin to align with the edges */
+  border-radius: 0; /* Removed border-radius for cleaner alignment */
+  overflow: hidden;
+}
+
+.custom-accordion .mat-expansion-panel-header {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  padding: 10px; /* Ajustement du padding pour éviter le défilement horizontal */
+  font-size: 14px; /* Réduction de la taille de police pour plus d'espace */
+  display: flex;
+  align-items: center;
+}
+
+.custom-accordion .mat-expansion-panel-header:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.custom-accordion .mat-action-list mat-list-item {
+  color: #333;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: background-color 0.3s ease, padding-left 0.3s ease;
+  padding: 8px 10px; /* Ajustement du padding pour éviter le défilement horizontal */
+  display: flex;
+  align-items: center;
+  font-size: 13px; /* Réduction de la taille de police pour plus d'espace */
+}
+
+.custom-accordion .mat-action-list mat-list-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding-left: 18px; /* Ajustement du padding pour éviter le défilement horizontal */
+}
+
+.mat-list-item {
+  font-size: 13px; /* Réduction de la taille de police pour éviter le défilement horizontal */
+}
+
+.mat-panel-title mat-icon {
+  margin-right: 10px;
+  color: #333;
+}
+
+.mat-panel-title {
+  display: flex;
+  align-items: center;
+}
+
+.custom-accordion .mat-action-list mat-list-item mat-icon {
+  color: #333;
+  margin-right: 10px;
 }

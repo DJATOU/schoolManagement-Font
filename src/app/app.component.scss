@@ -2,30 +2,57 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 
 .app-navigation {
-  height: 64px; // Hauteur de la barre de navigation, ajustez selon vos besoins
-  // Autres styles de la barre de navigation...
+  height: 64px;
+  flex: none;
 }
 
 .main-container {
   display: flex;
-  flex-direction: row; // Changez cela pour empiler verticalement
-  flex-grow: 1; // Permet à main-container de remplir l'espace après la navigation
-  overflow: hidden; // Empêche le contenu débordant de dépasser
+  flex: 1;
+  width: 100%;
 }
 
-.side-menu {
-  flex-grow: 0; // Ne grandit pas au-delà du contenu du menu
-  width: 200px; // Largeur fixe pour le side menu, ajustez selon vos besoins
-  z-index: 1000; 
-  // Autres styles de side-menu...
+.sidenav-container {
+  display: flex;
+  flex: 1;
+  height: calc(100vh - 64px); /* Hauteur totale moins la barre de navigation */
+  margin: 0;
+  padding: 0;
+}
+
+.sidenav {
+  width: 250px; /* Largeur de la barre latérale */
+  background: linear-gradient(178.6deg, rgb(232, 245, 253) 3.3%, rgb(252, 253, 255) 109.6%);
+  color: black;
+  margin: 0;
+  padding: 0;
+}
+
+.mat-list-item {
+  color: black;
 }
 
 .content-area {
-  flex-grow: 1; // Prend tout l'espace restant
-  overflow-y: auto; // Si le contenu dépasse, il sera défilable
-  margin-left: 73px;
-  // Autres styles de content-area...
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 16px;
+  background-color: #f4f5f7;
+  margin: 0;
+  align-items: stretch; /* Aligner les éléments pour qu'ils s'étirent sur toute la largeur */
+  width: 100%; /* Assurez-vous qu'il prend toute la largeur disponible */
+}
+
+.main-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  width: 100%;
+  margin: 0 auto; /* Centrer horizontalement */
 }

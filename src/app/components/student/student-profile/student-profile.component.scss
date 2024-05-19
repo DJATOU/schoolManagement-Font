@@ -1,6 +1,5 @@
-/* student-profile.component.scss */
 .student-profile-container {
-  max-width: 800px;
+  max-width: 1200px; /* Augmenter la largeur maximale */
   margin: 2rem auto;
   padding: 2rem;
   background-color: #fff;
@@ -8,7 +7,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.student-card {
+.student-card, .group-card {
   margin-bottom: 2rem;
 }
 
@@ -27,7 +26,7 @@
 }
 
 .info-section {
-  flex: 1 1 45%;
+  flex: 1 1 48%;
   margin-bottom: 1rem;
 }
 
@@ -50,21 +49,4 @@ button {
   justify-content: center;
   align-items: center;
   height: 100vh;
-}
-
-
-/* styles.scss or global stylesheet */
-.success-snackbar {
-  background-color: #4caf50; /* Green */
-  color: #fff;
-}
-
-.warning-snackbar {
-  background-color: #ff9800; /* Orange */
-  color: #fff;
-}
-
-.error-snackbar {
-  background-color: #f44336; /* Red */
-  color: #fff;
 }

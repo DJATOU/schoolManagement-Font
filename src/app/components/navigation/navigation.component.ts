@@ -8,31 +8,28 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
-import { SearchService } from '../../services/SearchService ';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { SearchService } from '../../services/SearchService ';
 
 @Component({
   selector: 'app-navigation',
   standalone: true,
   imports: [
-    // Ensure all used Material modules and CommonModule are imported here
     CommonModule, MatFormFieldModule, MatInputModule, MatIcon, MatToolbarModule, FormsModule, MatAutocompleteModule, ReactiveFormsModule
   ],
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss']
 })
 export class NavigationComponent implements OnInit {
-userPhoto: any;
-hideSearch: boolean = false;
-toggleSidenav() {
-throw new Error('Method not implemented.');
-}
-
+  userPhoto: any;
+  hideSearch: boolean = false;
+  
   searchControl = new FormControl('');
   filteredSuggestions: Observable<string[]> | undefined;
   placeholder: string = 'Search for students...';
   currentSearchType: string = 'student';
 
+  @Output() sidenavToggle = new EventEmitter<void>();
   @Output() searchEvent = new EventEmitter<string>();
 
   constructor(
@@ -49,18 +46,21 @@ throw new Error('Method not implemented.');
     );
   }
 
+  toggleSidenav() {
+    this.sidenavToggle.emit();
+  }
+
   setSearchType(type: string): void {
     this.clearSearch();
     this.currentSearchType = type;
     this.placeholder = this.getPlaceholderByType(type);
-    this.searchService.setSearch(type); // Assuming SearchService can handle different types of searches.
+    this.searchService.setSearch(type);
   }
 
   onSearch(): void {
     console.log('Emitting search term:', this.searchControl.value);
     this.searchEvent.emit(this.searchControl.value ?? '');
     this.searchService.setSearch(this.searchControl.value ?? '');
-    // Navigate based on the search type if needed.
     this.router.navigate([`/${this.currentSearchType}`], { queryParams: { search: this.searchControl.value } });
   }
 
@@ -75,7 +75,6 @@ throw new Error('Method not implemented.');
         return this.performStudentSearch(value);
       case 'group':
       case 'teacher':
-        // Placeholder for other types of searches
         return of([]);
       default:
         return of([]);

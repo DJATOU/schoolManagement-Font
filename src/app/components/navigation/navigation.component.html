@@ -19,7 +19,7 @@
              [placeholder]="placeholder" 
              [formControl]="searchControl" 
              [matAutocomplete]="auto"
-             (keydown.enter)="onSearch()"> <!-- Added keydown.enter event here -->
+             (keydown.enter)="onSearch()">
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelect($event.option.value)">
         <mat-option *ngFor="let suggestion of filteredSuggestions | async" [value]="suggestion">
           {{ suggestion }}
@@ -28,7 +28,6 @@
       <mat-icon matSuffix *ngIf="searchControl.value" (click)="searchControl.setValue('')">close</mat-icon>
     </mat-form-field>
   </div>
-  
 
   <div class="user-info">
     <img [src]="userPhoto" alt="User Photo" class="user-photo">

@@ -71,25 +71,29 @@ export class StudentProfileComponent implements OnInit {
     }
   }
 
-
   onSubmitGroups(): void {
     if (this.groupForm.valid) {
       const groupIds = this.groupForm.value.groupIds;
+      console.log('Submitting groups:', groupIds); // Ajouter un journal ici
       if (this.student && this.student.id !== undefined) {
+        console.log('Student ID:', this.student.id); // Ajouter un journal ici
         this.studentService.addGroupsToStudent(this.student.id, groupIds).subscribe({
-          next: () => {
-            this.snackBar.open('Groups added to student successfully', 'Close', {
+          next: (response: any) => { // Utilisez `any` pour typer la réponse
+            console.log('Response from server:', response); // Ajouter un journal ici
+            this.snackBar.open(response.message, 'Close', {
               duration: 3000,
               panelClass: ['success-snackbar']
             });
           },
-          error: (error) => {
-            if (error.status === 409) { // Assuming 409 Conflict for already existing association
-              this.snackBar.open('Some groups were already associated with the student', 'Close', {
+          error: (error: any) => {
+            console.error('Error adding groups to student:', error); // Ajouter un journal ici
+            if (error.status === 409) {
+              const alreadyAssociatedGroups = error.error.alreadyAssociatedGroups || [];
+              this.snackBar.open(`Some groups were already associated with the student: ${alreadyAssociatedGroups.join(', ')}`, 'Close', {
                 duration: 3000,
                 panelClass: ['warning-snackbar']
               });
-            } else if (error.status === 404) { // Not Found
+            } else if (error.status === 404) {
               this.snackBar.open('Student or group not found', 'Close', {
                 duration: 3000,
                 panelClass: ['error-snackbar']
@@ -100,7 +104,6 @@ export class StudentProfileComponent implements OnInit {
                 panelClass: ['error-snackbar']
               });
             }
-            console.error('Error adding groups to student:', error);
           }
         });
       } else {
@@ -108,6 +111,8 @@ export class StudentProfileComponent implements OnInit {
       }
     }
   }
+  
+  
   
 
   onEdit(): void {
