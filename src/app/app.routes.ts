@@ -15,6 +15,8 @@ import { CalendarComponent } from './components/session/calendar/calendar.compon
 import { StudentProfileComponent } from './components/student/student-profile/student-profile.component';
 import { TeacherProfileComponent } from './components/teacher/teacher-profile/teacher-profile.component';
 import { TeacherSearchComponent } from './components/teacher/teacher-search/teacher-search.component';
+import { GroupSearchComponent } from './components/group/group-search/group-search.component';
+import { SerieFormComponent } from './components/serie/serie-form/serie-form.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -24,15 +26,18 @@ export const routes: Routes = [
     { path: 'pricing/new', component: PricingFormComponent},
     { path: 'subscription', component: StudentFormComponent },
     { path: 'student', component: StudentSearchComponent },
-    { path: 'teacher', component: TeacherSearchComponent },  // Ajoutez cette route
+    { path: 'teacher', component: TeacherSearchComponent },
+    { path: 'group', component: GroupSearchComponent },
     { path: 'subject/new', component: SubjectFormComponent },
     { path: 'teacher/new', component: TeacherFormComponent },
     { path: 'group/new', component: GroupFormComponent },
     { path: 'groupType/new', component: GroupTypeFormComponent },
     { path: 'session/new', component: SessionFormComponent },
+    { path: 'serie/new', component: SerieFormComponent },
     { path: 'calendar/new', component: CalendarComponent },
     { path: 'student/:id', component: StudentProfileComponent },
     { path: 'teacher/:id', component: TeacherProfileComponent},
+    { path: 'group/:id', component: TeacherProfileComponent},
   ];
   
   @NgModule({

@@ -1,1 +1,35 @@
-<p>group-search works!</p>
+<div class="content-container">
+  <mat-toolbar class="view-toggle-toolbar">
+    <button mat-button
+            [class.active]="viewMode === 'card'"
+            (click)="changeViewMode('card')">
+      <mat-icon>view_comfy</mat-icon>
+      Grid
+    </button>
+    <button mat-button
+            [class.active]="viewMode === 'list'"
+            (click)="changeViewMode('list')">
+      <mat-icon>view_list</mat-icon>
+      List
+    </button>
+  </mat-toolbar>
+
+  <div class="group-view" [ngClass]="{'card-view': viewMode === 'card', 'list-view': viewMode === 'list'}">
+    <ng-container *ngIf="viewMode === 'card'">
+      <app-group-card *ngFor="let group of currentPageGroups"
+                      [group]="group"
+                      [levels]="levels"
+                      [groupTypes]="groupTypes">
+      </app-group-card>
+    </ng-container>
+    <ng-container *ngIf="viewMode === 'list'">
+      <!-- Implement list view if needed -->
+    </ng-container>
+  </div>
+
+  <mat-paginator [length]="totalGroups"
+                 [pageSize]="pageSize"
+                 [pageSizeOptions]="pageSizeOptions"
+                 (page)="changePage($event)">
+  </mat-paginator>
+</div>

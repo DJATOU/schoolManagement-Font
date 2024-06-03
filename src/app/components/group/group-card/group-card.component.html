@@ -1,1 +1,14 @@
-<p>group-card works!</p>
+<mat-card class="profile-card">
+    <div class="profile-card-content">
+      <div class="profile-info">
+        <mat-card-title class="profile-name">
+          {{ group.name || 'Unknown Group' }}
+        </mat-card-title>
+        <mat-card-subtitle class="profile-subtitle">
+          <div>Level: {{ level }}</div>
+          <div>Type: {{ type }}</div>
+        </mat-card-subtitle>
+      </div>
+    </div>
+  </mat-card>
+  

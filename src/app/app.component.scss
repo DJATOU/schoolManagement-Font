@@ -4,6 +4,7 @@
   height: 100vh;
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 
 .app-navigation {
@@ -15,19 +16,22 @@
   display: flex;
   flex: 1;
   width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .sidenav-container {
   display: flex;
   flex: 1;
-  height: calc(100vh - 64px); /* Hauteur totale moins la barre de navigation */
+  height: calc(100vh - 64px);
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 
 .sidenav {
-  width: 250px; /* Largeur de la barre latérale */
-  background: linear-gradient(178.6deg, rgb(232, 245, 253) 3.3%, rgb(252, 253, 255) 109.6%);
+  width: 250px;
+  background: linear-gradient(109.6deg, rgb(148, 233, 194) 11.2%, rgb(224, 235, 186) 91.1%);
   color: black;
   margin: 0;
   padding: 0;
@@ -42,17 +46,22 @@
   flex-direction: column;
   flex-grow: 1;
   overflow-y: auto;
-  padding: 16px;
-  background-color: #f4f5f7;
+  padding: 0; /* Suppression du padding pour éviter le débordement */
+  background: linear-gradient(109.6deg, rgb(148, 233, 194) 11.2%, rgb(224, 235, 186) 91.1%);
   margin: 0;
-  align-items: stretch; /* Aligner les éléments pour qu'ils s'étirent sur toute la largeur */
-  width: 100%; /* Assurez-vous qu'il prend toute la largeur disponible */
+  align-items: stretch;
 }
 
 .main-content {
   display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
+  flex-direction: column;
+  flex: 1;
   width: 100%;
-  margin: 0 auto; /* Centrer horizontalement */
+  margin: 0;
+  padding: 0; /* Suppression du padding pour éviter le débordement */
+  align-items: stretch;
 }
+
+app-shared-layout-container{
+
+display: contents;}

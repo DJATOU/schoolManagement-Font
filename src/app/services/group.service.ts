@@ -23,6 +23,9 @@ export class GroupService {
     return this.http.get<Group>(`${this.apiUrl}/id/${id}`);
   }
 
+  getGroupById(groupId: number): Observable<Group> {
+    return this.http.get<Group>(`${this.apiUrl}/${groupId}`);
+  }
   // Create a new group
   createGroup(groupData: FormData): Observable<Group> {
     console.log('Group created:', groupData);
@@ -38,6 +41,12 @@ export class GroupService {
   searchGroupsByName(name: string): Observable<Group[]> {
     return this.http.get<Group[]>(`${this.apiUrl}/search`, {
       params: new HttpParams().set('name', name)
+    });
+  }
+
+  searchGroupsByNameStartingWith(searchTerm: string): Observable<Group[]> {
+    return this.http.get<Group[]>(`${this.apiUrl}/searchByNames`, {
+      params: new HttpParams().set('search', searchTerm)
     });
   }
 

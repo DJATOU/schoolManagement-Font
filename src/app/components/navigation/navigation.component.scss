@@ -1,35 +1,100 @@
 .mat-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; // Assure un alignement vertical centralisé de tous les éléments
+  background: linear-gradient(to right, rgb(182, 244, 146), rgb(51, 139, 147));
+  padding: 0 1rem; // Ajoute un padding horizontal pour éviter que les éléments ne touchent les bords
+
+  .spacer {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    gap: 1rem; // Ajoute un espacement entre le bouton de menu et le logo
 
-    .spacer {
-      flex-grow: 1; 
-    }
-  
-    .search-container {
-      flex-grow: 2; 
-      max-width: 40rem; 
-      margin: 2.5rem 5rem 0rem 5rem;
+    button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem; // Ajoute du padding interne au bouton pour agrandir la zone cliquable
+      color: white; // Couleur de l'icône du bouton
+      background: transparent;
+      border: none;
+      cursor: pointer;
     }
 
-  }
-  
-  .mat-icon{
-    color: black;
-    cursor: pointer; 
+    .logo {
+      height: 3rem; // Hauteur du logo ajustée
+      max-width: 100%; // S'assure que le logo ne dépasse pas de ses dimensions
+      cursor: pointer;
+    }
   }
 
   .icone-search {
-    display: flex; // Cette ligne assure que les icônes sont alignées horizontalement
-    justify-content: center; // Cette ligne centre les icônes dans le div .icone-search
+    display: flex;
+    align-items: center; // Assure un alignement vertical centralisé des icônes
     gap: 1rem;
-  
+
     mat-icon {
-      cursor: pointer; // Rend les icônes cliquables plus intuitivement avec la main au survol
-      // Ajouter un effet visuel pour les clics et les survols pourrait être une bonne idée
+      color: white; // Change la couleur des icônes
+      cursor: pointer;
+      transition: color 0.3s, transform 0.3s;
+
       &:hover {
-        color: #666; // Change la couleur au survol, choisissez une couleur qui correspond à votre design
+        color: #FFD700; // Change la couleur au survol, par exemple or
+        transform: scale(1.2); // Agrandit légèrement l'icône au survol
+      }
+
+      &.selected-icon {
+        color: #FFD700; // Couleur pour l'icône sélectionnée
+        border-bottom: 2px solid #FFD700; // Ajoute une bordure inférieure pour indiquer la sélection
       }
     }
   }
-  
+
+  .search-container {
+    flex-grow: 1;
+    max-width: 40rem;
+    display: flex;
+    align-items: center; // Assure un alignement vertical centralisé du champ de recherche
+    margin: 2.5rem 5rem 1rem 5rem; // Ajuste les marges pour centrer le champ de recherche
+    //padding: 0.5rem 0; // Ajoute un padding pour descendre la barre de recherche
+
+    mat-form-field {
+      width: 100%;
+      margin: 0; // Supprime les marges par défaut
+
+      .mat-icon {
+        cursor: pointer;
+      }
+    }
+
+    .search-icon {
+      color: white; // Change la couleur de l'icône de recherche
+    }
+  }
+
+  .user-info {
+    display: flex;
+    align-items: center;
+
+    .user-photo {
+      width: 2.5rem; // Réduit la taille de la photo
+      height: 2.5rem;
+      border-radius: 50%; // Rend la photo circulaire
+      margin-right: 0.5rem;
+      cursor: pointer;
+    }
+
+    .user-name {
+      color: white; // Change la couleur du texte du nom d'utilisateur
+    }
+  }
+}
+
+.mat-icon {
+  color: white; // Couleur des icônes par défaut
+  cursor: pointer;
+
+  &:hover {
+    color: #FFD700; // Couleur des icônes au survol
+  }
+}

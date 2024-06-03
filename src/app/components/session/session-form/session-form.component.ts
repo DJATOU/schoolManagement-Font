@@ -12,16 +12,17 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 
-
 import { TeacherService } from '../../../services/teacher.service';
 import { GroupService } from '../../../services/group.service';
-import { RoomService } from '../../../services/room.service';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+import { SeriesService } from '../../../services/series.service';
 import { Teacher } from '../../../models/teacher/teacher';
 import { Group } from '../../../models/group/group';
 import { Room } from '../../../models/room/room';
+import { SessionSeries } from '../../../models/sessionSerie/sessionSerie';
 import { SessionService } from '../../../services/SessionService';
-import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
-
+import { RoomService } from '../../../services/room.service';
+import { Session } from '../../../models/session/session';
 @Component({
   selector: 'app-session-form',
   standalone: true,
@@ -49,7 +50,8 @@ export class SessionFormComponent implements OnInit {
   teachers: Teacher[] = [];
   groups: Group[] = [];
   rooms: Room[] = [];
- // series: any[] = [];
+  series: SessionSeries[] = [];
+  sessions: Session[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -57,7 +59,7 @@ export class SessionFormComponent implements OnInit {
     private teacherService: TeacherService,
     private groupService: GroupService,
     private roomService: RoomService,
-   // private seriesService: SeriesService
+    private seriesService: SeriesService
   ) {}
 
   ngOnInit(): void {
@@ -72,8 +74,8 @@ export class SessionFormComponent implements OnInit {
       sessionTimeEnd: [null, Validators.required],
       groupId: [null, Validators.required],
       roomId: [null, Validators.required],
-      //session_series_id: [null, Validators.required],
       teacherId: [null, Validators.required],
+      seriesId: [null]
     });
 
     this.loadSelectOptions();
@@ -83,70 +85,92 @@ export class SessionFormComponent implements OnInit {
     this.teacherService.getTeachers().subscribe(data => this.teachers = data);
     this.groupService.getGroups().subscribe(data => this.groups = data);
     this.roomService.getRooms().subscribe(data => this.rooms = data);
-    //this.seriesService.getSeries().subscribe(data => this.series = data);
   }
 
   private combineDateTime(date: string, time: string): string {
-    console.log('Received date:', date, 'Received time:', time); // Log inputs for debugging
-  
     const [hourPart, minutePart] = time.match(/\d+/g) || [];
     const period = time.match(/AM|PM/i)?.[0];
-  
+
     if (!hourPart || !minutePart || !period) {
       throw new Error('Invalid time input format');
     }
-  
+
     const hours = parseInt(hourPart, 10);
     const minutes = parseInt(minutePart, 10);
     const dateTime = new Date(date);
-  
+
     if (isNaN(dateTime.getTime())) {
       throw new Error('Invalid date format');
     }
-  
-    // Convert 12-hour time format to 24-hour time format before setting
+
     if (period.toUpperCase() === "PM" && hours !== 12) {
       dateTime.setHours(hours + 12, minutes, 0, 0);
     } else if (period.toUpperCase() === "AM" && hours === 12) {
-      dateTime.setHours(0, minutes, 0, 0); // Handle midnight edge case
+      dateTime.setHours(0, minutes, 0, 0);
     } else {
       dateTime.setHours(hours, minutes, 0, 0);
     }
-  
-    if (isNaN(dateTime.getTime())) {
-      throw new Error('Invalid datetime after setting time');
-    }
-  
+
     return dateTime.toISOString();
   }
-  
-  
+
   onSubmit(): void {
     try {
       if (this.sessionForm.valid) {
         const formData = this.sessionForm.value;
         const startDateTime = this.combineDateTime(formData.sessionDateStart, formData.sessionTimeStart);
         const endDateTime = this.combineDateTime(formData.sessionDateEnd, formData.sessionTimeEnd);
-  
+
         const submissionData = {
           ...formData,
           sessionTimeStart: startDateTime,
           sessionTimeEnd: endDateTime
         };
-  
-        console.log('Submitting:', submissionData);
-        this.sessionService.createSession(submissionData).subscribe({
-          next: response => {
-            console.log('Session created successfully:', response);
-            this.sessionForm.reset();
-          },
-          error: (error: unknown) => {
-            if (error instanceof Error) {
-              console.error('Failed to create session:', error.message);
+
+        // Récupérer les détails du groupe pour obtenir le nombre total de sessions par série
+        this.groupService.getGroupById(submissionData.groupId).subscribe(group => {
+          const totalSessionsPerSeries = group.sessionNumberPerSerie;
+
+          this.seriesService.getSeriesByGroupId(submissionData.groupId).subscribe(series => {
+            const currentSeries = series.find(s => s.groupId === submissionData.groupId);
+
+            if (currentSeries && currentSeries.id !== undefined) {
+              this.sessionService.getSessionsBySeriesId(currentSeries.id).subscribe(sessions => {
+                if (sessions.length >= totalSessionsPerSeries) {
+                  const newSeriesData: SessionSeries = {
+                    groupId: submissionData.groupId,
+                    totalSessions: totalSessionsPerSeries,
+                    sessionsCompleted: 0,
+                    name: `Series ${currentSeries.groupId}-${series.length + 1}`, // Generate series name
+                    serieTimeStart: new Date().toISOString(),
+                    serieTimeEnd: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString()
+                  };
+
+                  this.seriesService.createSeries(newSeriesData).subscribe(newSeries => {
+                    submissionData.seriesId = newSeries.id;
+                    this.submitSession(submissionData);
+                  });
+                } else {
+                  submissionData.seriesId = currentSeries.id!;
+                  this.submitSession(submissionData);
+                }
+              });
             } else {
-              console.error('Failed to create session:', error);
+              const newSeriesData: SessionSeries = {
+                groupId: submissionData.groupId,
+                totalSessions: totalSessionsPerSeries,
+                sessionsCompleted: 0,
+                name: `Series ${submissionData.groupId}-1`,
+                serieTimeStart: new Date().toISOString(),
+                serieTimeEnd: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString()
+              };
+
+              this.seriesService.createSeries(newSeriesData).subscribe(newSeries => {
+                submissionData.seriesId = newSeries.id;
+                this.submitSession(submissionData);
+              });
             }
-          }
+          });
         });
       } else {
         console.warn('Form is not valid.');
@@ -159,8 +183,23 @@ export class SessionFormComponent implements OnInit {
       }
     }
   }
-  
-  
+
+  private submitSession(submissionData: any): void {
+    console.log('Submitting:', submissionData);
+    this.sessionService.createSession(submissionData).subscribe({
+      next: response => {
+        console.log('Session created successfully:', response);
+        this.sessionForm.reset();
+      },
+      error: (error: unknown) => {
+        if (error instanceof Error) {
+          console.error('Failed to create session:', error.message);
+        } else {
+          console.error('Failed to create session:', error);
+        }
+      }
+    });
+  }
 
   onClearForm(): void {
     this.sessionForm.reset();

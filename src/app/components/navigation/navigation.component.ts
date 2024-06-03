@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Observable, debounceTime, map, of, startWith, switchMap } from 'rxjs';
 import { StudentService } from '../../services/student.service';
 import { TeacherService } from '../../services/teacher.service';  // Import TeacherService
@@ -9,6 +9,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { SearchService } from '../../services/SearchService ';
 
@@ -16,7 +17,7 @@ import { SearchService } from '../../services/SearchService ';
   selector: 'app-navigation',
   standalone: true,
   imports: [
-    CommonModule, MatFormFieldModule, MatInputModule, MatIcon, MatToolbarModule, FormsModule, MatAutocompleteModule, ReactiveFormsModule
+    CommonModule, MatFormFieldModule, MatInputModule, MatIcon, MatToolbarModule, FormsModule, MatAutocompleteModule, ReactiveFormsModule, MatMenuModule, RouterLink
   ],
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss']
@@ -24,7 +25,7 @@ import { SearchService } from '../../services/SearchService ';
 export class NavigationComponent implements OnInit {
   userPhoto: any;
   hideSearch: boolean = false;
-  
+  selectedIcon: string = '';
   searchControl = new FormControl('');
   filteredSuggestions: Observable<string[]> | undefined;
   placeholder: string = 'Search for students...';
@@ -57,6 +58,7 @@ export class NavigationComponent implements OnInit {
     this.currentSearchType = type;
     this.placeholder = this.getPlaceholderByType(type);
     this.searchService.setSearch(type);
+    this.selectedIcon = type;
   }
 
   onSearch(): void {
@@ -109,5 +111,25 @@ export class NavigationComponent implements OnInit {
     console.log('User selected:', suggestion);
     this.searchControl.setValue(suggestion);
     this.onSearch();
+  }
+
+   // Méthode pour changer le thème
+   toggleDarkMode() {
+    // Votre logique pour activer/désactiver le mode sombre
+  }
+
+  // Méthode pour changer la langue
+  changeLanguage(_lang:string) {
+    
+  }
+
+  // Méthode pour la déconnexion
+  logout() {
+    // Votre logique pour déconnecter l'utilisateur
+  }
+
+  // Méthode pour ouvrir les paramètres
+  openSettings() {
+    // Votre logique pour ouvrir les paramètres
   }
 }

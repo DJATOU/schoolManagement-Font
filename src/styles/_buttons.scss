@@ -1,36 +1,65 @@
-// Styles pour les boutons individuels
+/* Styles pour les boutons individuels */
 .submit-button {
-    flex: 1; // Les boutons prendront une taille égale
-    padding: 10px 30px;
-    font-size: 16px;
-    border-radius: 20px;
-    background-color: #3f51b5;
-    color: white;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    cursor: pointer;
-    transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
-  
-    &:hover {
-      background-color: #303f9f;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-      transform: translateY(-2px);
-    }
-  
-    &:focus,
-    &:active {
-      outline: none;
-      background-color: #283593;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.4);
-    }
-  
-    &:active {
-      transform: translateY(1px);
-    }
-  }
+  flex: 1; /* Les boutons prendront une taille égale */
+  padding: 10px 30px;
+  font-size: 16px;
+  border-radius: 20px;
+  background: linear-gradient(to right, rgb(182, 244, 146), rgb(51, 139, 147));
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
+}
 
-  
+.submit-button:hover {
+  background-color: #1b5e20; /* Couleur survol */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+.submit-button:focus,
+.submit-button:active {
+  outline: none;
+  background-color: #004d40; /* Couleur active */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+.submit-button:active {
+  transform: translateY(1px);
+}
+
+.clear-button {
+  flex: 1; /* Les boutons prendront une taille égale */
+  padding: 10px 30px;
+  font-size: 16px;
+  border-radius: 20px;
+  background-color: #c0ca33; /* Couleur secondaire (jaune foncé) */
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
+}
+
+.clear-button:hover {
+  background-color: #afb42b; /* Couleur survol */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+.clear-button:focus,
+.clear-button:active {
+  outline: none;
+  background-color: #9e9d24; /* Couleur active */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+.clear-button:active {
+  transform: translateY(1px);
+}
+
+/* Container pour les boutons */
 .button-container {
-    display: flex;
-    justify-content: center; // Centre les boutons horizontalement
-    gap: 1rem; // Espacement entre les boutons
+  display: flex;
+  justify-content: center; /* Centre les boutons horizontalement */
+  gap: 1rem; /* Espacement entre les boutons */
 }

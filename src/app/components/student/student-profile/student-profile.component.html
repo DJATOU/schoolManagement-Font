@@ -1,12 +1,31 @@
 <div class="student-profile-container" *ngIf="!loading; else loadingSpinner">
   <mat-card class="student-card">
     <mat-card-header>
-      <div mat-card-avatar class="student-photo"><img mat-card-image [src]="student?.photo" alt="Photo de l'étudiant"></div>
-      <mat-card-title>{{ student?.firstName }} {{ student?.lastName }}</mat-card-title>
-      <mat-card-subtitle>{{ student?.level }}</mat-card-subtitle>
+      <div class="header-container">
+        <div class="student-info-header">
+          <div class="student-photo-container">
+            <img [src]="student?.photo" alt="Student Photo" class="student-photo">
+          </div>
+          <div>
+            <mat-card-title>{{ student?.firstName }} {{ student?.lastName }}</mat-card-title>
+            <mat-card-subtitle>{{ student?.level }}</mat-card-subtitle>
+          </div>
+        </div>
+        <div class="header-buttons">
+          <button mat-icon-button class="edit-button" (click)="onEdit()" aria-label="Edit">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button class="disable-button" (click)="onDisable()" aria-label="Disable">
+            <mat-icon>block</mat-icon>
+          </button>
+          <button mat-icon-button class="print-button" (click)="onPrint()" aria-label="Print">
+            <mat-icon>print</mat-icon>
+          </button>
+        </div>
+      </div>
     </mat-card-header>
     <mat-card-content>
-      <div class="student-info">
+      <div class="student-info-grid">
         <div class="info-section">
           <h3>Personal Information</h3>
           <p><strong>Gender:</strong> {{ student?.gender }}</p>
@@ -22,28 +41,25 @@
           <p><strong>Average Score:</strong> {{ student?.averageScore }}</p>
         </div>
       </div>
-    </mat-card-content>
-  </mat-card>
-  
-  <mat-card class="group-card">
-    <mat-card-content>
-      <h3>Manage Groups</h3>
-      <form [formGroup]="groupForm" (ngSubmit)="onSubmitGroups()">
-        <mat-form-field appearance="fill">
-          <mat-label>Select Groups</mat-label>
-          <mat-select formControlName="groupIds" multiple>
-            <mat-option *ngFor="let group of groups" [value]="group.id">{{ group.name }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <button mat-raised-button color="primary" type="submit">Add Groups</button>
-      </form>
+      <div class="button-container">
+        <button mat-raised-button color="accent" (click)="openPaymentDialog()">Add Payment</button>
+        <button mat-raised-button color="primary" (click)="openGroupDialog()">Manage Groups</button>
+      </div>
     </mat-card-content>
   </mat-card>
 
-  <div class="button-container">
-    <button mat-raised-button color="primary" (click)="onEdit()">Edit</button>
-    <button mat-raised-button color="warn" (click)="onDelete()">Delete</button>
-  </div>
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          View Groups
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="group-cards">
+        <app-group-card *ngFor="let group of studentGroups" [group]="group"></app-group-card>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
 </div>
 
 <ng-template #loadingSpinner>

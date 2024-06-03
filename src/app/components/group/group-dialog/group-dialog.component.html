@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Manage Groups</h1>
+<div mat-dialog-actions class="group-dialog-actions">
+  <button mat-raised-button color="primary" (click)="onSubmit()">Add Groups</button>
+  <button mat-button (click)="onCancel()">Cancel</button>
+</div>
+<div mat-dialog-content class="group-dialog-content">
+  <form [formGroup]="groupForm">
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Select Groups</mat-label>
+      <mat-select formControlName="groupIds" multiple>
+        <mat-option *ngFor="let group of allGroups" [value]="group.id">{{ group.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</div>

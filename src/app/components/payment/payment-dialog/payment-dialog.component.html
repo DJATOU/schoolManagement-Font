@@ -1,0 +1,26 @@
+<h2 mat-dialog-title>Add Payment</h2>
+<mat-dialog-content>
+  <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="fill">
+      <mat-label>Group</mat-label>
+      <mat-select formControlName="groupId">
+        <mat-option *ngFor="let group of groups" [value]="group.id">{{ group.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Session</mat-label>
+      <input matInput formControlName="session">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Amount</mat-label>
+      <input matInput formControlName="amount" type="number">
+    </mat-form-field>
+
+    <div mat-dialog-actions>
+      <button mat-button type="button" (click)="onCancel()">Cancel</button>
+      <button mat-raised-button color="primary" type="submit">Submit</button>
+    </div>
+  </form>
+</mat-dialog-content>

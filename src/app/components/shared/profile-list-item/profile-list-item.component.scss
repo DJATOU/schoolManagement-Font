@@ -1,0 +1,79 @@
+:root {
+  --spacing-unit: 1rem;
+  --primary-color: #3498db;
+  --secondary-color: #2980b9;
+  --text-color-primary: #2c3e50;
+  --text-color-secondary: #95a5a6;
+  --background-color: #fff;
+  --border-color: #e1e4e8;
+  --box-shadow-default: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.1), 0 0.1rem 0.2rem rgba(0, 0, 0, 0.06);
+  --box-shadow-hover: 0 1rem 1.5rem rgba(0, 0, 0, 0.1), 0 0.4rem 0.6rem rgba(0, 0, 0, 0.05);
+}
+
+.profile-list-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  padding: var(--spacing-unit) 1.5rem;
+  margin-bottom: var(--spacing-unit);
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  box-shadow: var(--box-shadow-default);
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    box-shadow: var(--box-shadow-hover);
+    transform: translateY(-0.2rem);
+  }
+}
+
+.profile-avatar img {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 1.5rem;
+}
+
+.profile-details {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color-primary);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  p {
+    font-size: 1rem;
+    color: var(--text-color-secondary);
+    margin: 0.5rem 0 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.contact-button {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: bold;
+  transition: background-color 0.2s ease-in-out;
+  margin-left: 1.5rem;
+
+  &:hover {
+    background-color: var(--secondary-color);
+  }
+}

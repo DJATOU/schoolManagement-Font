@@ -8,19 +8,48 @@ import listPlugin from '@fullcalendar/list';
 import { SessionService } from '../../../services/SessionService';
 import { SessionModalComponent } from '../session-modal/session-modal.component';
 import { MatButtonModule } from '@angular/material/button';
+import { CalendarOptions, EventInput } from '@fullcalendar/core';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Group } from '../../../models/group/group';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatOption, MatSelect } from '@angular/material/select';
 
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
-  imports: [FullCalendarModule, MatDialogModule, MatButtonModule, SessionModalComponent], // Include MatDialog and SessionModalComponent here
+  styleUrls: ['./calendar.component.scss'],
+  imports: [FullCalendarModule, ReactiveFormsModule, MatDialogModule, MatButtonModule, SessionModalComponent, MatFormField, MatLabel, MatSelect, MatOption],
   standalone: true
 })
 export class CalendarComponent implements OnInit {
-  calendarOptions: any;
+  calendarOptions: CalendarOptions | undefined;
+  private eventsSubject = new Subject<{ groupId: number, startStr: string, endStr: string, successCallback: (events: EventInput[]) => void, failureCallback: (error: any) => void }>();
+  groups: Group[] = [];
+  selectedGroup = new FormControl<number | null>(null);
 
   constructor(private sessionService: SessionService, public dialog: MatDialog) {}
 
   ngOnInit() {
+    this.loadGroups();
+    this.eventsSubject.pipe(
+      debounceTime(300)  // Debounce time to prevent too many API calls
+    ).subscribe(({ groupId, startStr, endStr, successCallback, failureCallback }) => {
+      this.loadEvents(groupId, startStr, endStr, successCallback, failureCallback);
+    });
+
+    this.selectedGroup.valueChanges.subscribe(groupId => {
+      if (groupId !== null) {
+        this.calendarOptions = {
+          ...this.calendarOptions,
+          events: (fetchInfo, successCallback, failureCallback) => {
+            this.eventsSubject.next({ groupId, startStr: fetchInfo.startStr, endStr: fetchInfo.endStr, successCallback, failureCallback });
+          }
+        };
+      }
+    });
+
     this.calendarOptions = {
       plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin],
       initialView: 'dayGridMonth',
@@ -32,17 +61,33 @@ export class CalendarComponent implements OnInit {
       buttonText: {
         listMonth: 'list'
       },
-      events: [],
-      eventClick: this.handleEventClick.bind(this), // Setup the click handler
+      events: (fetchInfo, successCallback, failureCallback) => {
+        const groupId = this.selectedGroup.value;
+        if (groupId !== null) {
+          this.eventsSubject.next({ groupId, startStr: fetchInfo.startStr, endStr: fetchInfo.endStr, successCallback, failureCallback });
+        }
+      },
+      eventClick: this.handleEventClick.bind(this),
       eventTimeFormat: {
         hour: '2-digit',
         minute: '2-digit',
         hour12: false
       }
     };
+  }
 
-    this.sessionService.getAllSessionsWithDetail().subscribe(sessions => {
-      this.calendarOptions.events = sessions.map(session => ({
+  private loadGroups() {
+    this.sessionService.getGroups().subscribe((groups: Group[]) => {
+      this.groups = groups;
+    });
+  }
+
+  private loadEvents(groupId: number, startStr: string, endStr: string, successCallback: (events: EventInput[]) => void, failureCallback: (error: any) => void) {
+    const startDate = new Date(startStr);
+    const endDate = new Date(endStr);
+
+    this.sessionService.getSessionsInDateRange(groupId, startDate, endDate).subscribe(sessions => {
+      const events = sessions.map(session => ({
         title: session.title,
         start: new Date(session.sessionTimeStart),
         end: new Date(session.sessionTimeEnd),
@@ -53,13 +98,14 @@ export class CalendarComponent implements OnInit {
           teacherName: session.teacherName,
           feedbackLink: session.feedbackLink,
           sessionType: session.sessionType,
-          start: new Date(session.sessionTimeStart),
-          end: new Date(session.sessionTimeEnd),
           groupId: session.groupId,
           isFinished: session.isFinished
         },
         classNames: session.isFinished ? ['is-finished'] : []
       }));
+      successCallback(events);
+    }, error => {
+      failureCallback(error);
     });
   }
 
@@ -68,30 +114,26 @@ export class CalendarComponent implements OnInit {
 
     if (!clickInfo.event.extendedProps.groupId) {
       console.error('Group ID is undefined for the clicked event', clickInfo.event.extendedProps);
-      return; // Exit the function or handle this case appropriately
+      return;
     }
 
-    // Fetch students based on group ID
     this.sessionService.getStudentsByGroupId(clickInfo.event.extendedProps.groupId).subscribe({
       next: (students) => {
         const sessionData = {
           ...clickInfo.event.extendedProps,
           students: students.map(s => {
-            return { ...s, id: s.id, isPresent: true };  // Ensure 'id' is correctly mapped
+            return { ...s, id: s.id, isPresent: true };
           })
         };
 
-        // Open the dialog with custom dimensions
         const dialogRef = this.dialog.open(SessionModalComponent, {
           data: sessionData,
           width: '600px',
           maxHeight: '90vh'
         });
 
-        // Handling after the dialog is closed
         dialogRef.afterClosed().subscribe(result => {
           if (result && result.isFinished) {
-            // Apply the is-finished class
             clickInfo.event.setProp('classNames', ['is-finished']);
             clickInfo.event.setExtendedProp('isFinished', true);
             console.log('Session validated and marked as finished on the calendar.');
@@ -100,7 +142,6 @@ export class CalendarComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error fetching students:', error);
-        // Optionally show an error message or user notification here
       }
     });
   }

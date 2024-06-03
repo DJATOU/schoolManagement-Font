@@ -1,0 +1,11 @@
+<mat-list-item class="profile-list-item">
+    <div class="profile-avatar">
+      <img [src]="profile.photo" alt="Profile Photo">
+    </div>
+    <div class="profile-details">
+      <h3>{{ profile.firstName }} {{ profile.lastName }}</h3>
+      <p>Email: {{ profile.email }}</p>
+      <button mat-button>Contact</button>
+    </div>
+</mat-list-item>
+  

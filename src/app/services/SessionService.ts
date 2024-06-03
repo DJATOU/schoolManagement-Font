@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { API_BASE_URL } from '../app.config';
 import { Session } from '../models/session/session';
 import { Student } from '../models/student/student';
+import { Group } from '../models/group/group';
 
 @Injectable({
   providedIn: 'root'
@@ -52,5 +53,25 @@ export class SessionService {
   markSessionAsFinished(sessionId: number): Observable<Session> {
     return this.http.patch<Session>(`${this.apiUrl}/${sessionId}/finish`, {});
   }
+
+  
+  // Get sessions by series ID
+  getSessionsBySeriesId(seriesId: number): Observable<Session[]> {
+    return this.http.get<Session[]>(`${this.apiUrl}/series/${seriesId}`);
+  }
  
+
+
+  getSessionsInDateRange(groupId: number, start: Date, end: Date): Observable<Session[]> {
+    const params = new HttpParams()
+      .set('groupId', groupId.toString())
+      .set('start', start.toISOString())
+      .set('end', end.toISOString());
+    return this.http.get<Session[]>(`${this.apiUrl}/sessions`, { params });
+  }
+
+  getGroups(): Observable<Group[]> {
+    return this.http.get<Group[]>(`${this.apiUrl}/groups`);
+  }
+  
 }

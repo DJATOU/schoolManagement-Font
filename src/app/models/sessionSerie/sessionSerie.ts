@@ -1,9 +1,9 @@
 import { BaseModel } from '../baseModel';
-
 export interface SessionSeries extends BaseModel {
+  name: string;
+  serieTimeStart?: string; 
+  serieTimeEnd?: string;
+  groupId: number;
   totalSessions: number;
-  totalPrice: number;
-  amountPaid: number;
-  balanceDue: number;
-  sessionsCompleted: number;
+  sessionsCompleted:number;
 }

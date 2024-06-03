@@ -3,13 +3,13 @@
     <button mat-icon-button (click)="toggleSidenav()">
       <mat-icon>menu</mat-icon>
     </button>
-    <img src="path-to-your-logo" alt="School Logo" class="logo">
+    <img src="assets/succes assistance.png" alt="School Logo" class="logo" [routerLink]="['/dashboard']">
   </div>
 
   <div class="icone-search">
-    <mat-icon tabindex="0" (click)="setSearchType('student')">face</mat-icon>
-    <mat-icon tabindex="0" (click)="setSearchType('group')">group</mat-icon>
-    <mat-icon tabindex="0" (click)="setSearchType('teacher')">person_outline</mat-icon>
+    <mat-icon tabindex="0" (click)="setSearchType('student')" [ngClass]="{'selected-icon': selectedIcon === 'student'}">face</mat-icon>
+    <mat-icon tabindex="0" (click)="setSearchType('group')" [ngClass]="{'selected-icon': selectedIcon === 'group'}">group</mat-icon>
+    <mat-icon tabindex="0" (click)="setSearchType('teacher')" [ngClass]="{'selected-icon': selectedIcon === 'teacher'}">person_outline</mat-icon>
   </div>
 
   <div class="search-container" [class.hide-search]="hideSearch">
@@ -30,7 +30,16 @@
   </div>
 
   <div class="user-info">
-    <img [src]="userPhoto" alt="User Photo" class="user-photo">
+    <img src="assets/pic.jpg" alt="User Photo" class="user-photo" [matMenuTriggerFor]="userMenu">
     <span class="user-name">Mr. Robinson</span>
   </div>
+  
+  <mat-menu #userMenu="matMenu">
+    <button mat-menu-item (click)="toggleDarkMode()">Mode sombre/clair</button>
+    <button mat-menu-item (click)="changeLanguage('ar')">Langue: Arabe</button>
+    <button mat-menu-item (click)="changeLanguage('fr')">Langue: Français</button>
+    <button mat-menu-item (click)="changeLanguage('es')">Langue: Espagnol</button>
+    <button mat-menu-item (click)="logout()">Déconnexion</button>
+    <button mat-menu-item (click)="openSettings()">Paramétrage</button>
+  </mat-menu>
 </mat-toolbar>

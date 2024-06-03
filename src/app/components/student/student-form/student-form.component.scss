@@ -1,17 +1,66 @@
+.student-profile-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
 
-  .photo button {
-    color: #3f51b5;
-    background-color: #e0e0e0;
-    border-radius: 5px;
-    padding: 10px;
-    float: right;
-    margin-top: -50px;
-    transition: background-color 0.3s ease;
-    cursor: pointer;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    button {
+      padding: 10px 20px;
+    }
   }
 
-  .photo button:hover {
-    background-color: #d0d0d0;
-  }
+  .content {
+    display: flex;
+    gap: 20px;
 
-  
+    .left-column,
+    .right-column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .profile-card,
+    .group-card,
+    .academic-card,
+    .actions-card {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+
+    .profile-photo {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+
+      mat-icon {
+        color: #3f51b5;
+      }
+
+      p {
+        margin: 0;
+      }
+    }
+  }
+}

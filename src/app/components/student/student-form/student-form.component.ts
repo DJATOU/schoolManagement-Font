@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { HttpClientModule } from '@angular/common/http';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule, MatOption, NativeDateAdapter } from '@angular/material/core';
 import { StudentService } from '../../../services/student.service';
@@ -16,6 +16,7 @@ import { LevelService } from '../../../services/level.service';
 import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { SummaryDialogComponent } from '../../summary-dialog/summary-dialog.component';
+import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
 
 
 @Component({
@@ -35,7 +36,12 @@ import { SummaryDialogComponent } from '../../summary-dialog/summary-dialog.comp
     MatOption, 
     MatSelectModule,
     CommonModule,
-    MatDialogModule
+    MatDialogModule,
+    MatLabel,
+    MatCard,
+    MatCardContent,
+    MatCardHeader,
+    MatCardTitle
   ],
   templateUrl: './student-form.component.html',
   styleUrls: ['./student-form.component.scss'],

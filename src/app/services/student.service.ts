@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Student } from '../models/student/student';
 import { API_BASE_URL } from '../app.config';
+import { Group } from '../models/group/group';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,10 @@ export class StudentService {
 
   getStudents(): Observable<Student[]> {
     return this.http.get<Student[]>(this.apiUrl);
+  }
+
+  getGroupsForStudent(id: number): Observable<Group[]> {
+    return this.http.get<Group[]>(`${this.apiUrl}/${id}/groups`);
   }
 
   getStudentById(id: number): Observable<Student> {

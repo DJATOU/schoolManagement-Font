@@ -18,7 +18,9 @@
     <ng-container *ngIf="viewMode === 'card'">
       <app-teacher-card *ngFor="let teacher of currentPageTeachers" [teacher]="teacher"></app-teacher-card>
     </ng-container>
-   
+    <ng-container *ngIf="viewMode === 'list'">
+      <app-teacher-list *ngFor="let teacher of currentPageTeachers" [teacher]="teacher"></app-teacher-list>
+    </ng-container>
   </div>
 
   <mat-paginator [length]="totalTeachers"

@@ -1,0 +1,54 @@
+<form [formGroup]="seriesForm" (ngSubmit)="onSubmit()" class="form-container">
+    <mat-tab-group>
+      <mat-tab label="Série Details">
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Nom de la Série</mat-label>
+            <input matInput formControlName="name" />
+          </mat-form-field>
+  
+          <mat-form-field appearance="fill">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description"></textarea>
+          </mat-form-field>
+        </div>
+      </mat-tab>
+      <mat-tab label="Timing">
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Date de Début</mat-label>
+            <input matInput [matDatepicker]="startDatePicker" placeholder="Choose a date" formControlName="startDate" />
+            <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #startDatePicker></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Date de Fin</mat-label>
+            <input matInput [matDatepicker]="endDatePicker" placeholder="Choose a date" formControlName="endDate" />
+            <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #endDatePicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </mat-tab>
+      <mat-tab label="Identifiers">
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Groupe</mat-label>
+            <mat-select formControlName="groupId">
+              <mat-option *ngFor="let group of groups" [value]="group.id">{{ group.name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+  
+          <mat-form-field appearance="fill">
+            <mat-label>Total Sessions</mat-label>
+            <input matInput formControlName="totalSessions" type="number" />
+          </mat-form-field>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  
+    <div class="button-container">
+      <button mat-raised-button color="primary" type="submit" class="submit-button">Submit</button>
+      <button mat-raised-button color="primary" type="button" class="submit-button" (click)="onClearForm()">Clear</button>
+    </div>
+  </form>
+  
