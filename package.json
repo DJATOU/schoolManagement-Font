@@ -30,6 +30,7 @@
     "@fullcalendar/list": "^6.1.11",
     "@fullcalendar/timegrid": "^6.1.11",
     "gsap": "^3.12.5",
+    "luxon": "^3.4.4",
     "moment": "^2.30.1",
     "ngx-material-timepicker": "^13.1.1",
     "rxjs": "~7.8.0",
