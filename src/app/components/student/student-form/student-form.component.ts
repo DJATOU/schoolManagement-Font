@@ -17,6 +17,8 @@ import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { SummaryDialogComponent } from '../../summary-dialog/summary-dialog.component';
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Student } from '../../../models/student/student';
 
 
 @Component({
@@ -73,6 +75,7 @@ export class StudentFormComponent implements OnInit {
     private fb: FormBuilder, 
     private studentService: StudentService,
     private levelService: LevelService,
+    private snackBar: MatSnackBar,
     public dialog: MatDialog
   ) {}
 
@@ -126,25 +129,44 @@ export class StudentFormComponent implements OnInit {
   
           // Submit the form data
           this.studentService.createStudent(formData).subscribe({
-            next: (response) => {
-              console.log('Student created:', response);
+            next: (student) => {
+              console.log('Student created:', student);
+              this.snackBar.open("The student "+ this.getFullName(student) +" is successfully created", 'Close', {
+                duration: 3000,
+                panelClass: ['success-snackbar']
+              });
               this.onClearForm();
             },
             error: (error) => {
-              console.error('Error creating student:', error);
+              console.log(error);
+              const error_message= 'Error creating student: '+ error.name;
+              this.snackBar.open(error_message, 'Close', {
+                duration: 3000,
+                panelClass: ['error-snackbar']
+              });
             }
           });
         } else {
-          console.warn('Form submission was cancelled.');
+          this.snackBar.open('Form submission was cancelled.', 'Close', {
+            duration: 3000,
+            panelClass: ['info-snackbar']
+          });
         }
       });
     } else {
-      console.warn('The form is not valid or the file is not selected.');
+      this.snackBar.open('The form is not valid or the file is not selected.', 'Close', {
+        duration: 3000,
+        panelClass: ['warning-snackbar']
+      });
     }
   }
 
   onClearForm(): void {
     this.studentForm.reset();
     this.selectedFile = null;
+  }
+
+  getFullName(student: Student): string {
+    return `${student.firstName} ${student.lastName.toUpperCase()}`;
   }
 }
