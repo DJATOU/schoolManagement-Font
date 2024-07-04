@@ -17,6 +17,7 @@ import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { SummaryDialogComponent } from '../../summary-dialog/summary-dialog.component';
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
+import { Student } from '../../../models/student/student';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
@@ -73,8 +74,7 @@ export class StudentFormComponent implements OnInit {
     private fb: FormBuilder,
     private studentService: StudentService,
     private levelService: LevelService,
-    public dialog: MatDialog,
-    private snackBar: MatSnackBar // Injectez MatSnackBar ici
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -163,7 +163,7 @@ export class StudentFormComponent implements OnInit {
           });
 
           // Submit the form data
-          this.studentService.createStudent(formDataToSubmit).subscribe({
+          this.studentService.createStudent(formData).subscribe({
             next: (response) => {
               console.log('Student created:', response);
               this.onClearForm();
@@ -175,7 +175,10 @@ export class StudentFormComponent implements OnInit {
             }
           });
         } else {
-          console.warn('Form submission was cancelled.');
+          this.snackBar.open('Form submission was cancelled.', 'Close', {
+            duration: 3000,
+            panelClass: ['info-snackbar']
+          });
         }
       });
     } else {
@@ -187,6 +190,10 @@ export class StudentFormComponent implements OnInit {
   onClearForm(): void {
     this.studentForm.reset();
     this.selectedFile = null;
+  }
+
+  getFullName(student: Student): string {
+    return `${student.firstName} ${student.lastName.toUpperCase()}`;
   }
 
   showSuccessMessage(message: string): void {
