@@ -167,20 +167,11 @@ export class StudentFormComponent implements OnInit {
           this.studentService.createStudent(formDataToSubmit).subscribe({
             next: (student) => {
               console.log('Student created:', student);
-              this.snackBar.open("The student "+ this.getFullName(student) +" is successfully created", 'Close', {
-                duration: 3000,
-                panelClass: ['success-snackbar']
-              });
               this.onClearForm();
               this.showSuccessMessage('Student created successfully.'); // Affichez le message de succès
             },
             error: (error) => {
               console.log(error);
-              const error_message= 'Error creating student: '+ error.name;
-              this.snackBar.open(error_message, 'Close', {
-                duration: 3000,
-                panelClass: ['error-snackbar']
-              });
               this.showErrorMessage('Error creating student.'); // Affichez le message d'erreur
             }
           });
@@ -189,17 +180,9 @@ export class StudentFormComponent implements OnInit {
             duration: 3000,
             panelClass: ['info-snackbar']
           });
-          this.snackBar.open('Form submission was cancelled.', 'Close', {
-            duration: 3000,
-            panelClass: ['info-snackbar']
-          });
         }
       });
     } else {
-      this.snackBar.open('The form is not valid or the file is not selected.', 'Close', {
-        duration: 3000,
-        panelClass: ['warning-snackbar']
-      });
       this.showErrorMessage('The form is not valid or the file is not selected.'); // Affichez le message d'erreur
     }
   }
@@ -207,10 +190,6 @@ export class StudentFormComponent implements OnInit {
   onClearForm(): void {
     this.studentForm.reset();
     this.selectedFile = null;
-  }
-
-  getFullName(student: Student): string {
-    return `${student.firstName} ${student.lastName.toUpperCase()}`;
   }
 
   showSuccessMessage(message: string): void {
