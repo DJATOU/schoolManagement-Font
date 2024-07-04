@@ -74,6 +74,7 @@ export class StudentFormComponent implements OnInit {
     private fb: FormBuilder,
     private studentService: StudentService,
     private levelService: LevelService,
+    private snackBar: MatSnackBar,
     public dialog: MatDialog
   ) {}
 
@@ -163,14 +164,23 @@ export class StudentFormComponent implements OnInit {
           });
 
           // Submit the form data
-          this.studentService.createStudent(formData).subscribe({
-            next: (response) => {
-              console.log('Student created:', response);
+          this.studentService.createStudent(formDataToSubmit).subscribe({
+            next: (student) => {
+              console.log('Student created:', student);
+              this.snackBar.open("The student "+ this.getFullName(student) +" is successfully created", 'Close', {
+                duration: 3000,
+                panelClass: ['success-snackbar']
+              });
               this.onClearForm();
               this.showSuccessMessage('Student created successfully.'); // Affichez le message de succès
             },
             error: (error) => {
-              console.error('Error creating student:', error);
+              console.log(error);
+              const error_message= 'Error creating student: '+ error.name;
+              this.snackBar.open(error_message, 'Close', {
+                duration: 3000,
+                panelClass: ['error-snackbar']
+              });
               this.showErrorMessage('Error creating student.'); // Affichez le message d'erreur
             }
           });
@@ -179,10 +189,17 @@ export class StudentFormComponent implements OnInit {
             duration: 3000,
             panelClass: ['info-snackbar']
           });
+          this.snackBar.open('Form submission was cancelled.', 'Close', {
+            duration: 3000,
+            panelClass: ['info-snackbar']
+          });
         }
       });
     } else {
-      console.warn('The form is not valid or the file is not selected.');
+      this.snackBar.open('The form is not valid or the file is not selected.', 'Close', {
+        duration: 3000,
+        panelClass: ['warning-snackbar']
+      });
       this.showErrorMessage('The form is not valid or the file is not selected.'); // Affichez le message d'erreur
     }
   }
