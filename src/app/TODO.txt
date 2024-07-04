@@ -1,3 +1,5 @@
+Le upload des photos marche bien mais l'affichage non
+Complete Group List
 Auto complete dans la recherche d'un groupe
 Ajouter des feedbacks.
 Ajouter la validation des champs tel que: date de naissance, téléphone
