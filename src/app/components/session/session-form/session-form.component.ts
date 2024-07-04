@@ -1,28 +1,31 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatIconModule } from '@angular/material/icon';
-
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { SessionService } from '../../../services/SessionService';
 import { TeacherService } from '../../../services/teacher.service';
 import { GroupService } from '../../../services/group.service';
-import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+import { RoomService } from '../../../services/room.service';
 import { SeriesService } from '../../../services/series.service';
+import { SummaryDialogComponent } from '../../summary-dialog/summary-dialog.component';
 import { Teacher } from '../../../models/teacher/teacher';
 import { Group } from '../../../models/group/group';
 import { Room } from '../../../models/room/room';
 import { SessionSeries } from '../../../models/sessionSerie/sessionSerie';
-import { SessionService } from '../../../services/SessionService';
-import { RoomService } from '../../../services/room.service';
-import { Session } from '../../../models/session/session';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatCardModule } from '@angular/material/card';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+
 @Component({
   selector: 'app-session-form',
   standalone: true,
@@ -30,20 +33,20 @@ import { Session } from '../../../models/session/session';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatTabsModule,
     MatIconModule,
-    HttpClientModule,
-    RouterModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    NgxMaterialTimepickerModule,
-    CommonModule
+    MatOptionModule,
+    MatSelectModule,
+    MatTabsModule,
+    MatSnackBarModule,
+    CommonModule,
+    MatCardModule,
+    NgxMaterialTimepickerModule
   ],
   templateUrl: './session-form.component.html',
-  styleUrls: ['./session-form.component.scss']
+  styleUrls: ['./session-form.component.scss'],
+  providers: [SessionService]
 })
 export class SessionFormComponent implements OnInit {
   sessionForm!: FormGroup;
@@ -51,7 +54,6 @@ export class SessionFormComponent implements OnInit {
   groups: Group[] = [];
   rooms: Room[] = [];
   series: SessionSeries[] = [];
-  sessions: Session[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -59,23 +61,30 @@ export class SessionFormComponent implements OnInit {
     private teacherService: TeacherService,
     private groupService: GroupService,
     private roomService: RoomService,
-    private seriesService: SeriesService
+    private seriesService: SeriesService,
+    public dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     this.sessionForm = this.fb.group({
-      title: ['', Validators.required],
-      description: [''],
-      sessionType: ['', Validators.required],
-      feedbackLink: [''],
-      sessionDateStart: [null, Validators.required],
-      sessionTimeStart: [null, Validators.required],
-      sessionDateEnd: [null, Validators.required],
-      sessionTimeEnd: [null, Validators.required],
-      groupId: [null, Validators.required],
-      roomId: [null, Validators.required],
-      teacherId: [null, Validators.required],
-      seriesId: [null]
+      sessionDetails: this.fb.group({
+        title: ['', Validators.required],
+        description: [''],
+        sessionType: ['', Validators.required],
+        feedbackLink: ['']
+      }),
+      sessionTiming: this.fb.group({
+        sessionDateStart: [null, Validators.required],
+        sessionTimeStart: [null, Validators.required],
+        sessionDateEnd: [null, Validators.required],
+        sessionTimeEnd: [null, Validators.required],
+      }),
+      identifiers: this.fb.group({
+        groupId: [null, Validators.required],
+        roomId: [null, Validators.required],
+        teacherId: [null, Validators.required]
+      })
     });
 
     this.loadSelectOptions();
@@ -118,30 +127,69 @@ export class SessionFormComponent implements OnInit {
     try {
       if (this.sessionForm.valid) {
         const formData = this.sessionForm.value;
-        const startDateTime = this.combineDateTime(formData.sessionDateStart, formData.sessionTimeStart);
-        const endDateTime = this.combineDateTime(formData.sessionDateEnd, formData.sessionTimeEnd);
+        const startDateTime = this.combineDateTime(formData.sessionTiming.sessionDateStart, formData.sessionTiming.sessionTimeStart);
+        const endDateTime = this.combineDateTime(formData.sessionTiming.sessionDateEnd, formData.sessionTiming.sessionTimeEnd);
 
         const submissionData = {
-          ...formData,
+          ...formData.sessionDetails,
+          ...formData.sessionTiming,
           sessionTimeStart: startDateTime,
-          sessionTimeEnd: endDateTime
+          sessionTimeEnd: endDateTime,
+          groupId: formData.identifiers.groupId,
+          roomId: formData.identifiers.roomId,
+          teacherId: formData.identifiers.teacherId,
         };
 
-        // Récupérer les détails du groupe pour obtenir le nombre total de sessions par série
-        this.groupService.getGroupById(submissionData.groupId).subscribe(group => {
-          const totalSessionsPerSeries = group.sessionNumberPerSerie;
+        const flattenedData = this.flattenFormData({
+          sessionDetails: formData.sessionDetails,
+          sessionTiming: formData.sessionTiming,
+          identifiers: {
+            group: this.getGroupNameById(formData.identifiers.groupId),
+            room: this.getRoomNameById(formData.identifiers.roomId),
+            teacher: this.getTeacherNameById(formData.identifiers.teacherId),
+          }
+        });
 
-          this.seriesService.getSeriesByGroupId(submissionData.groupId).subscribe(series => {
-            const currentSeries = series.find(s => s.groupId === submissionData.groupId);
+        const dialogRef = this.dialog.open(SummaryDialogComponent, {
+          data: flattenedData
+        });
 
-            if (currentSeries && currentSeries.id !== undefined) {
-              this.sessionService.getSessionsBySeriesId(currentSeries.id).subscribe(sessions => {
-                if (sessions.length >= totalSessionsPerSeries) {
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            // Handle series creation and session submission
+            this.groupService.getGroupById(submissionData.groupId).subscribe(group => {
+              const totalSessionsPerSeries = group.sessionNumberPerSerie;
+
+              this.seriesService.getSeriesByGroupId(submissionData.groupId).subscribe(series => {
+                const currentSeries = series.find(s => s.groupId === submissionData.groupId);
+
+                if (currentSeries && currentSeries.id !== undefined) {
+                  this.sessionService.getSessionsBySeriesId(currentSeries.id).subscribe(sessions => {
+                    if (sessions.length >= totalSessionsPerSeries) {
+                      const newSeriesData: SessionSeries = {
+                        groupId: submissionData.groupId,
+                        totalSessions: totalSessionsPerSeries,
+                        sessionsCompleted: 0,
+                        name: `Series ${currentSeries.groupId}-${series.length + 1}`, // Generate series name
+                        serieTimeStart: new Date().toISOString(),
+                        serieTimeEnd: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString()
+                      };
+
+                      this.seriesService.createSeries(newSeriesData).subscribe(newSeries => {
+                        submissionData.seriesId = newSeries.id;
+                        this.submitSession(submissionData);
+                      });
+                    } else {
+                      submissionData.seriesId = currentSeries.id!;
+                      this.submitSession(submissionData);
+                    }
+                  });
+                } else {
                   const newSeriesData: SessionSeries = {
                     groupId: submissionData.groupId,
                     totalSessions: totalSessionsPerSeries,
                     sessionsCompleted: 0,
-                    name: `Series ${currentSeries.groupId}-${series.length + 1}`, // Generate series name
+                    name: `Series ${submissionData.groupId}-1`,
                     serieTimeStart: new Date().toISOString(),
                     serieTimeEnd: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString()
                   };
@@ -150,30 +198,16 @@ export class SessionFormComponent implements OnInit {
                     submissionData.seriesId = newSeries.id;
                     this.submitSession(submissionData);
                   });
-                } else {
-                  submissionData.seriesId = currentSeries.id!;
-                  this.submitSession(submissionData);
                 }
               });
-            } else {
-              const newSeriesData: SessionSeries = {
-                groupId: submissionData.groupId,
-                totalSessions: totalSessionsPerSeries,
-                sessionsCompleted: 0,
-                name: `Series ${submissionData.groupId}-1`,
-                serieTimeStart: new Date().toISOString(),
-                serieTimeEnd: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString()
-              };
-
-              this.seriesService.createSeries(newSeriesData).subscribe(newSeries => {
-                submissionData.seriesId = newSeries.id;
-                this.submitSession(submissionData);
-              });
-            }
-          });
+            });
+          } else {
+            console.warn('Form submission was cancelled.');
+          }
         });
       } else {
-        console.warn('Form is not valid.');
+        console.warn('The form is not valid.');
+        this.showErrorMessage('The form is not valid.');
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -190,6 +224,7 @@ export class SessionFormComponent implements OnInit {
       next: response => {
         console.log('Session created successfully:', response);
         this.sessionForm.reset();
+        this.showSuccessMessage('Session created successfully.');
       },
       error: (error: unknown) => {
         if (error instanceof Error) {
@@ -197,11 +232,57 @@ export class SessionFormComponent implements OnInit {
         } else {
           console.error('Failed to create session:', error);
         }
+        this.showErrorMessage('Failed to create session.');
       }
     });
   }
 
+  getGroupNameById(id: number): string {
+    const group = this.groups.find(g => g.id === id);
+    return group ? group.name : '';
+  }
+
+  getRoomNameById(id: number): string {
+    const room = this.rooms.find(r => r.id === id);
+    return room ? room.name : '';
+  }
+
+  getTeacherNameById(id: number): string {
+    const teacher = this.teachers.find(t => t.id === id);
+    return teacher ? `${teacher.firstName} ${teacher.lastName}` : '';
+  }
+
+  flattenFormData(data: any, parentKey: string = ''): { label: string, value: any }[] {
+    let result: { label: string, value: any }[] = [];
+    Object.keys(data).forEach(key => {
+      const newKey = parentKey ? `${parentKey} - ${key}` : key;
+      const value = data[key];
+      if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+        result = result.concat(this.flattenFormData(value, newKey));
+      } else if (Array.isArray(value)) {
+        result.push({ label: newKey, value: value.join(', ') });
+      } else {
+        result.push({ label: newKey, value: value });
+      }
+    });
+    return result;
+  }
+
   onClearForm(): void {
     this.sessionForm.reset();
+  }
+
+  showSuccessMessage(message: string): void {
+    this.snackBar.open(message, 'OK', {
+      duration: 3000,
+      panelClass: ['snack-bar-success']
+    });
+  }
+
+  showErrorMessage(message: string): void {
+    this.snackBar.open(message, 'OK', {
+      duration: 3000,
+      panelClass: ['snack-bar-error']
+    });
   }
 }

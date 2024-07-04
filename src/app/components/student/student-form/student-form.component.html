@@ -1,90 +1,93 @@
 <form [formGroup]="studentForm" (ngSubmit)="onSubmit()" class="form-container">
-  <mat-tab-group animationDuration="0ms">
+  <h2 class="form-title">Student Registration Form</h2>
+  <mat-tab-group class="tab-group">
     <mat-tab label="Personal Information">
-      <mat-card>
-        <mat-card-content>
-          <div class="form-section">
-            <mat-form-field appearance="fill">
-              <mat-label>First Name</mat-label>
-              <input matInput formControlName="firstName">
-            </mat-form-field>
+      <div class="tab-content" formGroupName="personalInformation">
+        <mat-form-field appearance="fill">
+          <mat-label>First Name</mat-label>
+          <input matInput formControlName="firstName">
+        </mat-form-field>
 
-            <mat-form-field appearance="fill">
-              <mat-label>Last Name</mat-label>
-              <input matInput formControlName="lastName">
-            </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Last Name</mat-label>
+          <input matInput formControlName="lastName">
+        </mat-form-field>
 
-            <mat-form-field appearance="fill">
-              <mat-label>Gender</mat-label>
-              <mat-select formControlName="gender">
-                <mat-option value="male">Male</mat-option>
-                <mat-option value="female">Female</mat-option>
-              </mat-select>
-            </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Gender</mat-label>
+          <mat-select formControlName="gender">
+            <mat-option value="male">Male</mat-option>
+            <mat-option value="female">Female</mat-option>
+          </mat-select>
+        </mat-form-field>
 
-            <mat-form-field appearance="fill" class="photo">
-              <mat-label>Upload Photo</mat-label>
-              <input matInput readonly [value]="selectedFile?.name" placeholder="No file chosen">
-              <input type="file" (change)="onFileSelected($event)" accept="image/*" hidden #photoInput>
-              <button mat-icon-button (click)="photoInput.click()">
-                <mat-icon>attach_file</mat-icon> Choose a picture
-              </button>
-            </mat-form-field>
-
-            <mat-form-field appearance="fill">
-              <mat-label>Email</mat-label>
-              <input matInput formControlName="email">
-            </mat-form-field>
-
-            <mat-form-field appearance="fill">
-              <mat-label>Phone Number</mat-label>
-              <input matInput formControlName="phoneNumber">
-            </mat-form-field>
-
-            <mat-form-field appearance="fill">
-              <mat-label>Date of Birth</mat-label>
-              <input matInput [matDatepicker]="picker" formControlName="dateOfBirth">
-              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
-
-            <mat-form-field appearance="fill">
-              <mat-label>Place of Birth</mat-label>
-              <input matInput formControlName="placeOfBirth">
-            </mat-form-field>
-          </div>
-        </mat-card-content>
-      </mat-card>
+        <mat-form-field appearance="fill" class="photo-field">
+          <mat-label>Upload Photo</mat-label>
+          <div class="upload-container">
+            <input matInput readonly [value]="selectedFile?.name" placeholder="No file chosen" class="upload-input">
+            <button type="button" mat-raised-button color="accent" (click)="photoInput.click()" class="upload-button">
+            <mat-icon>attach_file</mat-icon> Choose a picture
+          </button>
+          <input type="file" (change)="onFileSelected($event)" accept="image/*" hidden #photoInput>
+        </div>
+        </mat-form-field>
+      </div>
     </mat-tab>
+    
+    <mat-tab label="Contact Information">
+      <div class="tab-content" formGroupName="contactInformation">
+        <mat-form-field appearance="fill">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email">
+        </mat-form-field>
 
+        <mat-form-field appearance="fill">
+          <mat-label>Phone Number</mat-label>
+          <input matInput formControlName="phoneNumber">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Date of Birth</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="dateOfBirth">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Place of Birth</mat-label>
+          <input matInput formControlName="placeOfBirth">
+        </mat-form-field>
+      </div>
+    </mat-tab>
     <mat-tab label="Academic Information">
-      <mat-card>
-        <mat-card-content>
-          <div class="form-section">
-            <mat-form-field appearance="fill">
-              <mat-label>Level</mat-label>
-              <mat-select formControlName="levelId">
-                <mat-option *ngFor="let level of levels" [value]="level.id">{{ level.name }}</mat-option>
-              </mat-select>
-            </mat-form-field>
+      <div class="tab-content" formGroupName="academicInformation">
+        <mat-form-field appearance="fill">
+          <mat-label>Level</mat-label>
+          <mat-select formControlName="levelId">
+            <mat-option *ngFor="let level of levels" [value]="level.id">{{ level.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
 
-            <mat-form-field appearance="fill">
-              <mat-label>Establishment</mat-label>
-              <input matInput formControlName="establishment">
-            </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Establishment</mat-label>
+          <input matInput formControlName="establishment">
+        </mat-form-field>
 
-            <mat-form-field appearance="fill">
-              <mat-label>Average Score</mat-label>
-              <input matInput formControlName="averageScore">
-            </mat-form-field>
-          </div>
-        </mat-card-content>
-      </mat-card>
+        <mat-form-field appearance="fill">
+          <mat-label>Average Score</mat-label>
+          <input matInput formControlName="averageScore">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description"></textarea>
+        </mat-form-field>
+      </div>
     </mat-tab>
   </mat-tab-group>
 
   <div class="button-container">
     <button mat-raised-button color="primary" type="submit" class="submit-button">Submit</button>
-    <button mat-raised-button color="accent" type="button" class="submit-button" (click)="onClearForm()">Clear</button>
+    <button mat-raised-button color="accent" type="button" class="clear-button" (click)="onClearForm()">Clear</button>
   </div>
 </form>

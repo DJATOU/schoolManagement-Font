@@ -1,7 +1,8 @@
 <form [formGroup]="sessionForm" (ngSubmit)="onSubmit()" class="form-container">
-  <mat-tab-group>
+  <h2 class="form-title">Session Registration Form</h2>
+  <mat-tab-group class="tab-group">
     <mat-tab label="Session Details">
-      <div>
+      <div class="tab-content" formGroupName="sessionDetails">
         <mat-form-field appearance="fill">
           <mat-label>Title</mat-label>
           <input matInput formControlName="title">
@@ -24,8 +25,7 @@
       </div>
     </mat-tab>
     <mat-tab label="Session Timing">
-      <div>
-        <!-- Session Start Datetime -->
+      <div class="tab-content" formGroupName="sessionTiming">
         <mat-form-field appearance="fill">
           <mat-label>Session Start Date</mat-label>
           <input matInput [matDatepicker]="startDatePicker" placeholder="Choose a date" formControlName="sessionDateStart">
@@ -39,7 +39,6 @@
           <ngx-material-timepicker #startTimePicker></ngx-material-timepicker>
         </mat-form-field>
       
-        <!-- Session End Datetime -->
         <mat-form-field appearance="fill">
           <mat-label>Session End Date</mat-label>
           <input matInput [matDatepicker]="endDatePicker" placeholder="Choose a date" formControlName="sessionDateEnd">
@@ -55,7 +54,7 @@
       </div>
     </mat-tab>
     <mat-tab label="Identifiers">
-      <div>
+      <div class="tab-content" formGroupName="identifiers">
         <mat-form-field appearance="fill">
           <mat-label>Group</mat-label>
           <mat-select formControlName="groupId">
@@ -83,7 +82,7 @@
   </mat-tab-group>
 
   <div class="button-container">
-      <button mat-raised-button color="primary" type="submit" class="submit-button">Submit</button>
-      <button mat-raised-button color="primary" type="button" class="submit-button" (click)="onClearForm()">Clear</button>
+    <button mat-raised-button color="primary" type="submit" class="submit-button">Save Session</button>
+    <button mat-raised-button color="accent" type="button" class="clear-button" (click)="onClearForm()">Clear</button>
   </div>
 </form>

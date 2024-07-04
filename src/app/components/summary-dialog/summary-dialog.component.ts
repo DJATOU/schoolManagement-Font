@@ -12,17 +12,38 @@ import { MatDialogModule } from '@angular/material/dialog';
   imports: [CommonModule, MatDialogModule, MatButtonModule]
 })
 export class SummaryDialogComponent {
-  dataFields: { label: string, value: any }[] = [];
+  sections: { title: string, fields: { label: string, value: any }[] }[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<SummaryDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    this.dataFields = Object.keys(data).map(key => ({
-      label: key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()), // Formate la clé pour l'affichage
-      value: data[key]
+    console.log('Received Data:', data);
+  
+    // Organiser les données en sections
+    const groupedData: { [key: string]: { label: string, value: any }[] } = {};
+  
+    data.forEach((item: { label: string, value: any }) => {
+      const [section, ...rest] = item.label.split(' - ');
+      const field = rest.join(' - ');
+  
+      if (!groupedData[section]) {
+        groupedData[section] = [];
+      }
+      groupedData[section].push({ label: field, value: item.value });
+    });
+  
+    console.log('Grouped Data:', groupedData);
+  
+    // Convertir en tableau pour itération facile dans le template
+    this.sections = Object.keys(groupedData).map(section => ({
+      title: section,
+      fields: groupedData[section]
     }));
+  
+    console.log('Sections:', this.sections);
   }
+  
 
   onConfirm(): void {
     this.dialogRef.close(true);

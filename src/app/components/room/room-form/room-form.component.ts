@@ -1,64 +1,130 @@
 import { HttpClientModule } from '@angular/common/http';
-import { Component } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Room } from '../../../models/room/room';
 import { RoomService } from '../../../services/room.service';
+import { SummaryDialogComponent } from '../../summary-dialog/summary-dialog.component';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-room-form',
   standalone: true,
   imports: [
-    ReactiveFormsModule, 
-    MatFormFieldModule, 
+    ReactiveFormsModule,
+    MatFormFieldModule,
     MatInputModule,
     HttpClientModule,
-    RouterModule
+    RouterModule,
+    MatTabsModule
   ],
   templateUrl: './room-form.component.html',
-  styleUrl: './room-form.component.scss'
+  styleUrls: ['./room-form.component.scss']
 })
-export class RoomFormComponent {
-  roomForm = this.fb.group({
-    name: ['', Validators.required],
-    capacity: ['', [Validators.required, Validators.min(0)]],
-    description: ['']
-  });
+export class RoomFormComponent implements OnInit {
+  roomForm!: FormGroup;
 
-  constructor(private fb: FormBuilder,private roomService: RoomService) { }
+  constructor(
+    private fb: FormBuilder,
+    private roomService: RoomService,
+    private snackBar: MatSnackBar,
+    public dialog: MatDialog
+  ) { }
 
-  
+  ngOnInit(): void {
+    this.roomForm = this.fb.group({
+      roomDetails: this.fb.group({
+        name: ['', Validators.required],
+        capacity: ['', [Validators.required, Validators.min(0)]],
+        description: ['']
+      })
+    });
+  }
+
+  flattenFormData(data: any, parentKey: string = ''): { label: string, value: any }[] {
+    let result: { label: string, value: any }[] = [];
+    Object.keys(data).forEach(key => {
+      const newKey = parentKey ? `${parentKey} - ${key}` : key;
+      const value = data[key];
+      if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+        result = result.concat(this.flattenFormData(value, newKey));
+      } else if (Array.isArray(value)) {
+        result.push({ label: newKey, value: value.join(', ') });
+      } else {
+        result.push({ label: newKey, value: value });
+      }
+    });
+    return result;
+  }
 
   onSubmit(): void {
     if (this.roomForm.valid) {
-      const formValue = this.roomForm.value;
-  
-      const room: Room = {
-        base: {
-          description: formValue.description ?? ''
-        },
-        name: formValue.name ?? '',
-        capacity: formValue.capacity ? parseInt(formValue.capacity) : 0
+      const formData = {
+        roomDetails: {
+          name: this.roomForm.get('roomDetails.name')?.value,
+          capacity: this.roomForm.get('roomDetails.capacity')?.value,
+          description: this.roomForm.get('roomDetails.description')?.value
+        }
       };
-      
-      this.roomService.createRoom(room).subscribe({
-        next: (room) => {
-          console.log('room created:', room);
-          // Handle successful response
-        },
-        error: (error) => {
-          console.error('Error creating room:', error);
-          // Handle error response
+
+      const flattenedData = this.flattenFormData(formData);
+      console.log('Form Data:', formData);
+      console.log('Flattened Data:', flattenedData);
+
+      const dialogRef = this.dialog.open(SummaryDialogComponent, {
+        data: flattenedData
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          const room: Room = {
+            base: {
+              description: formData.roomDetails.description ?? ''
+            },
+            name: formData.roomDetails.name ?? '',
+            capacity: formData.roomDetails.capacity ? parseInt(formData.roomDetails.capacity) : 0
+          };
+          
+          this.roomService.createRoom(room).subscribe({
+            next: (room) => {
+              console.log('Room created:', room);
+              this.onClearForm();
+              this.showSuccessMessage('Room created successfully.');
+            },
+            error: (error) => {
+              console.error('Error creating room:', error);
+              this.showErrorMessage('Error creating room.');
+            }
+          });
+        } else {
+          console.warn('Form submission was cancelled.');
         }
       });
     } else {
       console.warn('Form is not valid');
+      this.showErrorMessage('Form is not valid.');
     }
   }
 
-  onClearForm() {
+  onClearForm(): void {
     this.roomForm.reset();
+  }
+
+  showSuccessMessage(message: string): void {
+    this.snackBar.open(message, 'OK', {
+      duration: 3000,
+      panelClass: ['snack-bar-success']
+    });
+  }
+
+  showErrorMessage(message: string): void {
+    this.snackBar.open(message, 'OK', {
+      duration: 3000,
+      panelClass: ['snack-bar-error']
+    });
   }
 }

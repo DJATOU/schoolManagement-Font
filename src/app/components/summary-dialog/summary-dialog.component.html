@@ -1,10 +1,16 @@
 <h2 mat-dialog-title>Summary</h2>
 <mat-dialog-content>
-  <div *ngFor="let field of dataFields">
-    <p><strong>{{ field.label }}:</strong> {{ field.value }}</p>
+  <div class="section-container">
+    <div *ngFor="let section of sections" class="section">
+      <div class="section-title">{{ section.title | titlecase }}</div>
+      <div *ngFor="let field of section.fields" class="field">
+        <div class="field-label">{{ field.label | titlecase }}:</div>
+        <div class="field-value">{{ field.value }}</div>
+      </div>
+    </div>
   </div>
 </mat-dialog-content>
-<mat-dialog-actions [attr.align]="'end'">
+<mat-dialog-actions align="end">
   <button mat-button (click)="onCancel()">Cancel</button>
   <button mat-button color="primary" (click)="onConfirm()">Confirm</button>
 </mat-dialog-actions>

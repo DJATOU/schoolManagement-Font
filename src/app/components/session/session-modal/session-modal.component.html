@@ -1,45 +1,43 @@
-<!-- session-modal.component.html -->
 <mat-dialog-content class="modal-content">
-    <mat-tab-group animationDuration="0ms">
-      <mat-tab label="Session Details">
-        <mat-card class="session-card">
-          <mat-card-header>
-            <mat-card-title>{{ sessionData.title }}</mat-card-title>
-            <mat-card-subtitle>{{ sessionData.sessionType }}</mat-card-subtitle>
-          </mat-card-header>
-          <mat-card-content>
-            <div class="session-details">
-              <p><strong>Group:</strong> {{ sessionData.groupName }}</p>
-              <p><strong>Room:</strong> {{ sessionData.roomName }}</p>
-              <p><strong>Teacher:</strong> {{ sessionData.teacherName }}</p>
-              <p><strong>Start:</strong> {{ sessionData.start | date: 'medium' }}</p>
-              <p><strong>End:</strong> {{ sessionData.end | date: 'medium' }}</p>
-              <p><strong>Feedback:</strong> <a href="{{ sessionData.feedbackLink }}" target="_blank">Link</a></p>
-            </div>
-          </mat-card-content>
-        </mat-card>
-      </mat-tab>
-      <mat-tab label="Attendances">
-        <mat-card class="students-card">
-          <mat-card-header>
-            <mat-card-title>Students</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <mat-checkbox (change)="toggleAllStudents($event.checked)" class="check-all">Check All</mat-checkbox>
-            <div *ngFor="let student of sessionData.students" class="student-list-item">
-              <mat-checkbox [(ngModel)]="student.isPresent" class="student-checkbox checkbox-disabled" disabled>
-                {{ student.firstName }} {{ student.lastName }}
-              </mat-checkbox>
-              <input matInput [(ngModel)]="student.description" placeholder="Add a note" class="description-input">
-            </div>
-          </mat-card-content>
-        </mat-card>
-      </mat-tab>
-    </mat-tab-group>
-  </mat-dialog-content>
-  
-  <mat-dialog-actions>
-    <button mat-button (click)="onValidateSession()" color="primary">Validate Session</button>
-    <button mat-button (click)="dialogRef.close()" color="warn">Close</button>
-  </mat-dialog-actions>
-  
+  <mat-tab-group animationDuration="0ms">
+    <mat-tab label="Session Details">
+      <mat-card class="session-card">
+        <mat-card-header>
+          <mat-card-title>{{ sessionData.title }}</mat-card-title>
+          <mat-card-subtitle>{{ sessionData.sessionType }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="session-details">
+            <p><strong>Group:</strong> {{ sessionData.groupName }}</p>
+            <p><strong>Room:</strong> {{ sessionData.roomName }}</p>
+            <p><strong>Teacher:</strong> {{ sessionData.teacherName }}</p>
+            <p><strong>Start:</strong> {{ sessionData.start | date: 'medium' }}</p>
+            <p><strong>End:</strong> {{ sessionData.end | date: 'medium' }}</p>
+            <p><strong>Feedback:</strong> <a href="{{ sessionData.feedbackLink }}" target="_blank">Link</a></p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-tab>
+    <mat-tab label="Attendances">
+      <mat-card class="students-card">
+        <mat-card-header>
+          <mat-card-title>Students</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-checkbox (change)="toggleAllStudents($event.checked)" class="check-all" [disabled]="isFinished">Check All</mat-checkbox>
+          <div *ngFor="let student of sessionData.students" class="student-list-item">
+            <mat-checkbox [(ngModel)]="student.isPresent" class="student-checkbox" [disabled]="isFinished">
+              {{ student.firstName }} {{ student.lastName }}
+            </mat-checkbox>
+            <input matInput [(ngModel)]="student.description" placeholder="Add a note" class="description-input" [disabled]="isFinished">
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-tab>
+  </mat-tab-group>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button (click)="onValidateSession()" color="primary" [disabled]="isFinished">Validate Session</button>
+  <button mat-button (click)="dialogRef.close()" color="warn">Close</button>
+</mat-dialog-actions>

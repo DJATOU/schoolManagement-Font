@@ -1,7 +1,7 @@
 import { BaseModel } from '../baseModel';
 
 export interface Room {
-  id?: string;
+  id?: number;
   base: BaseModel;
   name: string;
   capacity: number;
