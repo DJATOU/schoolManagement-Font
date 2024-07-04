@@ -1,15 +1,33 @@
 /* Container for the entire form */
 .form-container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    max-width: 800px;
-    margin: 30px auto;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    background-color: white;
-    max-height: calc(100vh - 120px);
-    overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem; /* 20px converted to rem */
+  max-width: 50rem; /* 800px converted to rem */
+  margin: 1.875rem auto; /* 30px converted to rem */
+  padding: 1.25rem; /* 20px converted to rem */
+  border: 0.0625rem solid #ddd; /* 1px converted to rem */
+  border-radius: 0.5rem; /* 8px converted to rem */
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); /* 4px and 8px converted to rem */
+  background-color: white;
+  height: calc(100vh - 13rem); /* 220px converted to rem */
+  overflow-y: auto;
 }
+
+/* Tab group styles to ensure height consistency */
+.tab-group {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Ensure it takes the full height of the form container */
+}
+
+/* Tab content */
+.tab-content {
+  flex-grow: 1; /* Take remaining space */
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem; /* 20px converted to rem */
+  overflow-y: auto; /* Allow scrolling if content overflows */
+}
+
+

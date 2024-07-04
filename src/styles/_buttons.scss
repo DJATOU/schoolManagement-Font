@@ -63,3 +63,34 @@
   justify-content: center; /* Centre les boutons horizontalement */
   gap: 1rem; /* Espacement entre les boutons */
 }
+
+/* Style for the upload container */
+.upload-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  }
+  
+  /* Style for the upload input */
+  .upload-input {
+  flex: 1;
+  }
+  
+  /* Style for the upload button */
+  .upload-button {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  }
+  
+  .upload-button:hover {
+  background-color: #0056b3;
+  }
+  
+  .upload-button mat-icon {
+  margin-right: 8px;
+  }

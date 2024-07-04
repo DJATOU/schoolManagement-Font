@@ -1,5 +1,3 @@
-// src/app/models/group.model.ts
-
 export interface Group {
     id?: number;
     name: string;

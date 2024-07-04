@@ -1,5 +1,4 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SessionService } from '../../../services/SessionService';
@@ -28,6 +27,8 @@ import { FormsModule } from '@angular/forms';
   ]
 })
 export class SessionModalComponent implements OnInit {
+  isFinished = false;
+
   constructor(
     public dialogRef: MatDialogRef<SessionModalComponent>,
     @Inject(MAT_DIALOG_DATA) public sessionData: any,
@@ -47,6 +48,9 @@ export class SessionModalComponent implements OnInit {
         console.error('Error fetching students:', error);
       });
     }
+
+    // Set isFinished based on sessionData
+    this.isFinished = this.sessionData.isFinished || false;
   }
 
   onValidateSession() {
@@ -74,6 +78,7 @@ export class SessionModalComponent implements OnInit {
     this.sessionService.markSessionAsFinished(this.sessionData.id).subscribe({
       next: (response) => {
         console.log('Session marked as finished', response);
+        this.isFinished = true;
         this.dialogRef.close({ isFinished: true });
       },
       error: (error) => {
@@ -84,6 +89,7 @@ export class SessionModalComponent implements OnInit {
   }
 
   toggleAllStudents(isChecked: boolean) {
+    if (this.isFinished) return; // Prevent changing if session is finished
     this.sessionData.students.forEach((student: { isPresent: boolean }) => student.isPresent = isChecked);
   }
 }

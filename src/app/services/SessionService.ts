@@ -4,7 +4,6 @@ import { Observable, tap } from 'rxjs';
 import { API_BASE_URL } from '../app.config';
 import { Session } from '../models/session/session';
 import { Student } from '../models/student/student';
-import { Group } from '../models/group/group';
 
 @Injectable({
   providedIn: 'root'
@@ -70,8 +69,4 @@ export class SessionService {
     return this.http.get<Session[]>(`${this.apiUrl}/sessions`, { params });
   }
 
-  getGroups(): Observable<Group[]> {
-    return this.http.get<Group[]>(`${this.apiUrl}/groups`);
-  }
-  
 }

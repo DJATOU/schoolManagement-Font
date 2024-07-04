@@ -1,0 +1,9 @@
+/* Styles pour le group-selector-toolbar */
+.group-selector-toolbar {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 1rem;
+  height: 2rem; /* Ajustez la hauteur pour qu'elle corresponde aux autres boutons */
+  line-height: 2.5rem; /* Pour centrer verticalement le contenu */
+  margin-top: -0.5rem; /* Ajustez la marge supérieure selon vos besoins */
+}
