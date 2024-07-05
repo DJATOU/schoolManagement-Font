@@ -2,9 +2,9 @@
 <mat-dialog-content>
   <div class="section-container">
     <div *ngFor="let section of sections" class="section">
-      <div class="section-title">{{ section.title | titlecase }}</div>
+      <div class="section-title">{{ section.title | camelCaseToSpaceString}}</div>
       <div *ngFor="let field of section.fields" class="field">
-        <div class="field-label">{{ field.label | titlecase }}:</div>
+        <div class="field-label">{{ field.label | camelCaseToSpaceString}}:</div>
         <div class="field-value">{{ field.value }}</div>
       </div>
     </div>

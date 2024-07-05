@@ -92,7 +92,7 @@ export class StudentFormComponent implements OnInit {
         placeOfBirth: ['']
       }),
       academicInformation: this.fb.group({
-        levelId: ['', Validators.required],
+        level: ['', Validators.required],
         establishment: [''],
         averageScore: ['', Validators.pattern("^[0-9]*$")],
         description: ['']

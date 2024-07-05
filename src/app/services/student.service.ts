@@ -26,6 +26,7 @@ export class StudentService {
   }
 
   createStudent(studentData: FormData): Observable<Student> {
+    console.log(studentData);
     return this.http.post<Student>(`${this.apiUrl}/createStudent`, studentData);
   }
 

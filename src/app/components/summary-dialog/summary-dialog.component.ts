@@ -3,13 +3,14 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
+import { CamelCaseToSpaceStringPipe } from '../../pipes/camelCase2SpaceString/camel-case-to-space-string.pipe';
 
 @Component({
   selector: 'app-summary-dialog',
   templateUrl: './summary-dialog.component.html',
   styleUrls: ['./summary-dialog.component.scss'],
   standalone: true,
-  imports: [CommonModule, MatDialogModule, MatButtonModule]
+  imports: [CommonModule, MatDialogModule, MatButtonModule,CamelCaseToSpaceStringPipe]
 })
 export class SummaryDialogComponent {
   sections: { title: string, fields: { label: string, value: any }[] }[] = [];

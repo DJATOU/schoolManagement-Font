@@ -63,7 +63,7 @@
       <div class="tab-content" formGroupName="academicInformation">
         <mat-form-field appearance="fill">
           <mat-label>Level</mat-label>
-          <mat-select formControlName="levelId">
+          <mat-select formControlName="level">
             <mat-option *ngFor="let level of levels" [value]="level.id">{{ level.name }}</mat-option>
           </mat-select>
         </mat-form-field>
