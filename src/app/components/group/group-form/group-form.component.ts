@@ -139,7 +139,16 @@ export class GroupFormComponent implements OnInit {
   
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
-          this.groupService.createGroup(this.groupForm.value).subscribe({
+          const formDataToSubmit = new FormData();
+          
+          Object.keys(this.groupForm.value).forEach(groupKey => {
+            const fieldGroup = this.groupForm.get(groupKey) as FormGroup;
+            Object.keys(fieldGroup.controls).forEach(key => {
+              const value = fieldGroup.get(key)?.value;
+              formDataToSubmit.append(key, value);
+            });
+          });
+          this.groupService.createGroup(formDataToSubmit).subscribe({
             next: (response) => {
               console.log('Group created:', response);
               this.onClearForm();
@@ -177,7 +186,7 @@ export class GroupFormComponent implements OnInit {
   
   getPriceById(id: number): string {
     const price = this.prices.find(price => price.id === id);
-    return price ? `${price.price} ${price.price}` : '';
+    return price ? `${price.price}` : '';
   }
   
   getTeacherNameById(id: number): string {
