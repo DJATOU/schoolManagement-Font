@@ -9,6 +9,7 @@ import { Level } from '../../../models/level/level';
 import { LevelService } from '../../../services/level.service';
 import { SummaryDialogComponent } from '../../summary-dialog/summary-dialog.component';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-level-form',
@@ -19,6 +20,7 @@ import { MatTab, MatTabGroup } from '@angular/material/tabs';
     MatInputModule,
     HttpClientModule,
     RouterModule,
+    MatSnackBarModule,
     MatTab,
     MatTabGroup
   ],
@@ -35,7 +37,10 @@ export class LevelFormComponent {
     description: ['']
   });
 
-  constructor(private fb: FormBuilder, private levelService: LevelService, public dialog: MatDialog) { }
+  constructor(private fb: FormBuilder,
+    private levelService: LevelService,
+    public dialog: MatDialog,
+    private snackBar: MatSnackBar) { }
 
   flattenFormData(data: any, parentKey: string = ''): { label: string, value: any }[] {
     let result: { label: string, value: any }[] = [];
@@ -82,12 +87,12 @@ export class LevelFormComponent {
           this.levelService.createLevel(level).subscribe({
             next: (level) => {
               console.log('Level created:', level);
+              this.showSuccessMessage('Level created successfully.');
               this.onClearForm();
-              // Handle successful response
             },
             error: (error) => {
               console.error('Error creating level:', error);
-              // Handle error response
+              this.showErrorMessage('Error creating level.');
             }
           });
         } else {
@@ -96,10 +101,25 @@ export class LevelFormComponent {
       });
     } else {
       console.warn('Form is not valid');
+      this.showErrorMessage('The form is not valid.');
     }
   }
 
   onClearForm() {
     this.levelForm.reset();
+  }
+
+  showSuccessMessage(message: string): void {
+    this.snackBar.open(message, 'OK', {
+      duration: 3000,
+      panelClass: ['snack-bar-success']
+    });
+  }
+
+  showErrorMessage(message: string): void {
+    this.snackBar.open(message, 'OK', {
+      duration: 3000,
+      panelClass: ['snack-bar-error']
+    });
   }
 }
