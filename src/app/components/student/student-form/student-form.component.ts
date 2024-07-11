@@ -1,23 +1,23 @@
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { HttpClientModule } from '@angular/common/http';
+import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule, MatOption, NativeDateAdapter } from '@angular/material/core';
-import { StudentService } from '../../../services/student.service';
-import { RouterModule } from '@angular/router';
-import { MatStepperModule } from '@angular/material/stepper';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatTabsModule } from '@angular/material/tabs';
+import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatTabsModule } from '@angular/material/tabs';
+import { RouterModule } from '@angular/router';
 import { Level } from '../../../models/level/level';
 import { LevelService } from '../../../services/level.service';
-import { CommonModule } from '@angular/common';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { StudentService } from '../../../services/student.service';
 import { SummaryDialogComponent } from '../../summary-dialog/summary-dialog.component';
-import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-student',
@@ -141,10 +141,11 @@ export class StudentFormComponent implements OnInit {
       };
 
       const flattenedData = this.flattenFormData(formData);
-      console.log(flattenedData); // Debug: affiche les données aplaties
+      let filteredFlattenedData = flattenedData.filter(item => item.label !== 'personalInformation - photo');
+      console.log(filteredFlattenedData); // Debug: affiche les données aplaties
 
       const dialogRef = this.dialog.open(SummaryDialogComponent, {
-        data: flattenedData
+        data: filteredFlattenedData
       });
 
       dialogRef.afterClosed().subscribe(result => {
