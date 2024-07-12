@@ -19,6 +19,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { GroupCardComponent } from '../../group/group-card/group-card.component';
 import { PaymentDialogComponent } from '../../payment/payment-dialog/payment-dialog.component';
 import { GroupDialogComponent } from '../../group/group-dialog/group-dialog.component';
+import { LevelService } from '../../../services/level.service';
 
 @Component({
   selector: 'app-student-profile',
@@ -48,11 +49,13 @@ export class StudentProfileComponent implements OnInit {
   studentGroups: Group[] = [];
   groupForm: FormGroup;
   loading = true;
+  levelDescription: string;
 
   constructor(
     private route: ActivatedRoute,
     private studentService: StudentService,
     private groupService: GroupService,
+    private levelService: LevelService,
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
@@ -60,6 +63,7 @@ export class StudentProfileComponent implements OnInit {
     this.groupForm = this.fb.group({
       groupIds: [[]]
     });
+    this.levelDescription = '';
   }
 
   ngOnInit(): void {
@@ -74,6 +78,17 @@ export class StudentProfileComponent implements OnInit {
             this.studentGroups = groups;
           }, error => {
             console.error('Error fetching student groups:', error);
+          });
+
+          this.levelService.getLevelById(this.student.level).subscribe({
+            next: (level) => {
+              this.levelDescription = level.description || '';
+              console.log(level.description);
+              student.level = this.levelDescription;
+            },
+            error: (error) => {
+              console.error('Error fetching level:', error);
+            }
           });
         }
       }, error => {
