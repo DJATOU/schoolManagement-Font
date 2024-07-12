@@ -39,8 +39,7 @@ export class StudentCardComponent implements OnInit {
       error: (error) => {
         console.error('Error fetching level:', error);
       }
-    }
-    );
+    });
   }
 
   private setProfile() {
