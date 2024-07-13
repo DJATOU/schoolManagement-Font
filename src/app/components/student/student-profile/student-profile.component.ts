@@ -1,25 +1,27 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
-import { StudentService } from '../../../services/student.service';
-import { GroupService } from '../../../services/group.service';
-import { Student } from '../../../models/student/student';
-import { Group } from '../../../models/group/group';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
+import { MatCardModule } from '@angular/material/card';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { GroupCardComponent } from '../../group/group-card/group-card.component';
-import { PaymentDialogComponent } from '../../payment/payment-dialog/payment-dialog.component';
-import { GroupDialogComponent } from '../../group/group-dialog/group-dialog.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute } from '@angular/router';
+import { GroupType } from '../../../models/GroupType/groupTyp';
+import { Group } from '../../../models/group/group';
+import { Level } from '../../../models/level/level';
+import { Student } from '../../../models/student/student';
+import { GroupTypeService } from '../../../services/GroupTypeService';
+import { GroupService } from '../../../services/group.service';
 import { LevelService } from '../../../services/level.service';
+import { StudentService } from '../../../services/student.service';
+import { GroupCardComponent } from '../../group/group-card/group-card.component';
+import { GroupDialogComponent } from '../../group/group-dialog/group-dialog.component';
+import { PaymentDialogComponent } from '../../payment/payment-dialog/payment-dialog.component';
 
 @Component({
   selector: 'app-student-profile',
@@ -41,20 +43,22 @@ import { LevelService } from '../../../services/level.service';
   ],
   templateUrl: './student-profile.component.html',
   styleUrls: ['./student-profile.component.scss'],
-  providers: [StudentService, GroupService]
+  providers: [StudentService, GroupService, LevelService, GroupTypeService]
 })
 export class StudentProfileComponent implements OnInit {
   student: Student | null = null;
   allGroups: Group[] = [];
+  allGroupTypes: GroupType[] = [];
+  allLevels: Level[] = [];
   studentGroups: Group[] = [];
   groupForm: FormGroup;
   loading = true;
-  levelDescription: string;
 
   constructor(
     private route: ActivatedRoute,
     private studentService: StudentService,
     private groupService: GroupService,
+    private groupTypeService: GroupTypeService,
     private levelService: LevelService,
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
@@ -63,7 +67,6 @@ export class StudentProfileComponent implements OnInit {
     this.groupForm = this.fb.group({
       groupIds: [[]]
     });
-    this.levelDescription = '';
   }
 
   ngOnInit(): void {
@@ -74,21 +77,23 @@ export class StudentProfileComponent implements OnInit {
         this.loading = false;
 
         if (this.student && this.student.id !== undefined) {
-          this.studentService.getGroupsForStudent(this.student.id).subscribe(groups => {
-            this.studentGroups = groups;
-          }, error => {
-            console.error('Error fetching student groups:', error);
-          });
+          this.levelService.getLevels().subscribe({
+            next: (levels) => {
+              this.allLevels = levels;
+              console.log(this.allLevels);
 
-          this.levelService.getLevelById(this.student.level).subscribe({
-            next: (level) => {
-              this.levelDescription = level.description || '';
-              console.log(level.description);
-              student.level = this.levelDescription;
+              this.student!.level = this.allLevels.find(level => level.id?.toString() === student.level)?.description || '';
+              console.log(this.student!.level);
             },
             error: (error) => {
               console.error('Error fetching level:', error);
             }
+          });
+
+          this.studentService.getGroupsForStudent(this.student.id).subscribe(groups => {
+            this.studentGroups = groups;
+          }, error => {
+            console.error('Error fetching student groups:', error);
           });
         }
       }, error => {
@@ -99,6 +104,12 @@ export class StudentProfileComponent implements OnInit {
         this.allGroups = groups;
       }, error => {
         console.error('Error fetching groups:', error);
+      });
+
+      this.groupTypeService.getAllGroupTypes().subscribe(groupTypes => {
+        this.allGroupTypes = groupTypes;
+      }, error => {
+        console.error('Error fetching group types:', error);
       });
     } else {
       console.error('Invalid student ID');

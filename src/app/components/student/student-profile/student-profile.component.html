@@ -56,7 +56,11 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
       <div class="group-cards">
-        <app-group-card *ngFor="let group of studentGroups" [group]="group"></app-group-card>
+        <app-group-card *ngFor="let group of studentGroups"
+                        [group]="group"
+                        [levels]="allLevels"
+                        [groupTypes]="allGroupTypes">
+        </app-group-card>
       </div>
     </mat-expansion-panel>
   </mat-accordion>

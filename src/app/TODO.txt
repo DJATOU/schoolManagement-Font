@@ -8,8 +8,9 @@ Important
         Auto complete dans la recherche d'un groupe
         Complete Group List
     Ressources academiques (Niveaux, Salles, Matiere, Types de groupes, Tarification)
-        Affichage.
+        Affichage
         modefication
+        Suppression
 Optionnel:
     Ajouter la traduction
     Ajouter le mode sombre claire
