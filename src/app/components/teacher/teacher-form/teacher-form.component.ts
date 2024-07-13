@@ -109,8 +109,8 @@ export class TeacherFormComponent {
         otherInformation: this.teacherForm.get('otherInformation')?.value,
         photo: this.selectedFile?.name
       };
-  
-      const flattenedData = this.flattenFormData(formData);
+
+      const flattenedData = this.flattenFormData(formData).filter(item => item.label !== 'basicInformation - photo');;
       console.log(flattenedData);
   
       const dialogRef = this.dialog.open(SummaryDialogComponent, {
