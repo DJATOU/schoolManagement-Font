@@ -1,7 +1,6 @@
-import { Component, Inject, OnInit, AfterViewInit } from '@angular/core';
+import { Component, Inject, AfterViewInit, } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
-import { GroupService } from '../../../services/group.service';
 import { Group } from '../../../models/group/group';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -23,27 +22,19 @@ import { gsap } from 'gsap';
   templateUrl: './group-dialog.component.html',
   styleUrls: ['./group-dialog.component.scss']
 })
-export class GroupDialogComponent implements OnInit, AfterViewInit {
+export class GroupDialogComponent implements AfterViewInit {
   groupForm: FormGroup;
   allGroups: Group[] = [];
 
   constructor(
     private fb: FormBuilder,
-    private groupService: GroupService,
     private dialogRef: MatDialogRef<GroupDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.groupForm = this.fb.group({
       groupIds: [[], Validators.required]
     });
-  }
-
-  ngOnInit(): void {
-    this.groupService.getGroups().subscribe(groups => {
-      this.allGroups = groups;
-    }, error => {
-      console.error('Error fetching groups:', error);
-    });
+    this.allGroups = data.allGroups;
   }
 
   ngAfterViewInit(): void {
