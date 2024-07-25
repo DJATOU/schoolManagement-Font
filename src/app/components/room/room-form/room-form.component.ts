@@ -82,9 +82,7 @@ export class RoomFormComponent implements OnInit {
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
           const room: Room = {
-            base: {
-              description: formData.roomDetails.description ?? ''
-            },
+            description: formData.roomDetails.description ?? '',
             name: formData.roomDetails.name ?? '',
             capacity: formData.roomDetails.capacity ? parseInt(formData.roomDetails.capacity) : 0
           };

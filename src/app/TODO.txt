@@ -1,16 +1,19 @@
 Important
     Etudiant:
-        Le upload des photos marche bien mais l'affichage non
-        Ajouter la possibilite de modification d'un etudiant
++++     Le upload des photos marche bien mais l'affichage non
++++     Ajouter la possibilite de modification d'un etudiant
++       Ajouter la validation des champs tel que: date de naissance, téléphone
++       Faire une liste pour le champs ville
     Enseignant:
-        Ajouter la validation des champs tel que: date de naissance, téléphone
++       Ajouter la validation des champs tel que: date de naissance, téléphone
++       Faire une liste pour le champs ville et nationalite
     Groupe:
-        Auto complete dans la recherche d'un groupe
-        Complete Group List
+++      Auto complete dans la recherche d'un groupe
+++      Complete Group List
     Ressources academiques (Niveaux, Salles, Matiere, Types de groupes, Tarification)
-        Affichage
-        modefication
-        Suppression
+++      Affichage
++++     modefication
++       Suppression
 Optionnel:
     Ajouter la traduction
     Ajouter le mode sombre claire

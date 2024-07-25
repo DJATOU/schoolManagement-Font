@@ -51,6 +51,7 @@ export class StudentProfileComponent implements OnInit {
   allGroupTypes: GroupType[] = [];
   allLevels: Level[] = [];
   studentGroups: Group[] = [];
+  studentLevelId: number = -1;
   groupForm: FormGroup;
   loading = true;
 
@@ -81,8 +82,9 @@ export class StudentProfileComponent implements OnInit {
             next: (levels) => {
               this.allLevels = levels;
               console.log(this.allLevels);
-
-              this.student!.level = this.allLevels.find(level => level.id?.toString() === student.level)?.description || '';
+              let studentLevel= this.allLevels.find(level => level.id?.toString() === student.level);
+              this.studentLevelId = studentLevel?.id || -1;
+              this.student!.level = studentLevel?.description || '';
               console.log(this.student!.level);
             },
             error: (error) => {
@@ -176,11 +178,14 @@ export class StudentProfileComponent implements OnInit {
   }
 
   openGroupDialog(): void {
+    let possibleGroups = this.allGroups.filter(group => group.levelId === this.studentLevelId);
     const dialogRef = this.dialog.open(GroupDialogComponent, {
       width: '400px',
-      data: { allGroups: this.allGroups, selectedGroups: this.groupForm.value.groupIds }
+      data: {
+        allGroups: possibleGroups,
+        selectedGroups: this.groupForm.value.groupIds 
+      }
     });
-
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         // Handle the group selection

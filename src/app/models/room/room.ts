@@ -1,8 +1,7 @@
 import { BaseModel } from '../baseModel';
 
-export interface Room {
+export interface Room extends BaseModel {
   id?: number;
-  base: BaseModel;
   name: string;
   capacity: number;
 }
