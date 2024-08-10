@@ -17,6 +17,7 @@ import { TeacherProfileComponent } from './components/teacher/teacher-profile/te
 import { TeacherSearchComponent } from './components/teacher/teacher-search/teacher-search.component';
 import { GroupSearchComponent } from './components/group/group-search/group-search.component';
 import { SerieFormComponent } from './components/serie/serie-form/serie-form.component';
+import { LevelTableComponent } from './components/level/level-table/level-table.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -38,6 +39,7 @@ export const routes: Routes = [
   { path: 'student/:id', component: StudentProfileComponent },
   { path: 'teacher/:id', component: TeacherProfileComponent},
   { path: 'group/:id', component: TeacherProfileComponent},
+  { path: 'level/table', component: LevelTableComponent},
 ];
   
   @NgModule({
