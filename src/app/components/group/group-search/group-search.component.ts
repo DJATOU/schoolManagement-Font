@@ -13,7 +13,7 @@ import { LevelService } from '../../../services/level.service';
 import { GroupTypeService } from '../../../services/GroupTypeService';
 import { Group } from '../../../models/group/group';
 import { Level } from '../../../models/level/level';
-import { GroupType } from '../../../models/GroupType/groupTyp';
+import { GroupType } from '../../../models/GroupType/groupType';
 import { CommonModule } from '@angular/common';
 import { GroupCardComponent } from '../group-card/group-card.component';
 import { SearchService } from '../../../services/SearchService ';

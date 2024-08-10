@@ -11,7 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
-import { GroupType } from '../../../models/GroupType/groupTyp';
+import { GroupType } from '../../../models/GroupType/groupType';
 import { Group } from '../../../models/group/group';
 import { Level } from '../../../models/level/level';
 import { Student } from '../../../models/student/student';
