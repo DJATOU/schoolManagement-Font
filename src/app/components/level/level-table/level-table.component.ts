@@ -2,6 +2,7 @@ import { Component} from '@angular/core';
 import { LevelService } from '../../../services/level.service';
 import { Level } from '../../../models/level/level';
 import { ReusableDatatableComponent } from '../../shared/reusable-datatable/reusable-datatable.component';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-level-table',
@@ -11,8 +12,7 @@ import { ReusableDatatableComponent } from '../../shared/reusable-datatable/reus
   styleUrl: './level-table.component.scss'
 })
 export class LevelTableComponent {
-
-  levels: Level[] = [];
+  observable: Observable<any[]> = new Observable<any[]>();
   columns = [
     {
       columnDef: 'id',
@@ -37,8 +37,6 @@ export class LevelTableComponent {
   ];
 
   constructor(levelService: LevelService) {
-    levelService.getLevels().subscribe((levels: Level[]) => {
-      this.levels = levels;
-    });
+    this.observable = levelService.getLevels();
   }
 }

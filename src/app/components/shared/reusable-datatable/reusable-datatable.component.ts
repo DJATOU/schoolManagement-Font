@@ -10,6 +10,7 @@ import { NgIf } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 interface ColumnDefenition {
   columnDef: string;
@@ -26,7 +27,7 @@ interface ColumnDefenition {
 })
 export class ReusableDatatableComponent  implements OnInit{
   @Input() columns!: ColumnDefenition[];
-  @Input() data!: any[];
+  @Input() observable!: Observable<any[]>;
 
   dataSource!: MatTableDataSource<any>;
   displayedColumns: string[] = [];
@@ -36,12 +37,15 @@ export class ReusableDatatableComponent  implements OnInit{
   router: Router;
 
   ngOnInit(): void {
-    console.log('Received data:', this.data);
     console.log('Received columns:', this.columns);
     this.displayedColumns = ['select', ...this.columns.map(c => c.columnDef)];
-    this.dataSource = new MatTableDataSource<any>(this.data);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    
+    this.observable.subscribe((data: any[]) => {
+      console.log('Received data:', data);
+      this.dataSource = new MatTableDataSource<any>(data);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    });
   }
 
   constructor(router: Router) {
