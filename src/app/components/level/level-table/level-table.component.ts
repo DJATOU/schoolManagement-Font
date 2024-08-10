@@ -86,7 +86,9 @@ export class LevelTableComponent {
   }
   
   onPrint() {
-    throw new Error('Method not implemented.');
+    window.print();
+    console.log('Print');
+    //throw new Error('Method not implemented.');
   }
   /**For the filter option. */
   applyFilter(event: Event) {
