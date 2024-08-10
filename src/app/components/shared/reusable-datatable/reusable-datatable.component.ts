@@ -28,6 +28,7 @@ interface ColumnDefenition {
 export class ReusableDatatableComponent  implements OnInit{
   @Input() columns!: ColumnDefenition[];
   @Input() observable!: Observable<any[]>;
+  @Input() dataType!: string;
 
   dataSource!: MatTableDataSource<any>;
   displayedColumns: string[] = [];
@@ -54,7 +55,7 @@ export class ReusableDatatableComponent  implements OnInit{
   
   /** Implement create logic */
   onCreate() {
-    this.router.navigate(['level/new/']);
+    this.router.navigate([this.dataType+'/new/']);
   }
 
   /** Implement view logic */
