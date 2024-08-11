@@ -3,12 +3,13 @@ Done:
         Assurez-vous que les étudiants absents ne sont pas cochés comme présents sur la session et reprendre la note enregistré pour l'afficher.
         Mettez à jour la base de données pour refléter l'assiduité avec précision.
 
+On going:
+    3.  Modifications et désactivations :
+        Implémentez les fonctionnalités de modification et de désactivation des différents etities comme (student groupe et teacher)
+
 Not Done:
     2.  Affichage des heures de début et de fin :
         Affichez de manière visible les heures de début et de fin des sessions.
-
-    3.  Modifications et désactivations :
-        Implémentez les fonctionnalités de modification et de désactivation des différents etities comme (student groupe et teacher)
 
     4.  Gestion des photos :
         Implémentez la fonctionnalité visualisation et gestion des photos des étudiants et teacher.

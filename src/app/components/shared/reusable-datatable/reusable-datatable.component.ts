@@ -6,11 +6,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SelectionModel } from '@angular/cdk/collections';
-import { NgIf } from '@angular/common';
+import { DatePipe, NgIf } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { SummaryDialogComponent } from '../../summary-dialog/summary-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 interface ColumnDefenition {
   columnDef: string;
@@ -35,7 +37,8 @@ export class ReusableDatatableComponent  implements OnInit{
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   selection = new SelectionModel<any>(true, []);
-  router: Router;
+  data: any;
+  datePipe: DatePipe;
 
   ngOnInit(): void {
     console.log('Received columns:', this.columns);
@@ -46,11 +49,12 @@ export class ReusableDatatableComponent  implements OnInit{
       this.dataSource = new MatTableDataSource<any>(data);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+      this.data = data;
     });
   }
 
-  constructor(router: Router) {
-    this.router = router;
+  constructor(private router: Router, public dialog: MatDialog){
+    this.datePipe = new DatePipe('en-US');
   }
   
   /** Implement create logic */
@@ -60,12 +64,56 @@ export class ReusableDatatableComponent  implements OnInit{
 
   /** Implement view logic */
   onView() {
-    throw new Error('Method not implemented.');
+    this.selection.selected.forEach((selected) => {
+      let informations= this.flattenFormData(selected, this.columns ,"Informations fondamentales");
+      
+      let otherColumn= Object.keys(selected).filter(key => !this.columns.some(column => column.columnDef === key));
+      let otherInformation= this.flattenFormData(selected, otherColumn ,"Autre informations")
+      
+      informations.push(...otherInformation);
+
+      this.dialog.open(SummaryDialogComponent, {
+        data: informations
+      });
+    });
+  }
+
+  /** This function is used like an Adapter that transform simple object to summary-dialog input*/
+  flattenFormData(data: any,cols: any[], parentKey: string = 'Informations'): { label: string, value: any }[] {
+    let result: { label: string, value: any }[] = [];
+
+    // Ajouter les informations fondamentales en premiers
+    cols.forEach((column) => {
+      const key = column.columnDef || column;
+      const newKey = parentKey ? `${parentKey} - ${key}` : key;
+      let value = data[key];
+
+      if( (key=="dateCreation" || key=="dateUpdate") && value){
+        value= this.convertDate(value);
+      }
+
+      if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+        // Recursively flatten the nested object
+        result = result.concat(this.flattenFormData(value, newKey));
+      } else if (Array.isArray(value)) {
+        // Convert array to string
+        result.push({ label: newKey, value: value.join(', ') });
+      } else {
+        result.push({ label: newKey, value: value });
+      }
+    });
+    return result;
+  }
+
+  convertDate(date: Date): String {
+    const dateParts = date.toString().split(',').map(part => parseInt(part, 10));
+    const newDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2], dateParts[3], dateParts[4]);
+    return this.datePipe.transform(newDate, 'dd MMMM yyyy') || '';
   }
   
   /** Implement edit logic */
   onEdit() {
-    throw new Error('Method not implemented.');
+    this.router.navigate([this.dataType+'/edit/'+this.selection.selected[0].id]);
   }
   
   /** Implement delete logic */
@@ -84,6 +132,7 @@ export class ReusableDatatableComponent  implements OnInit{
   onPrint() {
     window.print();
   }
+
   /**For the filter option. */
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
