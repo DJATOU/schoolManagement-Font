@@ -23,7 +23,7 @@ export class PricingTableComponent {
     },
     {
       columnDef: 'price',
-      header: 'price',
+      header: 'Price',
       cell: (element: Pricing) => `${element.price}`,
     },
     {
