@@ -3,6 +3,7 @@ import { LevelService } from '../../../services/level.service';
 import { Level } from '../../../models/level/level';
 import { ReusableDatatableComponent } from '../../shared/reusable-datatable/reusable-datatable.component';
 import { Observable } from 'rxjs';
+import { DeleteCommand } from '../../shared/reusable-datatable/DeleteCommand';
 
 @Component({
   selector: 'app-level-table',
@@ -11,7 +12,7 @@ import { Observable } from 'rxjs';
   templateUrl: './level-table.component.html',
   styleUrl: './level-table.component.scss'
 })
-export class LevelTableComponent {
+export class LevelTableComponent implements DeleteCommand{
   observable: Observable<any[]> = new Observable<any[]>();
   columns = [
     {
@@ -38,5 +39,9 @@ export class LevelTableComponent {
 
   constructor(levelService: LevelService) {
     this.observable = levelService.getLevels();
+  }
+
+  desactivate(): boolean {
+    throw new Error('Method not implemented.HaHA');
   }
 }

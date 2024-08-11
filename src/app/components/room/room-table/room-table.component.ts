@@ -3,6 +3,7 @@ import { Room } from '../../../models/room/room';
 import { RoomService } from '../../../services/room.service';
 import { ReusableDatatableComponent } from '../../shared/reusable-datatable/reusable-datatable.component';
 import { Observable } from 'rxjs';
+import { DeleteCommand } from '../../shared/reusable-datatable/DeleteCommand';
 
 @Component({
   selector: 'app-Room-table',
@@ -11,7 +12,7 @@ import { Observable } from 'rxjs';
   templateUrl: './room-table.component.html',
   styleUrl: './room-table.component.scss'
 })
-export class RoomTableComponent{
+export class RoomTableComponent implements DeleteCommand{
   observable: Observable<any[]> = new Observable<any[]>();
   columns = [
     {
@@ -38,5 +39,10 @@ export class RoomTableComponent{
 
   constructor(roomService: RoomService) {
     this.observable = roomService.getRooms();
+  }
+
+  desactivate(data: any[]): boolean {
+    throw new Error('Method not implemented.HaHA');
+    return false;
   }
 }

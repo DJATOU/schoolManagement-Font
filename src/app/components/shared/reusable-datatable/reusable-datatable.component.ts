@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, Optional, ViewChild } from '@angular/core';
 import { MatRecycleRows, MatTableDataSource, MatTableModule} from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { SummaryDialogComponent } from '../../summary-dialog/summary-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { DeleteCommand } from './DeleteCommand';
 
 interface ColumnDefenition {
   columnDef: string;
@@ -31,6 +32,7 @@ export class ReusableDatatableComponent  implements OnInit{
   @Input() columns!: ColumnDefenition[];
   @Input() observable!: Observable<any[]>;
   @Input() dataType!: string;
+  @Input() deleteCommand!: DeleteCommand;
 
   dataSource!: MatTableDataSource<any>;
   displayedColumns: string[] = [];
@@ -53,7 +55,7 @@ export class ReusableDatatableComponent  implements OnInit{
     });
   }
 
-  constructor(private router: Router, public dialog: MatDialog){
+  constructor(private router: Router, public dialog: MatDialog) {
     this.datePipe = new DatePipe('en-US');
   }
   
@@ -118,14 +120,15 @@ export class ReusableDatatableComponent  implements OnInit{
   
   /** Implement delete logic */
   onDelete() {
-    /*LevelService.deleteLevels(this.selection.selected).subscribe(() => {
-      this.levels = this.levels.filter((level: Level) => !this.selection.selected.includes(level));
-      this.dataSource = new MatTableDataSource<Level>(this.levels);
+    if( this.selection.selected.length != 0){
+      //Faire la confirmation avant la suppression
+      this.deleteCommand.desactivate(this.selection.selected);
+      this.data = this.data.filter((data: any) => !this.selection.selected.includes(data));
+      this.dataSource = new MatTableDataSource<any>(this.data);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       this.selection.clear();
-    });*/
-    throw new Error('Method not implemented.');
+    }
   }
   
   /** Implement print logic */

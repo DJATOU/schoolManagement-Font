@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Pricing } from '../../../models/pricing/pricing';
 import { PricingService } from '../../../services/pricing.service';
 import { DatePipe } from '@angular/common';
+import { DeleteCommand } from '../../shared/reusable-datatable/DeleteCommand';
 
 @Component({
   selector: 'app-pricing-table',
@@ -12,7 +13,7 @@ import { DatePipe } from '@angular/common';
   templateUrl: './pricing-table.component.html',
   styleUrl: './pricing-table.component.scss'
 })
-export class PricingTableComponent {
+export class PricingTableComponent implements DeleteCommand {
 
   observable: Observable<any[]> = new Observable<any[]>();
   columns = [
@@ -54,5 +55,10 @@ export class PricingTableComponent {
     const dateParts = date.toString().split(',').map(part => parseInt(part, 10));
     const newDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2], dateParts[3], dateParts[4]);
     return this.datePipe.transform(newDate, 'dd MMMM yyyy') || '';
+  }
+
+  desactivate(data: any[]): boolean {
+    throw new Error('Method not implemented.HaHA');
+    return false
   }
 }

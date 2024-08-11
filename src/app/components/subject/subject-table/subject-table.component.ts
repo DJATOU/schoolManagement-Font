@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { Subject } from '../../../models/subject/subject';
 import { SubjectService } from '../../../services/subject.service';
 import { ReusableDatatableComponent } from '../../shared/reusable-datatable/reusable-datatable.component';
+import { DeleteCommand } from '../../shared/reusable-datatable/DeleteCommand';
 
 @Component({
   selector: 'app-subject-table',
@@ -11,7 +12,7 @@ import { ReusableDatatableComponent } from '../../shared/reusable-datatable/reus
   templateUrl: './subject-table.component.html',
   styleUrl: './subject-table.component.scss'
 })
-export class SubjectTableComponent {
+export class SubjectTableComponent implements DeleteCommand {
   observable: Observable<any[]> = new Observable<any[]>();
   columns = [
     {
@@ -33,5 +34,10 @@ export class SubjectTableComponent {
 
   constructor(subjectService: SubjectService) {
     this.observable = subjectService.getSubjects();
+  }
+
+  desactivate(data: any[]): boolean {
+    throw new Error('Method not implemented.HaHA');
+    return false;
   }
 }
