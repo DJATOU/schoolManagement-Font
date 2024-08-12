@@ -32,12 +32,11 @@ export class SubjectTableComponent implements DeleteCommand {
     },
   ];
 
-  constructor(subjectService: SubjectService) {
+  constructor(private subjectService: SubjectService) {
     this.observable = subjectService.getSubjects();
   }
 
-  desactivate(data: any[]): boolean {
-    throw new Error('Method not implemented.HaHA');
-    return false;
+  desactivate(id_list: Number[]): Observable<boolean> {
+    return this.subjectService.desactivateSubjects(id_list);
   }
 }

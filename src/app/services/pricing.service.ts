@@ -22,4 +22,8 @@ export class PricingService {
   updatePricing(id: number, pricing: Pricing): Observable<Pricing> {
     return this.http.put<Pricing>(`${this.apiUrl}/${id}`, pricing);
   }
+  
+  desactivatePricings(id_list: Number[]): Observable<boolean> {
+    throw new Error('Method not implemented.');
+  }
 }

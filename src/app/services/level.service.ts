@@ -7,6 +7,7 @@ import { Level } from '../models/level/level';
   providedIn: 'root'
 })
 export class LevelService {
+
   private apiUrl = 'http://localhost:8080/api/levels';
 
   constructor(private http: HttpClient) { }
@@ -25,5 +26,9 @@ export class LevelService {
 
   updateLevel(id: number, Level: Level): Observable<Level> {
     return this.http.put<Level>(`${this.apiUrl}/${id}`, Level);
+  }
+
+  desactivateLevels(id_list: Number[]): Observable<boolean> {
+    return this.http.delete<boolean>(`${this.apiUrl}/${id_list}`);
   }
 }

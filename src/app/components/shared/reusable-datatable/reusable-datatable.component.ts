@@ -14,6 +14,9 @@ import { Observable } from 'rxjs';
 import { SummaryDialogComponent } from '../../summary-dialog/summary-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteCommand } from './DeleteCommand';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { el } from '@fullcalendar/core/internal-common';
 
 interface ColumnDefenition {
   columnDef: string;
@@ -55,7 +58,9 @@ export class ReusableDatatableComponent  implements OnInit{
     });
   }
 
-  constructor(private router: Router, public dialog: MatDialog) {
+  constructor(private router: Router,
+              public dialog: MatDialog,
+              private snackBar: MatSnackBar) {
     this.datePipe = new DatePipe('en-US');
   }
   
@@ -122,13 +127,53 @@ export class ReusableDatatableComponent  implements OnInit{
   onDelete() {
     if( this.selection.selected.length != 0){
       //Faire la confirmation avant la suppression
-      this.deleteCommand.desactivate(this.selection.selected);
-      this.data = this.data.filter((data: any) => !this.selection.selected.includes(data));
-      this.dataSource = new MatTableDataSource<any>(this.data);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-      this.selection.clear();
+      this.dialog.open(ConfirmationDialogComponent, {
+        data:{
+          title: 'Dialog de confirmation',
+          message: 'Voulez-vous vraiment supprimer ces éléments?',
+          confirmText: 'Yes, delete',
+          cancelText: 'No, cancel',
+          confirmColor: 'warn'
+        } 
+      }).afterClosed().subscribe((result: boolean) => {
+        if (result) {
+          let id_list = this.selection.selected.map((selected) => Number(selected.id));
+          this.deleteCommand.desactivate(id_list).subscribe({
+            next: (response) => {
+              //Mise à jour du tableau
+              this.data = this.data.filter((data: any) => !this.selection.selected.includes(data));
+              this.dataSource = new MatTableDataSource<any>(this.data);
+              this.dataSource.paginator = this.paginator;
+              this.dataSource.sort = this.sort;
+              this.selection.clear();
+
+              console.log('Elements deleted successfully:', response);
+              this.showSuccessMessage('Elements deleted successfully.'); // Affichez le message de succès
+            },
+            error: (error) => {
+              console.error('Error deleting elements:', error);
+              this.showErrorMessage('Error deleting student.'); // Affichez le message d'erreur
+            }
+          });
+        }
+        else{
+          console.log('Operation canceled.');
+        }
+      });
     }
+  }
+  showSuccessMessage(message: string): void {
+    this.snackBar.open(message, 'OK', {
+      duration: 3000,
+      panelClass: ['snack-bar-success']
+    });
+  }
+
+  showErrorMessage(message: string): void {
+    this.snackBar.open(message, 'OK', {
+      duration: 3000,
+      panelClass: ['snack-bar-error']
+    });
   }
   
   /** Implement print logic */

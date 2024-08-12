@@ -37,11 +37,11 @@ export class LevelTableComponent implements DeleteCommand{
     },
   ];
 
-  constructor(levelService: LevelService) {
+  constructor(private levelService: LevelService) {
     this.observable = levelService.getLevels();
   }
 
-  desactivate(): boolean {
-    throw new Error('Method not implemented.HaHA');
+  desactivate(id_list: Number[]): Observable<boolean> {
+    return this.levelService.desactivateLevels(id_list);
   }
 }

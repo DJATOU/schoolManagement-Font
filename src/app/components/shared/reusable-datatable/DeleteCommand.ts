@@ -1,4 +1,5 @@
+import { Observable } from "rxjs";
 
 export interface DeleteCommand {
-    desactivate(data: any[]): boolean;
+    desactivate(id_list: Number[]): Observable<boolean>;
 }

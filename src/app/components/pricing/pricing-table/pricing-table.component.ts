@@ -46,7 +46,7 @@ export class PricingTableComponent implements DeleteCommand {
 
   datePipe: DatePipe;
 
-  constructor(pricingService: PricingService) {
+  constructor(private pricingService: PricingService) {
     this.observable = pricingService.getPricings();
     this.datePipe = new DatePipe('en-US');
   }
@@ -57,8 +57,7 @@ export class PricingTableComponent implements DeleteCommand {
     return this.datePipe.transform(newDate, 'dd MMMM yyyy') || '';
   }
 
-  desactivate(data: any[]): boolean {
-    throw new Error('Method not implemented.HaHA');
-    return false
+  desactivate(id_list: Number[]): Observable<boolean> {
+    return this.pricingService.desactivatePricings(id_list);
   }
 }

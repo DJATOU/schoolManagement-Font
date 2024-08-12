@@ -37,12 +37,11 @@ export class RoomTableComponent implements DeleteCommand{
     },
   ];
 
-  constructor(roomService: RoomService) {
+  constructor(private roomService: RoomService) {
     this.observable = roomService.getRooms();
   }
 
-  desactivate(data: any[]): boolean {
-    throw new Error('Method not implemented.HaHA');
-    return false;
+  desactivate(id_list: Number[]): Observable<boolean> {
+    return this.roomService.desactivateRooms(id_list);
   }
 }
