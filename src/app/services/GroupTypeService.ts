@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { GroupType } from '../models/GroupType/groupTyp';
+import { GroupType } from '../models/GroupType/groupType';
 import { API_BASE_URL } from '../app.config';
 
 

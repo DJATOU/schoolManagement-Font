@@ -1,21 +1,50 @@
-Important
-    Etudiant:
-+++     Le upload des photos marche bien mais l'affichage non
-+++     Ajouter la possibilite de modification d'un etudiant
-+       Ajouter la validation des champs tel que: date de naissance, téléphone
-+       Faire une liste pour le champs ville
-    Enseignant:
-+       Ajouter la validation des champs tel que: date de naissance, téléphone
-+       Faire une liste pour le champs ville et nationalite
-    Groupe:
-++      Auto complete dans la recherche d'un groupe
-++      Complete Group List
-    Ressources academiques (Niveaux, Salles, Matiere, Types de groupes, Tarification)
-++      Affichage
-+++     modefication
-+       Suppression
-Optionnel:
-    Ajouter la traduction
-    Ajouter le mode sombre claire
-    Ajouter la connexion et la deconnexion
-    Ajouter la fenetre de parametrage
+Done:
+    1.  Affichage de l'assiduité et validation :
+        Assurez-vous que les étudiants absents ne sont pas cochés comme présents sur la session et reprendre la note enregistré pour l'afficher.
+        Mettez à jour la base de données pour refléter l'assiduité avec précision.
+
+On going:
+    3.  Modifications et désactivations :
+        Implémentez les fonctionnalités de modification et de désactivation des différents etities comme (student groupe et teacher)
+        *   La desactivation coté frontend marche bien pour student et teacher, mais pas faite pour groupe
+
+Not Done:
+    2.  Affichage des heures de début et de fin :
+        Affichez de manière visible les heures de début et de fin des sessions.
+
+    4.  Gestion des photos :
+        Implémentez la fonctionnalité visualisation et gestion des photos des étudiants et teacher.
+
+    5.  Email et téléphone cliquables :
+        Activez l'ouverture WhatsApp lors du clic sur phone, et emails
+
+    6.  Vues en liste :
+        Révisez et corrigez les problèmes avec les vues en grille et en liste pour qu'elles fonctionnent correctement.
+
+    7.  Design réactif :
+        Assurez-vous que l'application est entièrement réactive et fonctionne bien sur toutes les tailles d'appareils. (responsive)
+
+    8.  Validation des champs :
+        Révisez et améliorez les validations des formulaires pour assurer l'intégrité des données. (comme email , date naissaince)
+
+    9.  Gestion des groupes :
+        ajouter la page groupe
+        Implémentez la fonctionnalité permettant d'ajouter des étudiants à partir d'un groupe et améliorez l'affichage.
+
+    10. Impression :
+        Révisez et améliorez le formatage des documents imprimés.
+
+    11. Gestion des paiements :
+        Implémentez un système robuste pour la gestion des paiements.
+
+    12. Gestion des absences et présences et lien avec paiement pour détecter les étudiants en retard de paiement et ceux qui sont à jour0
+        Assurez le suivi des paiements pour chaque étudiant par session et groupe.
+        Implémentez le traitement des remboursements pour les étudiants qui ne peuvent pas rattraper les sessions manquées.
+        Rattrapage des sessions , et ajout de l'étudiant dans la session uniquement.
+les étudiants en retard de paiement ont une couleur rouge sur le groupe correspondant
+
+    13. Traduction :
+        Ajoutez la prise en charge de plusieurs langues pour répondre à différents besoins linguistiques.
+
+    14. Mode sombre :
+        Implémentez un mode sombre pour une meilleure expérience utilisateur dans des conditions de faible luminosité.

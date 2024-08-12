@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { Group } from '../../../models/group/group';
 import { Level } from '../../../models/level/level';
-import { GroupType } from '../../../models/GroupType/groupTyp';
+import { GroupType } from '../../../models/GroupType/groupType';
 
 @Component({
   selector: 'app-group-card',

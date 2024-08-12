@@ -42,7 +42,10 @@ export class TeacherService {
       params: new HttpParams().set('search', searchTerm)
     });
   }
-
+  
+  disableTeacher(id: number): Observable<boolean> {
+    return this.http.delete<boolean>(`${this.apiUrl}/disable/${id}`);
+  }
 }
   
 

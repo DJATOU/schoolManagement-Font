@@ -22,5 +22,9 @@ export class SubjectService {
   updateSubject(id: number, subject: Subject): Observable<Subject> {
     return this.http.put<Subject>(`${this.apiUrl}/${id}`, subject);
   }
+  
+  desactivateSubjects(id_list: Number[]): Observable<boolean> {
+    throw new Error('Method not implemented.');
+  }
 }
 

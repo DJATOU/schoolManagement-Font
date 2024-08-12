@@ -1,0 +1,56 @@
+<ng-container class="btn-group" (click)="onPrint()">
+    <button mat-stroked-button (click)="onPrint()">
+      <mat-icon>print</mat-icon>
+      Print
+    </button>
+    <button mat-raised-button color="primary" (click)="onCreate()">
+      <mat-icon>add</mat-icon>
+      Create
+    </button>
+    <button mat-raised-button color="warn" (click)="onDisable()">
+      <mat-icon>delete</mat-icon>
+      Delete
+    </button>
+    <button mat-raised-button *ngIf="isOneItemSelected()" (click)="onEdit()">
+      <mat-icon>edit</mat-icon>
+      Edit
+    </button>
+    <button mat-stroked-button *ngIf="isOneItemSelected()" (click)="onView()">
+      <mat-icon>visibility</mat-icon>
+      View
+    </button>
+</ng-container>
+
+<mat-form-field>
+    <mat-label>Filter</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Text" #input class="datatableFilter">
+</mat-form-field>
+
+<table mat-table [dataSource]="dataSource" matSort recycleRows class="datatable">
+    <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+        <mat-checkbox (change)="$event ? toggleAllRows() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()"
+                        [aria-label]="checkboxLabel()">
+        </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+        <mat-checkbox (click)="$event.stopPropagation()"
+                        (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)"
+                        [aria-label]="checkboxLabel(row)">
+        </mat-checkbox>
+        </td>
+    </ng-container>
+
+    @for (column of columns; track column) {
+        <ng-container [matColumnDef]="column.columnDef">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{column.header}}</th>
+        <td mat-cell *matCellDef="let row">{{column.cell(row)}}</td>
+        </ng-container>
+    }
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<mat-paginator [pageSizeOptions]="[5,10,20]" showFirstLastButtons></mat-paginator>

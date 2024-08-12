@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { GroupService } from '../../../services/group.service';
 import { PricingService } from '../../../services/pricing.service';
 import { Pricing } from '../../../models/pricing/pricing';
-import { GroupType } from '../../../models/GroupType/groupTyp';
+import { GroupType } from '../../../models/GroupType/groupType';
 import { Level } from '../../../models/level/level';
 import { Subject } from '../../../models/subject/subject';
 import { GroupTypeService } from '../../../services/GroupTypeService';

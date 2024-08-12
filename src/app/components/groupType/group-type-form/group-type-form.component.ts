@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { GroupTypeService } from '../../../services/GroupTypeService';
-import { GroupType } from '../../../models/GroupType/groupTyp';
+import { GroupType } from '../../../models/GroupType/groupType';
 import { SummaryDialogComponent } from '../../summary-dialog/summary-dialog.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatFormFieldModule } from '@angular/material/form-field';

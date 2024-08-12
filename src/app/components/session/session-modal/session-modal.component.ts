@@ -49,6 +49,21 @@ export class SessionModalComponent implements OnInit {
       });
     }
 
+    this.attendanceService.getAttendanceBySessionId(this.sessionData.id).subscribe(attendances => {
+      attendances.forEach((attendance: any) => {
+        console.log('a:', attendance);
+        const student = this.sessionData.students.find((s: Student) => s.id === attendance.studentId);
+        if (student) {
+          student.isPresent = attendance.isPresent;
+          student.description = attendance.description;
+        }
+      });
+    } , error => {
+      console.error('Error fetching attendance:', error);
+    } );
+
+    console.log('Students data:', this.sessionData.students);
+    console.log('attendance data:', this.sessionData.attendance);
     // Set isFinished based on sessionData
     this.isFinished = this.sessionData.isFinished || false;
   }

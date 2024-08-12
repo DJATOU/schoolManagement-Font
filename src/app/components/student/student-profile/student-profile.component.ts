@@ -11,7 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
-import { GroupType } from '../../../models/GroupType/groupTyp';
+import { GroupType } from '../../../models/GroupType/groupType';
 import { Group } from '../../../models/group/group';
 import { Level } from '../../../models/level/level';
 import { Student } from '../../../models/student/student';
@@ -22,6 +22,7 @@ import { StudentService } from '../../../services/student.service';
 import { GroupCardComponent } from '../../group/group-card/group-card.component';
 import { GroupDialogComponent } from '../../group/group-dialog/group-dialog.component';
 import { PaymentDialogComponent } from '../../payment/payment-dialog/payment-dialog.component';
+import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 import { ApiError, ApiResponse } from '../../../models/response';
 
 const errorMessages = {
@@ -287,9 +288,48 @@ export class StudentProfileComponent implements OnInit {
   }
 
   onDisable(): void {
-    // Implement delete functionality
+    // Confirmation dialog to disable student
+    this.dialog.open(ConfirmationDialogComponent, {
+      data:{
+        title: "Suppression d'un étudiant",
+        message: 'Voulez-vous vraiment supprimer cet étudiant?',
+        confirmText: 'Yes, delete',
+        cancelText: 'No, cancel',
+        confirmColor: 'warn'
+      } 
+    }).afterClosed().subscribe((result: boolean) => {
+      if (result) {
+        this.studentService.disableStudent(this.student!.id || -1).subscribe({
+          next: (response) => {
+            console.log('Student disabled successfully:', response);
+            this.showSuccessMessage('Student disabled successfully.'); // Affichez le message de succès
+          },
+          error: (error) => {
+            console.error('Error disabling student:', error);
+            this.showErrorMessage('Error disabling student.'); // Affichez le message d'erreur
+          }
+        });
+      }
+      else{
+        console.log('Operation canceled.');
+      }
+    });
   }
 
+  showSuccessMessage(message: string): void {
+    this.snackBar.open(message, 'OK', {
+      duration: 3000,
+      panelClass: ['snack-bar-success']
+    });
+  }
+
+  showErrorMessage(message: string): void {
+    this.snackBar.open(message, 'OK', {
+      duration: 3000,
+      panelClass: ['snack-bar-error']
+    });
+  }
+  
   onPrint(): void {
     window.print();
   }
