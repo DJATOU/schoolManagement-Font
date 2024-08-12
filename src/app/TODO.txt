@@ -6,8 +6,8 @@ Done:
 On going:
     3.  Modifications et désactivations :
         Implémentez les fonctionnalités de modification et de désactivation des différents etities comme (student groupe et teacher)
-        * Adding confirmation dialog in reusable-datatable
-        
+        *   La desactivation coté frontend marche bien pour student et teacher, mais pas faite pour groupe
+
 Not Done:
     2.  Affichage des heures de début et de fin :
         Affichez de manière visible les heures de début et de fin des sessions.

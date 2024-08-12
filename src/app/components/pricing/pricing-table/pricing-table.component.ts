@@ -57,7 +57,7 @@ export class PricingTableComponent implements DeleteCommand {
     return this.datePipe.transform(newDate, 'dd MMMM yyyy') || '';
   }
 
-  desactivate(id_list: Number[]): Observable<boolean> {
+  disableItems(id_list: Number[]): Observable<boolean> {
     return this.pricingService.desactivatePricings(id_list);
   }
 }

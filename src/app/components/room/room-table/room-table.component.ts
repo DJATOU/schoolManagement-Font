@@ -41,7 +41,7 @@ export class RoomTableComponent implements DeleteCommand{
     this.observable = roomService.getRooms();
   }
 
-  desactivate(id_list: Number[]): Observable<boolean> {
+  disableItems(id_list: Number[]): Observable<boolean> {
     return this.roomService.desactivateRooms(id_list);
   }
 }

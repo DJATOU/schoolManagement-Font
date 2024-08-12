@@ -65,6 +65,9 @@ export class StudentService {
 
   addGroupsToStudent(studentId: number, groupIds: number[]): Observable<any> {
     return this.http.post(`${this.apiUrl2}/${studentId}/addGroups`, { groupIds });
-}
-
+  }
+  
+  disableStudent(id: number): Observable<boolean> {
+    return this.http.delete<boolean>(`${this.apiUrl}/disable/${id}`);
+  }
 }

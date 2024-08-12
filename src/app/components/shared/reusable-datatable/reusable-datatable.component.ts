@@ -124,12 +124,12 @@ export class ReusableDatatableComponent  implements OnInit{
   }
   
   /** Implement delete logic */
-  onDelete() {
+  onDisable() {
     if( this.selection.selected.length != 0){
       //Faire la confirmation avant la suppression
       this.dialog.open(ConfirmationDialogComponent, {
         data:{
-          title: 'Dialog de confirmation',
+          title: 'Dialogue de confirmation',
           message: 'Voulez-vous vraiment supprimer ces éléments?',
           confirmText: 'Yes, delete',
           cancelText: 'No, cancel',
@@ -138,7 +138,7 @@ export class ReusableDatatableComponent  implements OnInit{
       }).afterClosed().subscribe((result: boolean) => {
         if (result) {
           let id_list = this.selection.selected.map((selected) => Number(selected.id));
-          this.deleteCommand.desactivate(id_list).subscribe({
+          this.deleteCommand.disableItems(id_list).subscribe({
             next: (response) => {
               //Mise à jour du tableau
               this.data = this.data.filter((data: any) => !this.selection.selected.includes(data));
@@ -147,12 +147,12 @@ export class ReusableDatatableComponent  implements OnInit{
               this.dataSource.sort = this.sort;
               this.selection.clear();
 
-              console.log('Elements deleted successfully:', response);
-              this.showSuccessMessage('Elements deleted successfully.'); // Affichez le message de succès
+              console.log('Elements disabled successfully:', response);
+              this.showSuccessMessage('Elements disabled successfully.'); // Affichez le message de succès
             },
             error: (error) => {
-              console.error('Error deleting elements:', error);
-              this.showErrorMessage('Error deleting student.'); // Affichez le message d'erreur
+              console.error('Error disabling elements:', error);
+              this.showErrorMessage('Error disabling elements.'); // Affichez le message d'erreur
             }
           });
         }
@@ -162,6 +162,7 @@ export class ReusableDatatableComponent  implements OnInit{
       });
     }
   }
+  
   showSuccessMessage(message: string): void {
     this.snackBar.open(message, 'OK', {
       duration: 3000,

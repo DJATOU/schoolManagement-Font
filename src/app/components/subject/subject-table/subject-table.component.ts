@@ -36,7 +36,7 @@ export class SubjectTableComponent implements DeleteCommand {
     this.observable = subjectService.getSubjects();
   }
 
-  desactivate(id_list: Number[]): Observable<boolean> {
+  disableItems(id_list: Number[]): Observable<boolean> {
     return this.subjectService.desactivateSubjects(id_list);
   }
 }
