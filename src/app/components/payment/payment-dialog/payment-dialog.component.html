@@ -3,19 +3,31 @@
   <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()">
     <mat-form-field appearance="fill">
       <mat-label>Group</mat-label>
-      <mat-select formControlName="groupId">
+      <mat-select formControlName="groupId" required>
         <mat-option *ngFor="let group of groups" [value]="group.id">{{ group.name }}</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-      <mat-label>Session</mat-label>
-      <input matInput formControlName="session">
+      <mat-label>Session Series</mat-label>
+      <mat-select formControlName="sessionSeriesId" required>
+        <mat-option *ngFor="let series of sessionSeries" [value]="series.id">{{ series.name }}</mat-option>
+      </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Amount</mat-label>
-      <input matInput formControlName="amount" type="number">
+      <input matInput formControlName="amountPaid" type="number" min="0" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Payment Method</mat-label>
+      <input matInput formControlName="paymentMethod" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="paymentDescription"></textarea>
     </mat-form-field>
 
     <div mat-dialog-actions>

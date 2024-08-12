@@ -125,3 +125,9 @@
   align-items: center;
   height: 100vh;
 }
+
+/* student-profile.component.scss or styles.scss */
+.error-snackbar {
+  background-color: #f44336; /* Red background for error */
+  color: white; /* White text for contrast */
+}

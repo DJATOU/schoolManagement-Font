@@ -10,5 +10,8 @@ export interface Payment {
     paymentMethod?: string;      // Optional field
     paymentDescription?: string; // Optional field
     groupId: number;             // Non-nullable field
+    totalSeriesCost?: number; // Add this property
+    totalPaidForSeries?: number; // Add this property
+    amountOwed?: number; // Add this property
   }
   

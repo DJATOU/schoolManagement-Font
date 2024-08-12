@@ -160,7 +160,7 @@ export class SessionFormComponent implements OnInit {
             this.groupService.getGroupById(submissionData.groupId).subscribe(group => {
               const totalSessionsPerSeries = group.sessionNumberPerSerie;
 
-              this.seriesService.getSeriesByGroupId(submissionData.groupId).subscribe(series => {
+              this.seriesService.getSessionSeriesByGroupId(submissionData.groupId).subscribe(series => {
                 const currentSeries = series.find(s => s.groupId === submissionData.groupId);
 
                 if (currentSeries && currentSeries.id !== undefined) {

@@ -19,4 +19,9 @@ export class SeriesService {
     createSeries(series: Partial<SessionSeries>): Observable<SessionSeries> {
       return this.http.post<SessionSeries>(this.apiUrl, series);
     }
+
+    
+  getSessionSeriesByGroupId(groupId: number): Observable<SessionSeries[]> {
+    return this.http.get<SessionSeries[]>(`${this.apiUrl}/group/${groupId}`);
+  }
 }

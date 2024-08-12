@@ -22,6 +22,17 @@ import { StudentService } from '../../../services/student.service';
 import { GroupCardComponent } from '../../group/group-card/group-card.component';
 import { GroupDialogComponent } from '../../group/group-dialog/group-dialog.component';
 import { PaymentDialogComponent } from '../../payment/payment-dialog/payment-dialog.component';
+import { ApiError, ApiResponse } from '../../../models/response';
+
+const errorMessages = {
+  PAYMENT_EXCEEDS_SESSIONS: "Le paiement ne peut pas être effectué car il dépasse le coût des sessions actuellement créées.",
+  STUDENT_NOT_FOUND: "L'étudiant n'a pas été trouvé.",
+  GROUP_NOT_FOUND: "Le groupe n'a pas été trouvé.",
+  GENERIC_ERROR: "Une erreur est survenue. Veuillez réessayer plus tard.",
+  GROUP_ALREADY_ASSOCIATED: "Certains groupes sont déjà associés à l'étudiant.",
+  INSUFFICIENT_SESSIONS: "Le nombre de sessions créées est insuffisant pour couvrir le paiement.",
+  INVALID_GROUP_LEVEL: "Aucun groupe correspondant au niveau de l'étudiant n'a été trouvé.",
+};
 
 @Component({
   selector: 'app-student-profile',
@@ -71,146 +82,205 @@ export class StudentProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const id = +this.route.snapshot.paramMap.get('id')!;
-    if (id) {
-      this.studentService.getStudentById(id).subscribe(student => {
+    const studentId = this.getStudentIdFromRoute();
+    if (studentId) {
+      this.loadStudentData(studentId);
+    } else {
+      this.showError(errorMessages.STUDENT_NOT_FOUND);
+    }
+  }
+
+  private getStudentIdFromRoute(): number | null {
+    const id = this.route.snapshot.paramMap.get('id');
+    return id ? +id : null;
+  }
+
+  private loadStudentData(studentId: number): void {
+    this.studentService.getStudentById(studentId).subscribe({
+      next: student => {
         this.student = student;
         this.loading = false;
+        this.loadStudentLevel();
+        this.loadStudentGroups();
+      },
+      error: () => {
+        this.loading = false;
+        this.showError(errorMessages.STUDENT_NOT_FOUND);
+      }
+    });
 
-        if (this.student && this.student.id !== undefined) {
-          this.levelService.getLevels().subscribe({
-            next: (levels) => {
-              this.allLevels = levels;
-              console.log(this.allLevels);
-              let studentLevel= this.allLevels.find(level => level.id?.toString() === student.level);
-              this.studentLevelId = studentLevel?.id || -1;
-              this.student!.level = studentLevel?.description || '';
-              console.log(this.student!.level);
-            },
-            error: (error) => {
-              console.error('Error fetching level:', error);
-            }
-          });
+    this.loadAllGroups();
+    this.loadAllGroupTypes();
+  }
 
-          this.studentService.getGroupsForStudent(this.student.id).subscribe(groups => {
-            this.studentGroups = groups;
-          }, error => {
-            console.error('Error fetching student groups:', error);
-          });
+  private loadStudentLevel(): void {
+    if (this.student?.id !== undefined) {
+      this.levelService.getLevels().subscribe({
+        next: levels => {
+          this.allLevels = levels;
+          const studentLevel = this.allLevels.find(level => level.id?.toString() === this.student?.level);
+          this.studentLevelId = studentLevel?.id || -1;
+          
+          if (this.student) {
+            this.student.level = studentLevel?.description ?? '';
+          }
+        },
+        error: () => {
+          this.showError(errorMessages.GENERIC_ERROR);
         }
-      }, error => {
-        console.error('Error fetching student:', error);
       });
-
-      this.groupService.getGroups().subscribe(groups => {
-        this.allGroups = groups;
-      }, error => {
-        console.error('Error fetching groups:', error);
-      });
-
-      this.groupTypeService.getAllGroupTypes().subscribe(groupTypes => {
-        this.allGroupTypes = groupTypes;
-      }, error => {
-        console.error('Error fetching group types:', error);
-      });
-    } else {
-      console.error('Invalid student ID');
     }
+  }
+
+  private loadStudentGroups(): void {
+    if (this.student?.id !== undefined) {
+      this.studentService.getGroupsForStudent(this.student.id).subscribe({
+        next: groups => {
+          this.studentGroups = groups;
+          console.log('Student groups loaded:', this.studentGroups);
+        },
+        error: () => {
+          this.showError(errorMessages.GENERIC_ERROR);
+        }
+      });
+    }
+  }
+
+  private loadAllGroups(): void {
+    this.groupService.getGroups().subscribe({
+      next: groups => {
+        this.allGroups = groups;
+      },
+      error: () => {
+        this.showError(errorMessages.GENERIC_ERROR);
+      }
+    });
+  }
+
+  private loadAllGroupTypes(): void {
+    this.groupTypeService.getAllGroupTypes().subscribe({
+      next: groupTypes => {
+        this.allGroupTypes = groupTypes;
+      },
+      error: () => {
+        this.showError(errorMessages.GENERIC_ERROR);
+      }
+    });
   }
 
   onSubmitGroups(): void {
     if (this.groupForm.valid) {
-      const groupIds = this.groupForm.value.groupIds;
-      if (this.student && this.student.id !== undefined) {
+      const groupIds: number[] = this.groupForm.value.groupIds;
+      if (this.student?.id !== undefined) {
         this.studentService.addGroupsToStudent(this.student.id, groupIds).subscribe({
-          next: (response: any) => {
+          next: (response: ApiResponse) => {
             this.snackBar.open(response.message, 'Close', {
               duration: 3000,
               panelClass: ['success-snackbar']
             });
 
-            // Update the studentGroups with the newly added groups
-            const newGroups = this.allGroups.filter(group => group.id !== undefined && groupIds.includes(group.id!));
-            this.studentGroups = [...this.studentGroups, ...newGroups];
+            this.updateStudentGroups(groupIds);
 
-            // Reset the form after submission
             this.groupForm.reset({ groupIds: [] });
           },
-          error: (error: any) => {
-            if (error.status === 409) {
-              const alreadyAssociatedGroups = error.error.alreadyAssociatedGroups || [];
-              this.snackBar.open(`Some groups were already associated with the student: ${alreadyAssociatedGroups.join(', ')}`, 'Close', {
-                duration: 3000,
-                panelClass: ['warning-snackbar']
-              });
-            } else if (error.status === 404) {
-              this.snackBar.open('Student or group not found', 'Close', {
-                duration: 3000,
-                panelClass: ['error-snackbar']
-              });
-            } else {
-              this.snackBar.open('Error adding groups to student', 'Close', {
-                duration: 3000,
-                panelClass: ['error-snackbar']
-              });
-            }
+          error: (error: ApiError) => {
+            this.handleGroupSubmissionError(error);
           }
         });
       } else {
-        console.error('Student ID is undefined');
+        this.showError(errorMessages.STUDENT_NOT_FOUND);
       }
     }
   }
 
-  openPaymentDialog(): void {
-    const dialogRef = this.dialog.open(PaymentDialogComponent, {
-      width: '400px',
-      data: { groups: this.studentGroups }
-    });
+  private updateStudentGroups(groupIds: number[]): void {
+    const newGroups = this.allGroups.filter(group => group.id !== undefined && groupIds.includes(group.id!));
+    this.studentGroups = [...this.studentGroups, ...newGroups];
+  }
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        // Handle the payment submission
-        console.log('Payment data:', result);
-        this.submitPayment(result);
-      }
+  private handleGroupSubmissionError(error: ApiError): void {
+    if (error.status === 409) {
+      const alreadyAssociatedGroups = error.error.alreadyAssociatedGroups || [];
+      this.showError(`${errorMessages.GROUP_ALREADY_ASSOCIATED}: ${alreadyAssociatedGroups.join(', ')}`);
+    } else if (error.status === 404) {
+      this.showError(errorMessages.GROUP_NOT_FOUND);
+    } else {
+      this.showError(errorMessages.GENERIC_ERROR);
+    }
+  }
+
+  private showError(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 5000,
+      panelClass: ['error-snackbar']
     });
   }
 
+  openPaymentDialog(): void {
+    if (this.student?.id && this.studentGroups.length > 0) {
+      const dialogRef = this.dialog.open(PaymentDialogComponent, {
+        width: '400px',
+        data: {
+          studentId: this.student.id,
+          groups: this.studentGroups
+        }
+      });
+  
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.submitPayment(result);
+        }
+      });
+    } else {
+      this.showError('The student must be enrolled in at least one group to proceed with the payment.');
+    }
+  }
+
   openGroupDialog(): void {
-    let possibleGroups = this.allGroups.filter(group => group.levelId === this.studentLevelId);
+    console.log('All groups:', this.allGroups);
+    
+    const possibleGroups = this.allGroups.filter(group => group.levelId === this.studentLevelId);
+  
+    if (possibleGroups.length === 0) {
+      this.showError(errorMessages.INVALID_GROUP_LEVEL);
+      return;
+    }
+  
+    console.log('Possible groups for level:', possibleGroups);
+  
     const dialogRef = this.dialog.open(GroupDialogComponent, {
       width: '400px',
       data: {
         allGroups: possibleGroups,
-        selectedGroups: this.groupForm.value.groupIds 
+        selectedGroups: this.groupForm.value.groupIds
       }
     });
+  
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // Handle the group selection
         this.groupForm.patchValue({ groupIds: result });
         this.onSubmitGroups();
       }
     });
   }
-
+  
   submitPayment(paymentData: any): void {
-    // Implement the API call to submit the payment data
     console.log('Submitting payment data:', paymentData);
-    // Example API call:
-    // this.paymentService.addPayment(paymentData).subscribe(response => {
-    //   this.snackBar.open('Payment added successfully', 'Close', {
-    //     duration: 3000,
-    //     panelClass: ['success-snackbar']
-    //   });
-    // }, error => {
-    //   this.snackBar.open('Error adding payment', 'Close', {
-    //     duration: 3000,
-    //     panelClass: ['error-snackbar']
-    //   });
+    // Implement the API call to submit the payment data
+    // this.paymentService.addPayment(paymentData).subscribe({
+    //   next: response => {
+    //     this.snackBar.open('Payment added successfully', 'Close', {
+    //       duration: 3000,
+    //       panelClass: ['success-snackbar']
+    //     });
+    //   },
+    //   error: (error: ApiError) => {
+    //     this.handlePaymentError(error);
+    //   }
     // });
   }
+
+ 
 
   onEdit(): void {
     // Open edit dialog or navigate to edit form
