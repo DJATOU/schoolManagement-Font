@@ -39,11 +39,11 @@ export class GroupTypeTableComponent implements DeleteCommand {
     },
   ];
 
-  constructor(groupTypeservice: GroupTypeService) {
+  constructor(private groupTypeservice: GroupTypeService) {
     this.observable = groupTypeservice.getAllGroupTypes();
   }
 
-  disableItems(data: any[]): Observable<boolean> {
-    throw new Error('Method not implemented.HaHA');
+  disableItems(id_list: Number[]): Observable<boolean> {
+    return this.groupTypeservice.disableGroupType(id_list);
   }
 }

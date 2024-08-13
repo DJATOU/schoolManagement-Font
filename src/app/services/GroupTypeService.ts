@@ -21,5 +21,9 @@ export class GroupTypeService {
     return this.http.get<GroupType[]>(this.apiUrl);
   }
 
+  
+  disableGroupType(id_list: Number[]): Observable<boolean> {
+    return this.http.delete<boolean>(`${this.apiUrl}/disable/${id_list}`);
+  }
 
 }
