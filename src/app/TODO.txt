@@ -6,7 +6,6 @@ Done:
 On going:
     3.  Modifications et désactivations :
         Implémentez les fonctionnalités de modification et de désactivation des différents etities comme (student groupe et teacher)
-        *   La desactivation coté frontend marche bien pour student et teacher, mais pas faite pour groupe
 
 Not Done:
     2.  Affichage des heures de début et de fin :

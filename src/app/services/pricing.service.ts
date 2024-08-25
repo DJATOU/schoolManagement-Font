@@ -23,7 +23,7 @@ export class PricingService {
     return this.http.put<Pricing>(`${this.apiUrl}/${id}`, pricing);
   }
   
-  desactivatePricings(id_list: Number[]): Observable<boolean> {
-    throw new Error('Method not implemented.');
+  disablePricings(id_list: Number[]): Observable<boolean> {
+    return this.http.delete<boolean>(`${this.apiUrl}/disable/${id_list}`);
   }
 }

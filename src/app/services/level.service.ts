@@ -28,7 +28,7 @@ export class LevelService {
     return this.http.put<Level>(`${this.apiUrl}/${id}`, Level);
   }
 
-  desactivateLevels(id_list: Number[]): Observable<boolean> {
+  disableLevels(id_list: Number[]): Observable<boolean> {
     return this.http.delete<boolean>(`${this.apiUrl}/disable/${id_list}`);
   }
 }

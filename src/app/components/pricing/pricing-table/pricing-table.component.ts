@@ -58,6 +58,6 @@ export class PricingTableComponent implements DeleteCommand {
   }
 
   disableItems(id_list: Number[]): Observable<boolean> {
-    return this.pricingService.desactivatePricings(id_list);
+    return this.pricingService.disablePricings(id_list);
   }
 }

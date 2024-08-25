@@ -42,6 +42,6 @@ export class LevelTableComponent implements DeleteCommand{
   }
 
   disableItems(id_list: Number[]): Observable<boolean> {
-    return this.levelService.desactivateLevels(id_list);
+    return this.levelService.disableLevels(id_list);
   }
 }
