@@ -17,13 +17,22 @@ export class PaymentService {
   }
 
   // Méthode pour récupérer les détails de paiement pour une série
-  getPaymentDetailsForSeries(studentId: number, seriesId: number): Observable<PaymentDetail[]> {
-    return this.http.get<PaymentDetail[]>(`${this.apiUrl}/${studentId}/series/${seriesId}/payment-details`);
+  getPaymentDetailsForSeries(studentId: number, seriesId: number): Observable<Payment[]> {
+    return this.http.get<Payment[]>(`${this.apiUrl}/${studentId}/series/${seriesId}/payment-details`);
   }
 
   // Méthode pour récupérer l'historique des paiements pour une série
   getPaymentHistoryForSeries(studentId: number, seriesId: number): Observable<Payment[]> {
     return this.http.get<Payment[]>(`${this.apiUrl}/${studentId}/series/${seriesId}/payment-history`);
   }
+
+  getPaymentHistoryByStudentId(studentId: number): Observable<Payment[]> {
+    return this.http.get<Payment[]>(`${this.apiUrl}/payments/student/${studentId}`);
+  }
+  
+  getPaymentDetailsForSessions(studentId: number, seriesId: number): Observable<PaymentDetail[]> {
+    return this.http.get<PaymentDetail[]>(`${this.apiUrl}/${studentId}/series/${seriesId}`);
+  }
+  
 
 }

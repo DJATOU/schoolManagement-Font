@@ -26,4 +26,8 @@ export class PricingService {
   desactivatePricings(id_list: Number[]): Observable<boolean> {
     throw new Error('Method not implemented.');
   }
+
+  getPricingById(id: number): Observable<Pricing> {
+    return this.http.get<Pricing>(`${this.apiUrl}/${id}`);
+  }
 }

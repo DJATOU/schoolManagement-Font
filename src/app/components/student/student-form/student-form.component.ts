@@ -74,10 +74,15 @@ export class StudentFormComponent implements OnInit {
     private studentService: StudentService,
     private levelService: LevelService,
     public dialog: MatDialog,
-    private snackBar: MatSnackBar // Injectez MatSnackBar ici
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
+    this.initializeForm();
+    this.loadLevels();
+  }
+
+  private initializeForm(): void {
     this.studentForm = this.fb.group({
       personalInformation: this.fb.group({
         firstName: ['', Validators.required],
@@ -98,32 +103,74 @@ export class StudentFormComponent implements OnInit {
         description: ['']
       })
     });
-
-    this.loadSelectOptions();
   }
 
-  loadSelectOptions(): void {
-    this.levelService.getLevels().subscribe(data => this.levels = data);
+  private loadLevels(): void {
+    this.levelService.getLevels().subscribe({
+      next: (data) => (this.levels = data),
+      error: () => this.showErrorMessage('Error loading levels.')
+    });
   }
 
   onFileSelected(event: Event): void {
     const target = event.target as HTMLInputElement;
-    if (target && target.files && target.files.length > 0) {
+    if (target?.files?.length) {
       this.selectedFile = target.files[0];
     }
   }
 
-  flattenFormData(data: any, parentKey: string = ''): { label: string, value: any }[] {
+  onSubmit(): void {
+    if (this.studentForm.invalid) {
+      this.showErrorMessage('The form is not valid or the file is not selected.');
+      return;
+    }
+
+    const formData = this.prepareFormData();
+
+    // Ouvrir un dialogue pour afficher le résumé des données saisies
+    const flattenedData = this.flattenFormData(this.studentForm.value);
+    const dialogRef = this.dialog.open(SummaryDialogComponent, {
+      data: flattenedData
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.submitForm(formData);
+      } else {
+        console.warn('Form submission was cancelled.');
+      }
+    });
+  }
+
+  private prepareFormData(): FormData {
+    const formDataToSubmit = new FormData();
+
+    if (this.selectedFile) {
+      formDataToSubmit.append('file', this.selectedFile, this.selectedFile.name);
+    }
+
+    Object.keys(this.studentForm.value).forEach((groupKey) => {
+      const group = this.studentForm.get(groupKey) as FormGroup;
+      Object.keys(group.controls).forEach((key) => {
+        const value = group.get(key)?.value;
+        if (key === 'level') {
+          formDataToSubmit.append('levelId', value);
+        } else {
+          formDataToSubmit.append(key, value);
+        }
+      });
+    });
+
+    return formDataToSubmit;
+  }
+
+  private flattenFormData(data: any, parentKey: string = ''): { label: string, value: any }[] {
     let result: { label: string, value: any }[] = [];
     Object.keys(data).forEach(key => {
       const newKey = parentKey ? `${parentKey} - ${key}` : key;
       const value = data[key];
       if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-        // Recursively flatten the nested object
         result = result.concat(this.flattenFormData(value, newKey));
-      } else if (Array.isArray(value)) {
-        // Convert array to string
-        result.push({ label: newKey, value: value.join(', ') });
       } else {
         result.push({ label: newKey, value: value });
       }
@@ -131,58 +178,18 @@ export class StudentFormComponent implements OnInit {
     return result;
   }
 
-  onSubmit(): void {
-    if (this.studentForm.valid) {
-      const formData = {
-        personalInformation: this.studentForm.get('personalInformation')?.value,
-        contactInformation: this.studentForm.get('contactInformation')?.value,
-        academicInformation: this.studentForm.get('academicInformation')?.value,
-        photo: this.selectedFile?.name
-      };
-
-      const flattenedData = this.flattenFormData(formData);
-      let filteredFlattenedData = flattenedData.filter(item => item.label !== 'personalInformation - photo');
-      console.log(filteredFlattenedData); // Debug: affiche les données aplaties
-
-      const dialogRef = this.dialog.open(SummaryDialogComponent, {
-        data: filteredFlattenedData
-      });
-
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          // Prepare form data for submission
-          const formDataToSubmit = new FormData();
-          if (this.selectedFile) {
-            formDataToSubmit.append('file', this.selectedFile, this.selectedFile.name);
-          }
-          Object.keys(this.studentForm.value).forEach(groupKey => {
-            const group = this.studentForm.get(groupKey) as FormGroup;
-            Object.keys(group.controls).forEach(key => {
-              const value = group.get(key)?.value;
-              formDataToSubmit.append(key, value);
-            });
-          });
-
-          // Submit the form data
-          this.studentService.createStudent(formDataToSubmit).subscribe({
-            next: (response) => {
-              console.log('Student created:', response);
-              this.onClearForm();
-              this.showSuccessMessage('Student created successfully.'); // Affichez le message de succès
-            },
-            error: (error) => {
-              console.error('Error creating student:', error);
-              this.showErrorMessage('Error creating student.'); // Affichez le message d'erreur
-            }
-          });
-        } else {
-          console.warn('Form submission was cancelled.');
-        }
-      });
-    } else {
-      console.warn('The form is not valid or the file is not selected.');
-      this.showErrorMessage('The form is not valid or the file is not selected.'); // Affichez le message d'erreur
-    }
+  private submitForm(formData: FormData): void {
+    this.studentService.createStudent(formData).subscribe({
+      next: (response) => {
+        console.log('Student created:', response);
+        this.onClearForm();
+        this.showSuccessMessage('Student created successfully.');
+      },
+      error: (error) => {
+        console.error('Error creating student:', error);
+        this.showErrorMessage('Error creating student.');
+      }
+    });
   }
 
   onClearForm(): void {
@@ -190,14 +197,14 @@ export class StudentFormComponent implements OnInit {
     this.selectedFile = null;
   }
 
-  showSuccessMessage(message: string): void {
+  private showSuccessMessage(message: string): void {
     this.snackBar.open(message, 'OK', {
       duration: 3000,
       panelClass: ['snack-bar-success']
     });
   }
 
-  showErrorMessage(message: string): void {
+  private showErrorMessage(message: string): void {
     this.snackBar.open(message, 'OK', {
       duration: 3000,
       panelClass: ['snack-bar-error']

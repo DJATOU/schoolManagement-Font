@@ -24,6 +24,7 @@ import { GroupDialogComponent } from '../../group/group-dialog/group-dialog.comp
 import { PaymentDialogComponent } from '../../payment/payment-dialog/payment-dialog.component';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 import { ApiError, ApiResponse } from '../../../models/response';
+import { PaymentHistoryDialogComponent } from '../../payment/payment-history/payment-history-dialog/payment-history-dialog.component';
 
 const errorMessages = {
   PAYMENT_EXCEEDS_SESSIONS: "Le paiement ne peut pas être effectué car il dépasse le coût des sessions actuellement créées.",
@@ -61,7 +62,7 @@ export class StudentProfileComponent implements OnInit {
   student: Student | null = null;
   allGroups: Group[] = [];
   allGroupTypes: GroupType[] = [];
-  allLevels: Level[] = [];
+  levels: Level[] = [];
   studentGroups: Group[] = [];
   studentLevelId: number = -1;
   groupForm: FormGroup;
@@ -89,6 +90,8 @@ export class StudentProfileComponent implements OnInit {
     } else {
       this.showError(errorMessages.STUDENT_NOT_FOUND);
     }
+
+    this.loadSelectOptions();
   }
 
   private getStudentIdFromRoute(): number | null {
@@ -115,23 +118,36 @@ export class StudentProfileComponent implements OnInit {
   }
 
   private loadStudentLevel(): void {
-    if (this.student?.id !== undefined) {
-      this.levelService.getLevels().subscribe({
-        next: levels => {
-          this.allLevels = levels;
-          const studentLevel = this.allLevels.find(level => level.id?.toString() === this.student?.level);
-          this.studentLevelId = studentLevel?.id || -1;
-          
-          if (this.student) {
-            this.student.level = studentLevel?.description ?? '';
-          }
+    if (this.student?.levelId) {
+      console.log('Attempting to fetch level with ID:', this.student.levelId); // Log pour vérifier l'ID du niveau
+      this.levelService.getLevelById(this.student.levelId).subscribe({
+        next: level => {
+          console.log('Level fetched successfully:', level); // Log pour vérifier la réponse du backend
+          this.student!.levelName = level.name;
+          this.studentLevelId = level.id ?? 0;
+          console.log('Level name set:', this.student?.levelName);
+          this.updateUI();
         },
-        error: () => {
+        error: error => {
+          console.error('Error fetching level:', error); // Log pour vérifier les erreurs
           this.showError(errorMessages.GENERIC_ERROR);
+          this.updateUI();
         }
       });
+    } else {
+      console.warn('No level ID provided for student:', this.student);
+      this.updateUI();
     }
   }
+
+ 
+  
+  private updateUI(): void {
+    // Mettez à jour l'interface ici après avoir récupéré les données
+    this.loading = false;
+  }
+  
+
 
   private loadStudentGroups(): void {
     if (this.student?.id !== undefined) {
@@ -167,6 +183,10 @@ export class StudentProfileComponent implements OnInit {
         this.showError(errorMessages.GENERIC_ERROR);
       }
     });
+  }
+
+  loadSelectOptions(): void {
+    this.levelService.getLevels().subscribe(data => this.levels = data);
   }
 
   onSubmitGroups(): void {
@@ -333,4 +353,19 @@ export class StudentProfileComponent implements OnInit {
   onPrint(): void {
     window.print();
   }
+
+  openPaymentHistoryDialog(): void {
+    this.dialog.open(PaymentHistoryDialogComponent, {
+      width: '600px',
+      data: { studentId: this.student?.id } // Passer l'ID de l'étudiant pour filtrer les données
+    });
+  }
+  
+  openAttendanceHistoryDialog(): void {
+    /*this.dialog.open(AttendanceHistoryDialogComponent, {
+      width: '600px',
+      data: { studentId: this.student?.id } // Passer l'ID de l'étudiant pour filtrer les données
+    });*/
+  }
+  
 }

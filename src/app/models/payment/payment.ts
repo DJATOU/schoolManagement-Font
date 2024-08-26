@@ -1,17 +1,15 @@
-// src/app/models/payment.model.ts
-
 export interface Payment {
-    studentId: number;           // Non-nullable field
-    sessionId: number;           // Non-nullable field
-    sessionSeriesId: number;     // Non-nullable field
-    amountPaid: number;          // Non-nullable field, should be validated to be >= 0
-    paymentForMonth: Date;       // Date can be null, so it's implicitly optional
-    status?: string;             // Optional field
-    paymentMethod?: string;      // Optional field
-    paymentDescription?: string; // Optional field
-    groupId: number;             // Non-nullable field
-    totalSeriesCost?: number; // Add this property
-    totalPaidForSeries?: number; // Add this property
-    amountOwed?: number; // Add this property
-  }
-  
+  studentId: number;
+  sessionId: number;
+  sessionSeriesId: number;
+  amountPaid: number;
+  paymentForMonth: Date;
+  status?: string;
+  paymentMethod?: string;
+  paymentDescription?: string;
+  groupId: number;
+  totalSeriesCost?: number; // Propriété ajoutée pour le coût total de la série
+  totalPaidForSeries?: number; // Propriété ajoutée pour le total payé
+  amountOwed?: number; // Propriété ajoutée pour le montant restant dû
+  seriesPrice?: number;
+}

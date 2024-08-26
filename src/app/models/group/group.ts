@@ -1,3 +1,5 @@
+import { Pricing } from "../pricing/pricing";
+
 export interface Group {
     id?: number;
     name: string;
@@ -11,5 +13,6 @@ export interface Group {
     description?: string;
     teacherId: number;
     studentIds?: Set<number>;
+    pricing?: Pricing;
   }
   

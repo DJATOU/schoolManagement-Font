@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,6 +15,7 @@ import { Payment } from '../../../models/payment/payment';
 import { PaymentConfirmationDialogComponent } from '../payment-confirmation-dialog/payment-confirmation-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PaymentDetail } from '../../../models/paymentDetail/paymentDetail';
+import { PricingService } from '../../../services/pricing.service';
 
 @Component({
   selector: 'app-payment-dialog',
@@ -47,6 +48,7 @@ export class PaymentDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<PaymentDialogComponent>,
     private sessionSeriesService: SeriesService,
     private paymentService: PaymentService,
+    private pricingService :PricingService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: { studentId: number, groups: Group[] }
@@ -85,49 +87,61 @@ export class PaymentDialogComponent implements OnInit {
   }
 
   openConfirmationDialog(paymentData: Payment): void {
-    const sessionSeriesId = paymentData.sessionSeriesId;
-    this.paymentService.getPaymentDetailsForSeries(this.studentId, sessionSeriesId).subscribe({
-      next: (paymentDetails) => {
-        this.paymentService.getPaymentHistoryForSeries(this.studentId, sessionSeriesId).subscribe({
-          next: (paymentHistory) => {
-            const totalPaidPreviously = paymentHistory.reduce((acc, curr) => acc + curr.amountPaid, 0);
-            const totalOwed = paymentHistory[0]?.amountOwed || 0;
-            const remainingAmount = totalOwed - (totalPaidPreviously + paymentData.amountPaid);
-
-            // Ajout des logs pour vérifier les valeurs
-            console.log('Total Owed:', totalOwed);
-            console.log('Total Paid Previously:', totalPaidPreviously);
-            console.log('Payment Data Amount Paid:', paymentData.amountPaid);
-            console.log('Remaining Amount:', remainingAmount);
-
-            const dialogRef = this.dialog.open(PaymentConfirmationDialogComponent, {
-              width: '500px',
-              data: {
-                paymentDetails: paymentDetails,
-                paymentHistory: paymentHistory,
-                totalPaid: totalPaidPreviously + paymentData.amountPaid,
-                totalOwed: totalOwed,
-                remainingAmount: remainingAmount
-              }
-            });
-
-            dialogRef.afterClosed().subscribe(result => {
-              if (result) {
-                this.submitPayment(paymentData);
-              }
-            });
-          },
-          error: (err) => {
-            console.error('Error fetching payment history:', err);
-          }
-        });
-      },
-      error: (err) => {
-        console.error('Error fetching payment details:', err);
-      }
-    });
-}
-
+    const sessionSeries = this.sessionSeries.find(series => series.id === paymentData.sessionSeriesId);
+    const seriesName = sessionSeries?.name || 'Unknown Series';
+  
+    // Charger le groupe pour obtenir le priceId et récupérer les informations de tarification
+    const group = this.groups.find(group => group.id === sessionSeries?.groupId);
+    if (group?.priceId) {
+      this.pricingService.getPricingById(group.priceId).subscribe({
+        next: (pricing) => {
+          const groupPrice = pricing.price * group.sessionNumberPerSerie;
+  
+          this.paymentService.getPaymentDetailsForSeries(this.studentId, paymentData.sessionSeriesId).subscribe({
+            next: (paymentDetails) => {
+              this.paymentService.getPaymentHistoryForSeries(this.studentId, paymentData.sessionSeriesId).subscribe({
+                next: (paymentHistory) => {
+                  const totalPaidPreviously = paymentHistory.reduce((acc, curr) => acc + curr.amountPaid, 0);
+                  const totalOwed = groupPrice; // Utiliser le prix récupéré via l'entité Pricing
+                  const remainingAmount = totalOwed - (totalPaidPreviously + paymentData.amountPaid);
+  
+                  const dialogRef = this.dialog.open(PaymentConfirmationDialogComponent, {
+                    width: '500px',
+                    data: {
+                      seriesName: seriesName,
+                      seriesPrice: groupPrice,
+                      paymentDetails: paymentDetails,
+                      paymentHistory: paymentHistory,
+                      totalPaid: totalPaidPreviously + paymentData.amountPaid,
+                      totalOwed: totalOwed,
+                      remainingAmount: remainingAmount
+                    }
+                  });
+  
+                  dialogRef.afterClosed().subscribe(result => {
+                    if (result) {
+                      this.submitPayment(paymentData);
+                    }
+                  });
+                },
+                error: (err) => {
+                  console.error('Error fetching payment history:', err);
+                }
+              });
+            },
+            error: (err) => {
+              console.error('Error fetching payment details:', err);
+            }
+          });
+        },
+        error: (err) => {
+          console.error('Error fetching pricing:', err);
+        }
+      });
+    }
+  }
+  
+  
 
   onSubmit(): void {
     if (this.paymentForm.valid) {

@@ -11,8 +11,8 @@
             <p><strong>Group:</strong> {{ sessionData.groupName }}</p>
             <p><strong>Room:</strong> {{ sessionData.roomName }}</p>
             <p><strong>Teacher:</strong> {{ sessionData.teacherName }}</p>
-            <p><strong>Start:</strong> {{ sessionData.start | date: 'medium' }}</p>
-            <p><strong>End:</strong> {{ sessionData.end | date: 'medium' }}</p>
+            <p><strong>Start:</strong> {{ sessionData.sessionTimeStart | date: 'medium' }}</p>
+            <p><strong>End:</strong> {{ sessionData.sessionTimeEnd | date: 'medium' }}</p>
             <p><strong>Feedback:</strong> <a href="{{ sessionData.feedbackLink }}" target="_blank">Link</a></p>
           </div>
         </mat-card-content>
@@ -22,6 +22,9 @@
       <mat-card class="students-card">
         <mat-card-header>
           <mat-card-title>Students</mat-card-title>
+          <button mat-icon-button (click)="openAddStudentDialog()" [disabled]="isFinished">
+            <mat-icon>add</mat-icon> <!-- Bouton pour ajouter un étudiant -->
+          </button>
         </mat-card-header>
         <mat-card-content>
           <mat-checkbox (change)="toggleAllStudents($event.checked)" class="check-all" [disabled]="isFinished">Check All</mat-checkbox>
@@ -39,5 +42,6 @@
 
 <mat-dialog-actions>
   <button mat-button (click)="onValidateSession()" color="primary" [disabled]="isFinished">Validate Session</button>
+  <button mat-button (click)="onUnvalidateSession()" color="accent" *ngIf="isFinished">Unvalidate Session</button> <!-- Bouton pour dévalider -->
   <button mat-button (click)="dialogRef.close()" color="warn">Close</button>
 </mat-dialog-actions>

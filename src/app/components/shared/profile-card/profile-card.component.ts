@@ -9,9 +9,10 @@ interface Profile {
   firstName: string;
   lastName: string;
   photo: string;
-  subtitle: string;
+  subtitle?: string;
   email?: string;
   phoneNumber?: string;
+  level?: number;
 }
 
 @Component({
@@ -29,8 +30,12 @@ export class ProfileCardComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('Profile data:', this.profile);
-    if (!this.profile || !this.profile.id) {
-      console.error('Profile input is not properly defined or does not have an ID:', this.profile);
+    if (!this.profile) {
+      console.error('Profile is null or undefined:', this.profile);
+    } else if (!this.profile.id) {
+      console.error('Profile ID is missing:', this.profile);
+    } else {
+      console.log('Profile is properly defined:', this.profile);
     }
   }
 

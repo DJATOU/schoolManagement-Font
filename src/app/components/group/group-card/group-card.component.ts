@@ -22,10 +22,15 @@ export class GroupCardComponent implements OnInit {
   type: string = 'Unknown Type';
 
   ngOnInit(): void {
+    this.setLevelAndType();
+  }
+
+  private setLevelAndType(): void {
     const levelData = this.levels.find(level => level.id === this.group.levelId);
     const typeData = this.groupTypes.find(type => type.id === this.group.groupTypeId);
 
-    this.level = levelData ? levelData.name : 'Unknown Level';
-    this.type = typeData ? typeData.name : 'Unknown Type';
+    // Assurez-vous que `levelData` et `typeData` existent avant d'accéder à leurs propriétés
+    this.level = levelData?.name || 'Unknown Level';
+    this.type = typeData?.name || 'Unknown Type';
   }
 }

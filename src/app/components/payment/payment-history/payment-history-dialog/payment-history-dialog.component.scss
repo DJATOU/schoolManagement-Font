@@ -1,0 +1,45 @@
+.paid {
+    color: green;
+  }
+  
+  .partially-paid {
+    color: orange;
+  }
+  
+  .unpaid {
+    color: red;
+  }
+  
+  .row-paid {
+    background-color: #d0f0c0;
+  }
+  
+  .row-partially-paid {
+    background-color: #ffe4b5;
+  }
+  
+  .row-unpaid {
+    background-color: #ffcccb;
+  }
+  
+  .series-summary {
+    padding: 16px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+  }
+  
+  .summary-paid {
+    background-color: #d0f0c0;
+    border: 1px solid green;
+  }
+  
+  .summary-partially-paid {
+    background-color: #ffe4b5;
+    border: 1px solid orange;
+  }
+  
+  .summary-unpaid {
+    background-color: #ffcccb;
+    border: 1px solid red;
+  }
+  

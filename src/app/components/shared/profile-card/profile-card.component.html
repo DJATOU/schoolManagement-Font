@@ -1,18 +1,17 @@
 <mat-card class="profile-card" (click)="navigateToProfile()">
-    <div class="profile-card-content">
-      <img mat-card-avatar [src]="profile.photo" alt="Profile Photo" class="profile-photo">
-      <div class="profile-info">
-        <mat-card-title class="profile-name">{{ profile.firstName }} {{ profile.lastName }}</mat-card-title>
-        <mat-card-subtitle class="profile-subtitle">{{ profile.subtitle }}</mat-card-subtitle>
-      </div>
-      <mat-card-actions class="card-actions">
-        <button mat-button class="contact-button email-button" (click)="sendEmail($event)">
-          <i class="material-icons">email</i>
-        </button>
-        <button mat-button class="contact-button phone-button" (click)="callPhone($event)">
-          <i class="material-icons">phone</i>
-        </button>
-      </mat-card-actions>
+  <div class="profile-card-content">
+    <img mat-card-avatar [src]="profile.photo" alt="Profile Photo" class="profile-photo">
+    <div class="profile-info">
+      <mat-card-title class="profile-name">{{ profile.firstName }} {{ profile.lastName }}</mat-card-title>
+      <mat-card-subtitle class="profile-subtitle">{{ profile.subtitle }}</mat-card-subtitle>
     </div>
-  </mat-card>
-  
+    <mat-card-actions class="card-actions">
+      <button mat-button class="contact-button email-button" (click)="sendEmail($event)">
+        <i class="material-icons">email</i>
+      </button>
+      <button mat-button class="contact-button phone-button" (click)="callPhone($event)">
+        <i class="material-icons">phone</i>
+      </button>
+    </mat-card-actions>
+  </div>
+</mat-card>

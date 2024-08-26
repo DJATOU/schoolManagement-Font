@@ -21,6 +21,13 @@
           <button mat-icon-button class="print-button" (click)="onPrint()" aria-label="Print">
             <mat-icon>print</mat-icon>
           </button>
+          <!-- New Buttons for Payment and Attendance History -->
+          <button mat-icon-button class="payment-history-button" (click)="openPaymentHistoryDialog()" aria-label="Payment History">
+            <mat-icon>account_balance_wallet</mat-icon>
+          </button>
+          <button mat-icon-button class="attendance-history-button" (click)="openAttendanceHistoryDialog()" aria-label="Attendance History">
+            <mat-icon>fact_check</mat-icon>
+          </button>
         </div>
       </div>
     </mat-card-header>
@@ -36,7 +43,7 @@
         </div>
         <div class="info-section">
           <h3>Academic Information</h3>
-          <p><strong>Level:</strong> {{ student?.level }}</p>
+          <p><strong>Level:</strong> {{ student?.levelName }}</p>
           <p><strong>Establishment:</strong> {{ student?.establishment }}</p>
           <p><strong>Average Score:</strong> {{ student?.averageScore }}</p>
         </div>
@@ -58,7 +65,7 @@
       <div class="group-cards">
         <app-group-card *ngFor="let group of studentGroups"
                         [group]="group"
-                        [levels]="allLevels"
+                        [levels]="levels"
                         [groupTypes]="allGroupTypes">
         </app-group-card>
       </div>

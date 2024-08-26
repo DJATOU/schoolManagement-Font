@@ -10,7 +10,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 
-
 @Component({
   selector: 'app-payment-confirmation-dialog',
   standalone: true,
@@ -31,7 +30,14 @@ export class PaymentConfirmationDialogComponent {
 
   constructor(
     private dialogRef: MatDialogRef<PaymentConfirmationDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { paymentDetails: PaymentDetail[], paymentHistory: Payment[], totalOwed: number, totalPaid: number }
+    @Inject(MAT_DIALOG_DATA) public data: { 
+      seriesName: string; 
+      seriesPrice: number; 
+      paymentDetails: PaymentDetail[]; 
+      paymentHistory: Payment[]; 
+      totalOwed: number; 
+      totalPaid: number; 
+    }
   ) {}
 
   onConfirm(): void {

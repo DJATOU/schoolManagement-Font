@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { Student } from '../models/student/student';
 import { API_BASE_URL } from '../app.config';
 import { Group } from '../models/group/group';
@@ -14,7 +14,9 @@ export class StudentService {
   constructor(private http: HttpClient) { }
 
   getStudents(): Observable<Student[]> {
-    return this.http.get<Student[]>(this.apiUrl);
+    return this.http.get<Student[]>(this.apiUrl).pipe(
+      tap(student => console.log("ooooooooooooooooooo", student))
+    );
   }
 
   getGroupsForStudent(id: number): Observable<Group[]> {
@@ -22,11 +24,13 @@ export class StudentService {
   }
 
   getStudentById(id: number): Observable<Student> {
-    return this.http.get<Student>(`${this.apiUrl}/id/${id}`);
-  }
+    return this.http.get<Student>(`${this.apiUrl}/id/${id}`).pipe(
+        tap(student => console.log("Student", student))
+    );
+}
 
   createStudent(studentData: FormData): Observable<Student> {
-    console.log(studentData);
+    console.log("nnnnnnnnnnnnnnn",studentData);
     return this.http.post<Student>(`${this.apiUrl}/createStudent`, studentData);
   }
 
@@ -34,7 +38,7 @@ export class StudentService {
     return this.http.put<Student>(`${this.apiUrl}/${id}`, student);
   }
 
-  searchStudents(firstName: string, lastName: string, level: string, groupId: string, establishment: string): Observable<Student[]> {
+  searchStudents(firstName: string, lastName: string, level: number, groupId: string, establishment: string): Observable<Student[]> {
     return this.http.get<Student[]>(`${this.apiUrl}/search`, {
       params: new HttpParams()
         .set('firstName', firstName)
@@ -70,4 +74,11 @@ export class StudentService {
   disableStudent(id: number): Observable<boolean> {
     return this.http.delete<boolean>(`${this.apiUrl}/disable/${id}`);
   }
+
+// student.service.ts
+  getStudentsByLevel(levelId: number): Observable<Student[]> {
+    return this.http.get<Student[]>(`${this.apiUrl}/levels/${levelId}`);
+  }
+
+  
 }

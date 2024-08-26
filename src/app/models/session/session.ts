@@ -1,25 +1,25 @@
 import { Group } from "../group/group";
 
 export interface Session {
-    id: string;
-    title: string;
-    description?: string;  // Optional field
-    sessionType: string;
-    feedbackLink?: string;  // Optional field
-    sessionTimeStart: Date;
-    sessionTimeEnd: Date;
-    groupId: string;
-    room_id: string;
-    session_series_id?: string;
-    teacher_id: string;
-    created_by?: string;
-    updated_by?: string;
-    date_creation?: Date;  // Optional field
-    date_update?: Date;    // Optional field
-    group?:Group
-    groupName?: string;   // Human-readable group name
-    roomName?: string;   // Human-readable room name
-    teacherName?: string; // Human-readable teacher name
-    isFinished?: string;
-  }
-  
+  id: number;
+  title: string;
+  description?: string;
+  sessionType: string;
+  feedbackLink?: string;
+  sessionTimeStart: Date;
+  sessionTimeEnd: Date;
+  groupId: number;
+  room_id: string;
+  sessionSeriesId?: number;
+  teacher_id: string;
+  created_by?: string;
+  updated_by?: string;
+  date_creation?: Date;
+  date_update?: Date;
+  group?: Group;
+  groupName?: string;
+  roomName?: string;
+  teacherName?: string;
+  isFinished?: boolean;
+  students: Array<{ id: number; isPresent: boolean }>;
+}

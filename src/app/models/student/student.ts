@@ -8,11 +8,14 @@ export interface Student {
     dateOfBirth: Date;
     placeOfBirth: string;
     photo: number[];
-    level: string;
-    groupIds?: number[];  // optional
-    tutorId?: number;  // optional
+    level: number;
+    levelId: number;
+    levelName?: string;
+    groupIds?: number[];
+    tutorId?: number;
     establishment: string;
-    averageScore?: number;  // optional
-    isPresent?:boolean,
+    averageScore?: number;
+    isPresent?: boolean;
     description?: string;
-}
+  }
+  
