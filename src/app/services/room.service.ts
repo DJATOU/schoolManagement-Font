@@ -26,4 +26,9 @@ export class RoomService {
   desactivateRooms(id_list: Number[]): Observable<boolean> {
     throw new Error('Method not implemented.');
   }
+
+  getRoom(id: number): Observable<Room> {
+    return this.http.get<Room>(`${this.apiUrl}/${id}`);
+  }
+  
 }

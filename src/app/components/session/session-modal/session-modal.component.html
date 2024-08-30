@@ -41,6 +41,7 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
+  <button mat-button (click)="onEditSession()" color="accent" [disabled]="isFinished">Edit Session</button>
   <button mat-button (click)="onValidateSession()" color="primary" [disabled]="isFinished">Validate Session</button>
   <button mat-button (click)="onUnvalidateSession()" color="accent" *ngIf="isFinished">Unvalidate Session</button> <!-- Bouton pour dévalider -->
   <button mat-button (click)="dialogRef.close()" color="warn">Close</button>

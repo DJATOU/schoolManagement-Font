@@ -39,7 +39,7 @@ export class SessionService {
   }
 
   // Update a session
-  updateSession(id: string, session: Session): Observable<Session> {
+  updateSession(id: number, session: Session): Observable<Session> {
     return this.http.patch<Session>(`${this.apiUrl}/${id}`, session);
   }
 
@@ -66,26 +66,25 @@ export class SessionService {
 
 
   getSessionsInDateRange(groupId: number, start: Date, end: Date): Observable<Session[]> {
-    console.log("je rentre dans getSessionsInDateRange"); // Log pour vérifier l'entrée dans la méthode
+    console.log("Entering getSessionsInDateRange");
     const params = new HttpParams()
       .set('groupId', groupId.toString())
       .set('start', start.toISOString())
       .set('end', end.toISOString());
-  
-    // Log supplémentaire pour vérifier les paramètres
+
     console.log('Params:', params.toString());
-  
+
     return this.http.get<Session[]>(`${this.apiUrl}/sessions`, { params }).pipe(
       tap(sessions => {
-        // Log pour vérifier les données récupérées
-        console.log('Sessions récupérées:', sessions);
+        console.log('Sessions retrieved:', sessions); // Vérifiez ici les IDs
       }),
       catchError(error => {
-        console.error('Erreur lors de la récupération des sessions:', error);
+        console.error('Error fetching sessions:', error);
         return throwError(error);
       })
     );
-  }
+}
+
   
 
 }

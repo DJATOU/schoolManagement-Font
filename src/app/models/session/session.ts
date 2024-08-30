@@ -9,9 +9,9 @@ export interface Session {
   sessionTimeStart: Date;
   sessionTimeEnd: Date;
   groupId: number;
-  room_id: string;
+  roomId: number;
   sessionSeriesId?: number;
-  teacher_id: string;
+  teacherId: number;
   created_by?: string;
   updated_by?: string;
   date_creation?: Date;

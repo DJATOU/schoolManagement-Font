@@ -250,3 +250,16 @@ mat-card-title {
   background-color: #f44336; /* Couleur rouge pour erreur */
   color: #fff; /* Texte blanc */
 }
+
+
+/* Ensure the Angular Material overlay container has a high z-index */
+.cdk-overlay-container {
+  z-index: 1000 !important; /* Adjust as necessary */
+}
+
+/* Ensure the ngx-material-timepicker has an even higher z-index */
+.ngx-material-timepicker-container {
+  z-index: 1050 !important; /* Adjust as necessary */
+}
+
+

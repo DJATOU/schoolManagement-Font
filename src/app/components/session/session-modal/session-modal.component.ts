@@ -16,6 +16,7 @@ import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { AddStudentDialogComponent } from '../add-student-dialog/add-student-dialog.component';
 import { StudentService } from '../../../services/student.service';
+import { EditSessionDialogComponent } from '../edit/edit-session-dialog/edit-session-dialogue.component';
 
 @Component({
   selector: 'app-session-modal',
@@ -51,7 +52,11 @@ export class SessionModalComponent implements OnInit {
     this.isFinished = !!this.sessionData.isFinished; // Convertir en booléen si la valeur est définie
 
     // Log supplémentaire pour vérifier les données de session
-    console.log('Session Data on Init:', this.sessionData);
+    console.log('Session Data on Init SessionModalComponent:', this.sessionData);
+
+    if (this.sessionData.roomId === null || this.sessionData.teacherId === null) {
+      console.error('room_id or teacher_id is null in the initial session data.');
+    }
   }
 
   private loadStudentsData(): void {
@@ -199,6 +204,38 @@ export class SessionModalComponent implements OnInit {
       }
     });
   }
-  
 
+  onEditSession(): void {
+    const editSessionData: Session = {
+      id: this.sessionData.id,
+      title: this.sessionData.title,
+      sessionType: this.sessionData.sessionType,
+      groupId: this.sessionData.groupId,
+      roomId: this.sessionData.roomId ?? null,  // Assurez-vous que la valeur est bien assignée
+      teacherId: this.sessionData.teacherId ?? null,  // Assurez-vous que la valeur est bien assignée
+      groupName: this.sessionData.groupName ?? '',
+      roomName: this.sessionData.roomName ?? '',
+      teacherName: this.sessionData.teacherName ?? '',
+      sessionTimeStart: this.sessionData.sessionTimeStart,
+      sessionTimeEnd: this.sessionData.sessionTimeEnd,
+      feedbackLink: this.sessionData.feedbackLink,
+      students: this.sessionData.students
+    };
+  
+    console.log('Edit Session Data:', editSessionData);
+  
+    const dialogRef = this.dialog.open(EditSessionDialogComponent, {
+       backdropClass: '',
+       panelClass: 'custom-dialog-container',
+      width: '700px',
+      data: { session: editSessionData }
+    });
+  
+    dialogRef.afterClosed().subscribe((updatedSession: Session | null) => {
+      if (updatedSession) {
+        Object.assign(this.sessionData, updatedSession);
+      }
+    });
+  }
+  
 }
