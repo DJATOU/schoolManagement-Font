@@ -129,7 +129,7 @@ export class SessionFormComponent implements OnInit {
         const formData = this.sessionForm.value;
         const startDateTime = this.combineDateTime(formData.sessionTiming.sessionDateStart, formData.sessionTiming.sessionTimeStart);
         const endDateTime = this.combineDateTime(formData.sessionTiming.sessionDateEnd, formData.sessionTiming.sessionTimeEnd);
-
+  
         const submissionData = {
           ...formData.sessionDetails,
           ...formData.sessionTiming,
@@ -139,7 +139,9 @@ export class SessionFormComponent implements OnInit {
           roomId: formData.identifiers.roomId,
           teacherId: formData.identifiers.teacherId,
         };
-
+  
+        console.log('Initial submissionData:', submissionData);
+  
         const flattenedData = this.flattenFormData({
           sessionDetails: formData.sessionDetails,
           sessionTiming: formData.sessionTiming,
@@ -149,23 +151,31 @@ export class SessionFormComponent implements OnInit {
             teacher: this.getTeacherNameById(formData.identifiers.teacherId),
           }
         });
-
+  
         const dialogRef = this.dialog.open(SummaryDialogComponent, {
           data: flattenedData
         });
-
+  
         dialogRef.afterClosed().subscribe(result => {
           if (result) {
-            // Handle series creation and session submission
+            console.log('Dialog confirmed, proceeding with series creation or session submission.');
+  
             this.groupService.getGroupById(submissionData.groupId).subscribe(group => {
+              console.log('Group data:', group);
               const totalSessionsPerSeries = group.sessionNumberPerSerie;
-
+  
               this.seriesService.getSessionSeriesByGroupId(submissionData.groupId).subscribe(series => {
+                console.log('Existing series for group:', series);
                 const currentSeries = series.find(s => s.groupId === submissionData.groupId);
-
+  
                 if (currentSeries && currentSeries.id !== undefined) {
+                  console.log('Found existing series:', currentSeries);
+  
                   this.sessionService.getSessionsBySeriesId(currentSeries.id).subscribe(sessions => {
+                    console.log('Sessions in current series:', sessions);
+  
                     if (sessions.length >= totalSessionsPerSeries) {
+                      console.log('Series is full, creating a new series.');
                       const newSeriesData: SessionSeries = {
                         groupId: submissionData.groupId,
                         totalSessions: totalSessionsPerSeries,
@@ -174,17 +184,22 @@ export class SessionFormComponent implements OnInit {
                         serieTimeStart: new Date().toISOString(),
                         serieTimeEnd: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString()
                       };
-
+  
                       this.seriesService.createSeries(newSeriesData).subscribe(newSeries => {
+                        console.log('New series created:', newSeries);
                         submissionData.seriesId = newSeries.id;
+                        console.log('Updated submissionData with new series ID:', submissionData);
                         this.submitSession(submissionData);
                       });
                     } else {
+                      console.log('Adding session to existing series.');
                       submissionData.seriesId = currentSeries.id!;
+                      console.log('Updated submissionData with existing series ID:', submissionData);
                       this.submitSession(submissionData);
                     }
                   });
                 } else {
+                  console.log('No existing series found, creating a new one.');
                   const newSeriesData: SessionSeries = {
                     groupId: submissionData.groupId,
                     totalSessions: totalSessionsPerSeries,
@@ -193,9 +208,11 @@ export class SessionFormComponent implements OnInit {
                     serieTimeStart: new Date().toISOString(),
                     serieTimeEnd: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString()
                   };
-
+  
                   this.seriesService.createSeries(newSeriesData).subscribe(newSeries => {
+                    console.log('New series created:', newSeries);
                     submissionData.seriesId = newSeries.id;
+                    console.log('Updated submissionData with new series ID:', submissionData);
                     this.submitSession(submissionData);
                   });
                 }
@@ -217,7 +234,7 @@ export class SessionFormComponent implements OnInit {
       }
     }
   }
-
+  
   private submitSession(submissionData: any): void {
     console.log('Submitting:', submissionData);
     this.sessionService.createSession(submissionData).subscribe({
@@ -236,7 +253,7 @@ export class SessionFormComponent implements OnInit {
       }
     });
   }
-
+  
   getGroupNameById(id: number): string {
     const group = this.groups.find(g => g.id === id);
     return group ? group.name : '';
