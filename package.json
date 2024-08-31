@@ -30,6 +30,8 @@
     "@fullcalendar/list": "^6.1.11",
     "@fullcalendar/timegrid": "^6.1.11",
     "gsap": "^3.12.5",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
     "lottie-web": "^5.12.2",
     "luxon": "^3.4.4",
     "moment": "^2.30.1",

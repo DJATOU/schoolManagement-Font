@@ -1,52 +1,93 @@
 .teacher-profile-container {
-  max-width: 1200px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.teacher-card, .group-card {
-  margin-bottom: 2rem;
-}
-
-.teacher-photo {
-  background-size: cover;
-  background-position: center;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-}
-
-.teacher-info {
   display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
 
-.info-section {
-  flex: 1 1 48%;
-  margin-bottom: 1rem;
-}
+  .teacher-card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
 
-h3 {
-  margin-top: 0;
-}
+    .teacher-photo {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-right: 16px;
 
-.button-container {
-  display: flex;
-  justify-content: space-between;
-}
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
 
-button {
-  padding: 0.75rem 2rem;
-  font-size: 1rem;
-}
+    mat-card-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #333;
+    }
 
-.loading-spinner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+    mat-card-subtitle {
+      font-size: 1.25rem;
+      color: #777;
+    }
+
+    mat-card-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+    }
+
+    mat-card-content {
+      padding: 24px;
+    }
+
+    .teacher-info {
+      display: flex;
+      justify-content: space-between;
+      gap: 32px;
+
+      .info-section {
+        flex: 1;
+        background-color: #f9f9f9;
+        padding: 16px;
+        border-radius: 8px;
+
+        h3 {
+          font-size: 1.2rem;
+          margin-bottom: 12px;
+          color: #333;
+        }
+
+        p {
+          margin: 4px 0;
+          font-size: 1rem;
+          color: #555;
+
+          strong {
+            color: #000;
+          }
+        }
+      }
+    }
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+
+    button {
+      min-width: 150px;
+    }
+  }
+
+  .loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+  }
 }

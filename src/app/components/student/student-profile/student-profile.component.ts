@@ -25,6 +25,7 @@ import { PaymentDialogComponent } from '../../payment/payment-dialog/payment-dia
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 import { ApiError, ApiResponse } from '../../../models/response';
 import { PaymentHistoryDialogComponent } from '../../payment/payment-history/payment-history-dialog/payment-history-dialog.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 const errorMessages = {
   PAYMENT_EXCEEDS_SESSIONS: "Le paiement ne peut pas être effectué car il dépasse le coût des sessions actuellement créées.",
@@ -52,7 +53,8 @@ const errorMessages = {
     MatExpansionModule,
     GroupCardComponent,
     PaymentDialogComponent,
-    GroupDialogComponent
+    GroupDialogComponent,
+    MatTooltipModule
   ],
   templateUrl: './student-profile.component.html',
   styleUrls: ['./student-profile.component.scss'],
@@ -350,9 +352,29 @@ export class StudentProfileComponent implements OnInit {
     });
   }
   
-  onPrint(): void {
-    window.print();
+  onPrint(lang: string = 'ar') {
+    if (this.student?.id) {
+      this.studentService.generateStudentPdf(this.student.id, lang).subscribe({
+        next: (pdfBlob: Blob) => {
+          const blob = new Blob([pdfBlob], { type: 'application/pdf' });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `student-profile-${this.student?.id}.pdf`;
+          a.click();
+          window.URL.revokeObjectURL(url);
+        },
+        error: (error) => {
+          console.error('Error generating PDF:', error);
+          this.showErrorMessage('Failed to generate PDF.');
+        }
+      });
+    } else {
+      this.showErrorMessage('Student not found.');
+    }
   }
+  
+  
 
   openPaymentHistoryDialog(): void {
     this.dialog.open(PaymentHistoryDialogComponent, {

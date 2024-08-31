@@ -4,7 +4,7 @@
       <div class="header-container">
         <div class="student-info-header">
           <div class="student-photo-container">
-            <img [src]="student?.photo" alt="Student Photo" class="student-photo">
+            <img [src]="student?.photo" alt="Photo de l'étudiant" class="student-photo">
           </div>
           <div>
             <mat-card-title>{{ student?.firstName }} {{ student?.lastName }}</mat-card-title>
@@ -12,20 +12,19 @@
           </div>
         </div>
         <div class="header-buttons">
-          <button mat-icon-button class="edit-button" (click)="onEdit()" aria-label="Edit">
+          <button mat-icon-button class="edit-button" (click)="onEdit()" aria-label="Modifier" matTooltip="Modifier le profil">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button class="disable-button" (click)="onDisable()" aria-label="Disable">
+          <button mat-icon-button class="disable-button" (click)="onDisable()" aria-label="Désactiver" matTooltip="Désactiver le compte">
             <mat-icon>block</mat-icon>
           </button>
-          <button mat-icon-button class="print-button" (click)="onPrint()" aria-label="Print">
+          <button mat-icon-button class="print-button" (click)="onPrint('fr')" aria-label="Imprimer" matTooltip="pdf fr">
             <mat-icon>print</mat-icon>
           </button>
-          <!-- New Buttons for Payment and Attendance History -->
-          <button mat-icon-button class="payment-history-button" (click)="openPaymentHistoryDialog()" aria-label="Payment History">
+          <button mat-icon-button class="payment-history-button" (click)="openPaymentHistoryDialog()" aria-label="Historique des paiements" matTooltip="Voir l'historique des paiements">
             <mat-icon>account_balance_wallet</mat-icon>
           </button>
-          <button mat-icon-button class="attendance-history-button" (click)="openAttendanceHistoryDialog()" aria-label="Attendance History">
+          <button mat-icon-button class="attendance-history-button" (click)="openAttendanceHistoryDialog()" aria-label="Historique de présence" matTooltip="Voir l'historique de présence">
             <mat-icon>fact_check</mat-icon>
           </button>
         </div>
@@ -34,23 +33,23 @@
     <mat-card-content>
       <div class="student-info-grid">
         <div class="info-section">
-          <h3>Personal Information</h3>
-          <p><strong>Gender:</strong> {{ student?.gender }}</p>
-          <p><strong>Email:</strong> {{ student?.email }}</p>
-          <p><strong>Phone Number:</strong> {{ student?.phoneNumber }}</p>
-          <p><strong>Date of Birth:</strong> {{ student?.dateOfBirth | date: 'mediumDate' }}</p>
-          <p><strong>Place of Birth:</strong> {{ student?.placeOfBirth }}</p>
+          <h3>Informations Personnelles</h3>
+          <p><strong>Sexe :</strong> {{ student?.gender }}</p>
+          <p><strong>Email :</strong> {{ student?.email }}</p>
+          <p><strong>Téléphone :</strong> {{ student?.phoneNumber }}</p>
+          <p><strong>Date de naissance :</strong> {{ student?.dateOfBirth | date: 'mediumDate' }}</p>
+          <p><strong>Lieu de naissance :</strong> {{ student?.placeOfBirth }}</p>
         </div>
         <div class="info-section">
-          <h3>Academic Information</h3>
-          <p><strong>Level:</strong> {{ student?.levelName }}</p>
-          <p><strong>Establishment:</strong> {{ student?.establishment }}</p>
-          <p><strong>Average Score:</strong> {{ student?.averageScore }}</p>
+          <h3>Informations Académiques</h3>
+          <p><strong>Niveau :</strong> {{ student?.levelName }}</p>
+          <p><strong>Établissement :</strong> {{ student?.establishment }}</p>
+          <p><strong>Moyenne :</strong> {{ student?.averageScore }}</p>
         </div>
       </div>
       <div class="button-container">
-        <button mat-raised-button color="accent" (click)="openPaymentDialog()">Add Payment</button>
-        <button mat-raised-button color="primary" (click)="openGroupDialog()">Manage Groups</button>
+        <button mat-raised-button color="accent" (click)="openPaymentDialog()">Ajouter Paiement</button>
+        <button mat-raised-button color="primary" (click)="openGroupDialog()">Gérer les Groupes</button>
       </div>
     </mat-card-content>
   </mat-card>
@@ -59,7 +58,7 @@
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
-          View Groups
+          Voir les Groupes
         </mat-panel-title>
       </mat-expansion-panel-header>
       <div class="group-cards">

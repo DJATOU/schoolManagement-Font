@@ -125,135 +125,158 @@ export class SessionFormComponent implements OnInit {
 
   onSubmit(): void {
     try {
-      if (this.sessionForm.valid) {
-        const formData = this.sessionForm.value;
-        const startDateTime = this.combineDateTime(formData.sessionTiming.sessionDateStart, formData.sessionTiming.sessionTimeStart);
-        const endDateTime = this.combineDateTime(formData.sessionTiming.sessionDateEnd, formData.sessionTiming.sessionTimeEnd);
-  
-        const submissionData = {
-          ...formData.sessionDetails,
-          ...formData.sessionTiming,
-          sessionTimeStart: startDateTime,
-          sessionTimeEnd: endDateTime,
-          groupId: formData.identifiers.groupId,
-          roomId: formData.identifiers.roomId,
-          teacherId: formData.identifiers.teacherId,
-        };
-  
-        console.log('Initial submissionData:', submissionData);
-  
-        const flattenedData = this.flattenFormData({
-          sessionDetails: formData.sessionDetails,
-          sessionTiming: formData.sessionTiming,
-          identifiers: {
-            group: this.getGroupNameById(formData.identifiers.groupId),
-            room: this.getRoomNameById(formData.identifiers.roomId),
-            teacher: this.getTeacherNameById(formData.identifiers.teacherId),
-          }
-        });
-  
-        const dialogRef = this.dialog.open(SummaryDialogComponent, {
-          data: flattenedData
-        });
-  
-        dialogRef.afterClosed().subscribe(result => {
-          if (result) {
-            console.log('Dialog confirmed, proceeding with series creation or session submission.');
-  
-            this.groupService.getGroupById(submissionData.groupId).subscribe(group => {
-              console.log('Group data:', group);
-              const totalSessionsPerSeries = group.sessionNumberPerSerie;
-  
-              this.seriesService.getSessionSeriesByGroupId(submissionData.groupId).subscribe(series => {
-                console.log('Existing series for group:', series);
-                const currentSeries = series.find(s => s.groupId === submissionData.groupId);
-  
-                if (currentSeries && currentSeries.id !== undefined) {
-                  console.log('Found existing series:', currentSeries);
-  
-                  this.sessionService.getSessionsBySeriesId(currentSeries.id).subscribe(sessions => {
-                    console.log('Sessions in current series:', sessions);
-  
-                    if (sessions.length >= totalSessionsPerSeries) {
-                      console.log('Series is full, creating a new series.');
-                      const newSeriesData: SessionSeries = {
-                        groupId: submissionData.groupId,
-                        totalSessions: totalSessionsPerSeries,
-                        sessionsCompleted: 0,
-                        name: `Series ${currentSeries.groupId}-${series.length + 1}`, // Generate series name
-                        serieTimeStart: new Date().toISOString(),
-                        serieTimeEnd: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString()
-                      };
-  
-                      this.seriesService.createSeries(newSeriesData).subscribe(newSeries => {
-                        console.log('New series created:', newSeries);
-                        submissionData.seriesId = newSeries.id;
-                        console.log('Updated submissionData with new series ID:', submissionData);
-                        this.submitSession(submissionData);
-                      });
-                    } else {
-                      console.log('Adding session to existing series.');
-                      submissionData.seriesId = currentSeries.id!;
-                      console.log('Updated submissionData with existing series ID:', submissionData);
-                      this.submitSession(submissionData);
-                    }
-                  });
-                } else {
-                  console.log('No existing series found, creating a new one.');
-                  const newSeriesData: SessionSeries = {
-                    groupId: submissionData.groupId,
-                    totalSessions: totalSessionsPerSeries,
-                    sessionsCompleted: 0,
-                    name: `Series ${submissionData.groupId}-1`,
-                    serieTimeStart: new Date().toISOString(),
-                    serieTimeEnd: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString()
-                  };
-  
-                  this.seriesService.createSeries(newSeriesData).subscribe(newSeries => {
-                    console.log('New series created:', newSeries);
-                    submissionData.seriesId = newSeries.id;
-                    console.log('Updated submissionData with new series ID:', submissionData);
-                    this.submitSession(submissionData);
-                  });
+        if (this.sessionForm.valid) {
+            const submissionData = this.prepareSubmissionData();
+
+            // Préparation des données aplatées pour le dialogue
+            const flattenedData = this.flattenFormData({
+                sessionDetails: submissionData.sessionDetails,
+                sessionTiming: submissionData.sessionTiming,
+                identifiers: {
+                    group: this.getGroupNameById(submissionData.groupId),
+                    room: this.getRoomNameById(submissionData.roomId),
+                    teacher: this.getTeacherNameById(submissionData.teacherId),
                 }
-              });
             });
-          } else {
-            console.warn('Form submission was cancelled.');
-          }
-        });
-      } else {
-        console.warn('The form is not valid.');
-        this.showErrorMessage('The form is not valid.');
-      }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error('Error in form submission:', error.message);
-      } else {
-        console.error('Error in form submission:', error);
-      }
-    }
-  }
-  
-  private submitSession(submissionData: any): void {
-    console.log('Submitting:', submissionData);
-    this.sessionService.createSession(submissionData).subscribe({
-      next: response => {
-        console.log('Session created successfully:', response);
-        this.sessionForm.reset();
-        this.showSuccessMessage('Session created successfully.');
-      },
-      error: (error: unknown) => {
-        if (error instanceof Error) {
-          console.error('Failed to create session:', error.message);
+
+            console.log('Flattened Data for dialog:', flattenedData);
+
+            const dialogRef = this.dialog.open(SummaryDialogComponent, { data: flattenedData });
+
+            dialogRef.afterClosed().subscribe(result => {
+                if (result) {
+                    console.log('Dialog confirmed, proceeding with series creation or session submission.');
+                    this.processSeriesCreationOrSubmission(submissionData);
+                } else {
+                    console.warn('Form submission was cancelled.');
+                }
+            });
         } else {
-          console.error('Failed to create session:', error);
+            console.warn('The form is not valid.');
+            this.showErrorMessage('The form is not valid.');
         }
-        this.showErrorMessage('Failed to create session.');
-      }
-    });
+    } catch (error: unknown) {
+        this.handleError(error);
+    }
+}
+
+private prepareSubmissionData(): any {
+    const formData = this.sessionForm.value;
+    const startDateTime = this.combineDateTime(formData.sessionTiming.sessionDateStart, formData.sessionTiming.sessionTimeStart);
+    const endDateTime = this.combineDateTime(formData.sessionTiming.sessionDateEnd, formData.sessionTiming.sessionTimeEnd);
+
+    const submissionData = {
+        ...formData.sessionDetails,
+        ...formData.sessionTiming,
+        sessionTimeStart: startDateTime,
+        sessionTimeEnd: endDateTime,
+        groupId: formData.identifiers.groupId,
+        roomId: formData.identifiers.roomId,
+        teacherId: formData.identifiers.teacherId,
+    };
+
+    console.log('Prepared submission data:', submissionData);
+    return submissionData;
+}
+
+private processSeriesCreationOrSubmission(submissionData: any): void {
+  this.groupService.getGroupById(submissionData.groupId).subscribe(group => {
+      const totalSessionsPerSeries = group.sessionNumberPerSerie;
+      const groupName = group.name;
+
+      console.log(`Group Name: ${groupName}, Total Sessions per Series: ${totalSessionsPerSeries}`);
+
+      this.seriesService.getSessionSeriesByGroupId(submissionData.groupId).subscribe(series => {
+          console.log('Existing series for group:', series);
+
+          this.findOrCreateSeries(submissionData, series, totalSessionsPerSeries, groupName);
+      });
+  });
+}
+
+private findOrCreateSeries(submissionData: any, series: any[], totalSessionsPerSeries: number, groupName: string): void {
+  let seriesFound = false;
+
+  series.forEach(existingSeries => {
+      this.sessionService.getSessionsBySeriesId(existingSeries.id).subscribe(sessions => {
+          const sessionCount = sessions.length;
+          console.log(`Checking series: ${existingSeries.name} (ID: ${existingSeries.id}) - Session Count: ${sessionCount}`);
+
+          if (sessionCount < totalSessionsPerSeries) {
+              console.log(`Found available series: ${existingSeries.name} with ID: ${existingSeries.id}`);
+              submissionData.seriesId = existingSeries.id;
+              this.submitSession(submissionData);
+              seriesFound = true;
+          }
+
+          if (!seriesFound && existingSeries === series[series.length - 1]) {
+              // Si aucune série n'a été trouvée ou toutes les séries sont pleines
+              console.log('No available series found or all series are full, creating a new series.');
+              this.createAndAssignNewSeries(submissionData, groupName, totalSessionsPerSeries, series.length + 1);
+          }
+      });
+  });
+
+  if (!series.length) {
+      // Si aucune série n'existe, en créer une nouvelle
+      this.createAndAssignNewSeries(submissionData, groupName, totalSessionsPerSeries, 1);
   }
-  
+}
+
+private createAndAssignNewSeries(submissionData: any, groupName: string, totalSessionsPerSeries: number, seriesCount: number): void {
+    console.log(`Creating new series as all existing series are full or none exist. Series Count: ${seriesCount}`);
+
+    const newSeriesData = this.constructSeriesData(submissionData.groupId, totalSessionsPerSeries, groupName, seriesCount);
+
+    this.seriesService.createSeries(newSeriesData).subscribe(newSeries => {
+        console.log(`New series created: ${newSeries.name} with ID: ${newSeries.id}`);
+        submissionData.seriesId = newSeries.id;
+        this.submitSession(submissionData);
+    });
+}
+
+private constructSeriesData(groupId: number, totalSessionsPerSeries: number, groupName: string, seriesCount: number): SessionSeries {
+    const now = new Date();
+    const month = now.toLocaleString('default', { month: 'long' });
+    const year = now.getFullYear();
+    const seriesName = `Série ${groupName} - ${month}-${year}-${seriesCount.toString().padStart(3, '0')}`;
+
+    console.log(`Constructing new series data: ${seriesName}`);
+
+    return {
+        groupId: groupId,
+        totalSessions: totalSessionsPerSeries,
+        sessionsCompleted: 0,
+        name: seriesName,
+        serieTimeStart: new Date().toISOString(),
+        serieTimeEnd: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString(),
+    };
+}
+
+private submitSession(submissionData: any): void {
+    console.log('Submitting session with data:', submissionData);
+    this.sessionService.createSession(submissionData).subscribe({
+        next: response => {
+            console.log('Session created successfully:', response);
+            this.sessionForm.reset();
+            this.showSuccessMessage('Session created successfully.');
+        },
+        error: (error: unknown) => {
+            this.handleError(error);
+        }
+    });
+}
+
+private handleError(error: unknown): void {
+    if (error instanceof Error) {
+        console.error('Error in form submission:', error.message);
+    } else {
+        console.error('Error in form submission:', error);
+    }
+}
+
+
+
   getGroupNameById(id: number): string {
     const group = this.groups.find(g => g.id === id);
     return group ? group.name : '';
