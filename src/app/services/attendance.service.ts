@@ -44,4 +44,9 @@ export class AttendanceService {
     deleteAttendanceBySessionId(sessionId: number): Observable<void> {
       return this.http.delete<void>(`${this.apiUrl}/session/${sessionId}`);
     }
+
+    deactivateAttendanceBySessionId(sessionId: number): Observable<void> {
+      return this.http.patch<void>(`${this.apiUrl}/deactivate/${sessionId}`, { active: false });
+  }
+  
 }

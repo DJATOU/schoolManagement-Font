@@ -17,6 +17,7 @@ import { MatIcon } from '@angular/material/icon';
 import { AddStudentDialogComponent } from '../add-student-dialog/add-student-dialog.component';
 import { StudentService } from '../../../services/student.service';
 import { EditSessionDialogComponent } from '../edit/edit-session-dialog/edit-session-dialogue.component';
+import { GroupService } from '../../../services/group.service';
 
 @Component({
   selector: 'app-session-modal',
@@ -43,11 +44,12 @@ export class SessionModalComponent implements OnInit {
     private sessionService: SessionService,
     private attendanceService: AttendanceService,
     private studentService : StudentService,
+    private groupService :  GroupService,
     private dialog: MatDialog // Injection de MatDialog ici
   ) {}
 
   ngOnInit(): void {
-    this.loadStudentsData();
+   // this.loadStudentsData();
     this.loadAttendanceData();
     this.isFinished = !!this.sessionData.isFinished; // Convertir en booléen si la valeur est définie
 
@@ -69,7 +71,7 @@ export class SessionModalComponent implements OnInit {
               ...student,
               id: student.id as number, // Force l'assignation en tant que 'number'
               isPresent: student.isPresent ?? true,
-              description: student.description ?? ''
+              description: student.description ?? '',
             }));
         },
         error: (error) => {
@@ -109,37 +111,40 @@ export class SessionModalComponent implements OnInit {
   
 
   onValidateSession(): void {
-    console.log('Series ID:', this.sessionData.sessionSeriesId); // Vérification du bon ID
-  
+    console.log('Validating session with Series ID:', this.sessionData.sessionSeriesId);
+
+    // Construire la liste des présences
     const attendanceUpdates: Attendance[] = this.sessionData.students.map((student: Student) => ({
-      id: 0,
-      studentId: student.id!,
-      sessionId: this.sessionData.id,
-      groupId: this.sessionData.groupId,
-      sessionSeriesId: this.sessionData.sessionSeriesId, // Remplacez ici par seriesId
-      isPresent: student.isPresent !== undefined ? student.isPresent : true,
-      description: student.description ?? '',
-      dateCreation: new Date(),
-      dateUpdate: new Date(),
-      createdBy: 'system',
-      updatedBy: 'system',
-      active: true
+        id: 0, // Initialement zéro car ce sera géré par le backend
+        studentId: student.id!,
+        sessionId: this.sessionData.id,
+        groupId: this.sessionData.groupId,
+        sessionSeriesId: this.sessionData.sessionSeriesId,
+        isPresent: student.isPresent !== undefined ? student.isPresent : true,
+        isJustified: student.isJustified !== undefined ? student.isJustified : false,
+        description: student.description ?? '',
+        dateCreation: new Date(),
+        dateUpdate: new Date(),
+        createdBy: 'system',
+        updatedBy: 'system',
+        active: true
     }));
-  
+
     this.attendanceService.submitAttendance(attendanceUpdates).subscribe({
-      next: (response) => {
-        console.log('Attendance submitted successfully', response);
-        this.markSessionAsFinished();
-  
-        // Recharger la liste des présences après validation
-        this.loadAttendanceData();
-      },
-      error: (error) => {
-        console.error('Failed to submit attendance', error);
-        alert(error.message);
-      }
+        next: (response) => {
+            console.log('Attendance submitted successfully', response);
+            this.markSessionAsFinished();
+
+            // Recharger la liste des présences après validation pour éviter la duplication
+            this.loadAttendanceData();
+        },
+        error: (error) => {
+            console.error('Failed to submit attendance', error);
+            alert('Failed to submit attendance: ' + error.message);
+        }
     });
-  }
+}
+
   
   
 
@@ -164,46 +169,69 @@ export class SessionModalComponent implements OnInit {
 
   onUnvalidateSession(): void {
     this.sessionService.markSessionAsUnfinished(this.sessionData.id).subscribe({
-      next: () => {
-        this.attendanceService.deleteAttendanceBySessionId(this.sessionData.id).subscribe({
-          next: () => {
-            console.log('Session unvalidated and attendance deleted successfully');
-            this.isFinished = false;
-          },
-          error: (error) => {
-            console.error('Failed to delete attendance:', error);
+        next: () => {
+            this.attendanceService.deactivateAttendanceBySessionId(this.sessionData.id).subscribe({
+                next: () => {
+                    console.log('Session unvalidated and attendance deactivated successfully');
+                    this.isFinished = false;
+
+                    // Mettre à jour uniquement le champ `isPresent` pour refléter la dévalidation
+                    this.sessionData.students.forEach(student => {
+                        student.isPresent = false;
+                    });
+
+                    // Log pour vérifier les données des étudiants après mise à jour
+                    console.log('Updated student data after unvalidation:', this.sessionData.students);
+                },
+                error: (error) => {
+                    console.error('Failed to deactivate attendance:', error);
+                    alert('Failed to deactivate attendance: ' + error.message);
+                }
+            });
+        },
+        error: (error) => {
+            console.error('Failed to unvalidate session:', error);
+            alert('Failed to unvalidate session: ' + error.message);
+        }
+    });
+}
+
+
+openAddStudentDialog(): void {
+  const existingStudentIds = this.sessionData.students.map(student => student.id);
+
+  // Récupérer le levelId avant d'ouvrir le dialog
+  this.groupService.getLevelIdByGroupId(this.sessionData.groupId).subscribe({
+    next: (levelId) => {
+      if (levelId !== undefined) {
+        const dialogRef = this.dialog.open(AddStudentDialogComponent, {
+          width: '400px',
+          data: { 
+            groupId: this.sessionData.groupId, 
+            levelId: levelId,  // Utilisation de levelId récupéré
+            existingStudentIds: existingStudentIds
           }
         });
-      },
-      error: (error) => {
-        console.error('Failed to unvalidate session:', error);
-      }
-    });
-  }
-  
 
-
-  openAddStudentDialog(): void {
-    const existingStudentIds = this.sessionData.students.map(student => student.id);
-  
-    const dialogRef = this.dialog.open(AddStudentDialogComponent, {
-      width: '400px',
-      data: { 
-        groupId: this.sessionData.groupId, 
-        existingStudentIds: existingStudentIds // Transmettre les IDs existants
-      }
-    });
-  
-    dialogRef.afterClosed().subscribe((selectedStudent: Student | null) => {
-      if (selectedStudent) {
-        this.sessionData.students.push({
-          ...selectedStudent,
-          isPresent: true,
-          description: ''
+        dialogRef.afterClosed().subscribe((selectedStudent: Student | null) => {
+          if (selectedStudent) {
+            this.sessionData.students.push({
+              ...selectedStudent,
+              isPresent: true,
+              description: ''
+            });
+          }
         });
+      } else {
+        console.error('Level ID is undefined for group ID:', this.sessionData.groupId);
       }
-    });
-  }
+    },
+    error: (error) => {
+      console.error('Failed to fetch level ID:', error);
+    }
+  });
+}
+
 
   onEditSession(): void {
     const editSessionData: Session = {
@@ -237,5 +265,17 @@ export class SessionModalComponent implements OnInit {
       }
     });
   }
-  
+
+  onPresentChange(student: Student): void {
+    if (student.isPresent) {
+        student.isJustified = false;  // Désélectionne isJustified si isPresent est coché
+    }
+}
+
+  onJustifiedChange(student: Student): void {
+    if (student.isJustified) {
+        student.isPresent = false;  // Désélectionne isPresent si isJustified est coché
+    }
+}
+
 }

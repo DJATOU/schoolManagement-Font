@@ -28,7 +28,7 @@ export class AddStudentDialogComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<AddStudentDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { groupId: number, existingStudentIds: number[] },
+    @Inject(MAT_DIALOG_DATA) public data: { levelId: number, existingStudentIds: number[] }, // Update here
     private studentService: StudentService
   ) {}
 
@@ -37,7 +37,7 @@ export class AddStudentDialogComponent implements OnInit {
   }
 
   loadStudents(): void {
-    this.studentService.getStudentsByLevel(this.data.groupId).subscribe({
+    this.studentService.getStudentsByLevel(this.data.levelId).subscribe({ // Update here
       next: (students) => {
         // Filtrer les étudiants déjà présents
         this.students = students.filter(student => !this.data.existingStudentIds.includes(student.id!));

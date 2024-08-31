@@ -16,6 +16,7 @@ export interface Student {
     establishment: string;
     averageScore?: number;
     isPresent?: boolean;
+    isJustified?: boolean;
     description?: string;
   }
   

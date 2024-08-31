@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { API_BASE_URL } from '../app.config';
 import { Group } from '../models/group/group';
 
@@ -51,4 +51,10 @@ export class GroupService {
   }
 
 
+    // Fetch a group by ID and return its levelId
+  getLevelIdByGroupId(groupId: number): Observable<number | undefined> {
+      return this.http.get<Group>(`${this.apiUrl}/${groupId}`).pipe(
+        map(group => group.levelId)  // Map the group to its levelId
+      );
+  }
 }

@@ -29,11 +29,31 @@
         <mat-card-content>
           <mat-checkbox (change)="toggleAllStudents($event.checked)" class="check-all" [disabled]="isFinished">Check All</mat-checkbox>
           <div *ngFor="let student of sessionData.students" class="student-list-item">
-            <mat-checkbox [(ngModel)]="student.isPresent" class="student-checkbox" [disabled]="isFinished">
+            <mat-checkbox 
+              [(ngModel)]="student.isPresent" 
+              class="student-checkbox" 
+              [disabled]="isFinished"
+              (change)="onPresentChange(student)">
               {{ student.firstName }} {{ student.lastName }}
             </mat-checkbox>
-            <input matInput [(ngModel)]="student.description" placeholder="Add a note" class="description-input" [disabled]="isFinished">
+            
+            <input 
+              matInput 
+              [(ngModel)]="student.description" 
+              placeholder="Add a note" 
+              class="description-input" 
+              [disabled]="isFinished">
+            
+            <mat-checkbox 
+              [(ngModel)]="student.isJustified" 
+              class="justified-checkbox" 
+              [disabled]="isFinished || (student.isPresent ?? false)"
+              (change)="onJustifiedChange(student)">
+              Justified
+            </mat-checkbox>
           </div>
+          
+          
         </mat-card-content>
       </mat-card>
     </mat-tab>
