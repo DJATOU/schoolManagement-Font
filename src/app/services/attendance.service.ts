@@ -48,5 +48,24 @@ export class AttendanceService {
     deactivateAttendanceBySessionId(sessionId: number): Observable<void> {
       return this.http.patch<void>(`${this.apiUrl}/deactivate/${sessionId}`, { active: false });
   }
+
+
+  getAttendanceByStudentAndSeries(studentId: number, sessionSeriesId : number): Observable<Attendance[]> {
+    console.log(`Fetching attendances for student ID: ${studentId} and series ID: ${sessionSeriesId }`);
+
+    return this.http.get<Attendance[]>(`${this.apiUrl}/student/${studentId}/series/${sessionSeriesId }`).pipe(
+      tap({
+        next: (attendances: Attendance[]) => {
+          console.log('Attendance data for student and series retrieved successfully:', attendances);
+        },
+        error: (error: Error) => {
+          console.error('Failed to retrieve attendance data for student and series:', error);
+        }
+      }),
+      catchError(() => {
+        return throwError(() => new Error('Failed to retrieve attendance data.'));
+      })
+    );
+  }
   
 }

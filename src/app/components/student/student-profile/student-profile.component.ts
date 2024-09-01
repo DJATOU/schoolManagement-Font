@@ -26,6 +26,7 @@ import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/co
 import { ApiError, ApiResponse } from '../../../models/response';
 import { PaymentHistoryDialogComponent } from '../../payment/payment-history/payment-history-dialog/payment-history-dialog.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { AttendanceHistoryDialogComponent } from '../../attendance/attendance-history-dialog/attendance-history-dialog.component';
 
 const errorMessages = {
   PAYMENT_EXCEEDS_SESSIONS: "Le paiement ne peut pas être effectué car il dépasse le coût des sessions actuellement créées.",
@@ -289,18 +290,6 @@ export class StudentProfileComponent implements OnInit {
   
   submitPayment(paymentData: any): void {
     console.log('Submitting payment data:', paymentData);
-    // Implement the API call to submit the payment data
-    // this.paymentService.addPayment(paymentData).subscribe({
-    //   next: response => {
-    //     this.snackBar.open('Payment added successfully', 'Close', {
-    //       duration: 3000,
-    //       panelClass: ['success-snackbar']
-    //     });
-    //   },
-    //   error: (error: ApiError) => {
-    //     this.handlePaymentError(error);
-    //   }
-    // });
   }
 
  
@@ -384,10 +373,10 @@ export class StudentProfileComponent implements OnInit {
   }
   
   openAttendanceHistoryDialog(): void {
-    /*this.dialog.open(AttendanceHistoryDialogComponent, {
+    this.dialog.open(AttendanceHistoryDialogComponent, {
       width: '600px',
       data: { studentId: this.student?.id } // Passer l'ID de l'étudiant pour filtrer les données
-    });*/
+    });
   }
   
 }

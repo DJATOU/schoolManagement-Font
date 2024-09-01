@@ -93,77 +93,106 @@ export class PaymentHistoryDialogComponent implements OnInit {
 
   loadPaymentHistory(): void {
     if (this.selectedSeries && this.selectedGroup) {
-      // le prix du groupe
-      this.loadGroupPricing(this.selectedGroup).subscribe({
-        next: (pricing) => {
-          const sessionPrice = pricing.price ?? 0; // Utilisez 0 si pricing.price est null ou undefined
-  
-          // l'historique des paiements pour la série
-          this.paymentService.getPaymentHistoryForSeries(this.data.studentId, this.selectedSeries!).subscribe({
-            next: (seriesPayments) => {
-              const totalSessions = this.sessionSeries.find(series => series.id === this.selectedSeries)?.totalSessions ?? 0;
-  
-              // Ajoutez ces logs pour vérifier les valeurs
-              console.log("Total Sessions:", totalSessions);
-              console.log("Session Price:", sessionPrice);
-  
-              this.seriesTotal = totalSessions * sessionPrice;
-              this.seriesPaid = seriesPayments.reduce((acc, payment) => acc + payment.amountPaid, 0);
-              this.seriesRemaining = this.seriesTotal - this.seriesPaid;
-              this.seriesStatus = this.getSeriesStatus();
-  
-              //  les détails des paiements pour les sessions
-              this.loadSessionPaymentDetails();
+        // Récupérer le groupe sélectionné à partir de la liste des groupes
+        const selectedGroupObject = this.studentGroups.find(group => group.id === this.selectedGroup);
+
+        if (!selectedGroupObject) {
+            console.error('Selected group not found in studentGroups array.');
+            return;
+        }
+
+        const pricingId = selectedGroupObject.priceId; // Remplacez `pricingId` par le nom correct du champ dans votre modèle de groupe
+
+        // Ajouter un log pour vérifier l'ID du prix avant d'appeler loadGroupPricing
+        console.log('Calling loadGroupPricing with Pricing ID:', pricingId);
+
+        this.loadGroupPricing(pricingId).subscribe({
+            next: (pricing) => {
+                const sessionPrice = pricing.price ?? 0;
+
+                console.log('Pricing retrieved:', pricing);
+                console.log('Session Price:', sessionPrice);
+
+                this.paymentService.getPaymentHistoryForSeries(this.data.studentId, this.selectedSeries!).subscribe({
+                    next: (seriesPayments) => {
+                        const totalSessions = this.sessionSeries.find(series => series.id === this.selectedSeries)?.totalSessions ?? 0;
+
+                        console.log("Total Sessions:", totalSessions);
+                        console.log("Session Price:", sessionPrice);
+
+                        this.seriesTotal = totalSessions * sessionPrice;
+                        this.seriesPaid = seriesPayments.reduce((acc, payment) => acc + payment.amountPaid, 0);
+                        this.seriesRemaining = this.seriesTotal - this.seriesPaid;
+                        this.seriesStatus = this.getSeriesStatus();
+
+                        this.loadSessionPaymentDetails();
+                    },
+                    error: (error: Error) => {
+                        console.error('Error loading payment history for series:', error);
+                    }
+                });
             },
             error: (error: Error) => {
-              console.error('Error loading payment history for series:', error);
+                console.error('Error loading group pricing:', error);
             }
-          });
-        },
-        error: (error: Error) => {
-          console.error('Error loading group pricing:', error);
-        }
-      });
+        });
     } else {
-      console.error('Selected series or group is null or undefined.');
+        console.error('Selected series or group is null or undefined.');
     }
-  }
+}
+
   
   
 
-  loadSessionPaymentDetails(): void {
-    if (this.selectedGroup !== null && this.selectedGroup !== undefined && this.selectedSeries !== null && this.selectedSeries !== undefined) {
-      this.loadGroupPricing(this.selectedGroup).subscribe({
-        next: (pricing) => {
-          const sessionPrice = pricing.price ?? 0; // 
-  
-          //  les détails des paiements
-          this.paymentService.getPaymentDetailsForSessions(this.data.studentId, this.selectedSeries!).subscribe({
-            next: (paymentDetails) => {
-              this.paymentHistory.data = paymentDetails.map(detail => ({
-                sessionId: detail.sessionId,
-                sessionName: detail.sessionName,
-                paymentMethod: detail.paymentMethod || 'Cash',
-                description: detail.description || 'Aucune description',
-                paymentDate: detail.paymentDate,
-                amountPaid: detail.amountPaid,
-                status: this.getPaymentStatusWithPrice(detail, sessionPrice),
-                sessionPrice: sessionPrice
-              }));
-            },
-            error: (error: Error) => {
-              console.error('Error loading session payment details:', error);
-            }
-          });
-        },
-        error: (error: Error) => {
-          console.error('Error loading group pricing:', error);
-        }
+loadSessionPaymentDetails(): void {
+  if (this.selectedGroup !== null && this.selectedGroup !== undefined && this.selectedSeries !== null && this.selectedSeries !== undefined) {
+      // Récupérer le groupe sélectionné à partir de la liste des groupes
+      const selectedGroupObject = this.studentGroups.find(group => group.id === this.selectedGroup);
+
+      if (!selectedGroupObject) {
+          console.error('Selected group not found in studentGroups array.');
+          return;
+      }
+
+      const pricingId = selectedGroupObject.priceId; // Remplacez `pricingId` par le nom correct du champ dans votre modèle de groupe
+
+      // Ajouter un log pour vérifier l'ID du prix avant d'appeler loadGroupPricing
+      console.log('Calling loadGroupPricing with Pricing ID:', pricingId);
+
+      this.loadGroupPricing(pricingId).subscribe({
+          next: (pricing) => {
+              const sessionPrice = pricing.price ?? 0;
+
+              console.log('Pricing retrieved:', pricing);
+              console.log('Session Price:', sessionPrice);
+
+              this.paymentService.getPaymentDetailsForSessions(this.data.studentId, this.selectedSeries!).subscribe({
+                  next: (paymentDetails) => {
+                      this.paymentHistory.data = paymentDetails.map(detail => ({
+                          sessionId: detail.sessionId,
+                          sessionName: detail.sessionName,
+                          paymentMethod: detail.paymentMethod || 'Cash',
+                          description: detail.description || 'Aucune description',
+                          paymentDate: detail.paymentDate,
+                          amountPaid: detail.amountPaid,
+                          status: this.getPaymentStatusWithPrice(detail, sessionPrice),
+                          sessionPrice: sessionPrice
+                      }));
+                  },
+                  error: (error: Error) => {
+                      console.error('Error loading session payment details:', error);
+                  }
+              });
+          },
+          error: (error: Error) => {
+              console.error('Error loading group pricing:', error);
+          }
       });
-    } else {
+  } else {
       console.error('Selected group or selected series is null or undefined.');
-    }
   }
+}
+
   
   
   

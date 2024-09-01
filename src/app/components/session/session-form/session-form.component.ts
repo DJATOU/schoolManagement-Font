@@ -204,7 +204,7 @@ private findOrCreateSeries(submissionData: any, series: any[], totalSessionsPerS
 
           if (sessionCount < totalSessionsPerSeries) {
               console.log(`Found available series: ${existingSeries.name} with ID: ${existingSeries.id}`);
-              submissionData.seriesId = existingSeries.id;
+              submissionData.sessionSeriesId  = existingSeries.id;
               this.submitSession(submissionData);
               seriesFound = true;
           }
@@ -230,7 +230,7 @@ private createAndAssignNewSeries(submissionData: any, groupName: string, totalSe
 
     this.seriesService.createSeries(newSeriesData).subscribe(newSeries => {
         console.log(`New series created: ${newSeries.name} with ID: ${newSeries.id}`);
-        submissionData.seriesId = newSeries.id;
+        submissionData.sessionSeriesId  = newSeries.id;
         this.submitSession(submissionData);
     });
 }

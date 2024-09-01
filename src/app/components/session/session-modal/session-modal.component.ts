@@ -48,101 +48,138 @@ export class SessionModalComponent implements OnInit {
     private dialog: MatDialog // Injection de MatDialog ici
   ) {}
 
-  ngOnInit(): void {
-   // this.loadStudentsData();
-    this.loadAttendanceData();
-    this.isFinished = !!this.sessionData.isFinished; // Convertir en booléen si la valeur est définie
-
-    // Log supplémentaire pour vérifier les données de session
-    console.log('Session Data on Init SessionModalComponent:', this.sessionData);
-
-    if (this.sessionData.roomId === null || this.sessionData.teacherId === null) {
-      console.error('room_id or teacher_id is null in the initial session data.');
+  private async loadStudentsData(): Promise<void> {
+    if (!this.sessionData.students || this.sessionData.students.length === 0) {
+        try {
+            const students = await this.sessionService.getStudentsByGroupId(this.sessionData.groupId).toPromise();
+            
+            // Assurez-vous que sessionData.students est initialisé s'il est undefined
+            this.sessionData.students = students?.filter(student => student.id !== undefined)
+                .map((student) => ({
+                    ...student,
+                    id: student.id as number,
+                    isPresent: student.isPresent ?? true,
+                    description: student.description ?? '',
+                })) ?? [];
+        } catch (error) {
+            console.error('Error fetching students:', error);
+        }
     }
+}
+
+
+async ngOnInit(): Promise<void> {
+  try {
+      // Log avant le chargement des étudiants
+      console.log('Before loading students, session data:', this.sessionData);
+      
+      await this.loadStudentsData();
+
+      // Log après le chargement des étudiants mais avant le chargement des présences
+      console.log('After loading students, before loading attendance, session data:', this.sessionData);
+
+      this.loadAttendanceData();
+
+      // Log après le chargement des présences
+      console.log('After loading attendance, session data:', this.sessionData);
+  } catch (error) {
+      console.error('Error during initialization:', error);
   }
 
-  private loadStudentsData(): void {
-    if (!this.sessionData.students || this.sessionData.students.length === 0) {
-      this.sessionService.getStudentsByGroupId(this.sessionData.groupId).subscribe({
-        next: (students: Student[]) => {
-          this.sessionData.students = students
-            .filter(student => student.id !== undefined) // Filtrez les étudiants sans 'id'
-            .map((student) => ({
-              ...student,
-              id: student.id as number, // Force l'assignation en tant que 'number'
-              isPresent: student.isPresent ?? true,
-              description: student.description ?? '',
-            }));
+  // Log avant de vérifier si la session est terminée
+  console.log('Before checking if session is finished, session data:', this.sessionData);
+
+  this.isFinished = !!this.sessionData.isFinished;
+
+  // Log après avoir vérifié si la session est terminée
+  console.log('After checking if session is finished, session data:', this.sessionData);
+
+  if (this.sessionData.roomId === null || this.sessionData.teacherId === null) {
+      console.error('room_id or teacher_id is null in the initial session data.');
+  }
+
+  // Log final pour voir la session data complète à la fin de ngOnInit
+  console.log('Final session data after ngOnInit:', this.sessionData);
+
+  // Vérification de sessionSeriesId
+  if (!this.sessionData.sessionSeriesId) {
+      console.error('Session Series ID is undefined! Please ensure it is correctly set.');
+  } else {
+      console.log('Session Series ID:', this.sessionData.sessionSeriesId);
+  }
+}
+
+
+
+ 
+private loadAttendanceData(): void {
+    this.attendanceService.getAttendanceBySessionId(this.sessionData.id).subscribe({
+        next: (attendances: Attendance[]) => {
+            attendances.forEach((attendance) => {
+                const existingStudent = this.sessionData.students.find((s: Student) => s.id === attendance.studentId);
+
+                if (existingStudent) {
+                    // Mettre à jour les informations de l'étudiant existant
+                    existingStudent.isPresent = attendance.isPresent;
+                    existingStudent.description = attendance.description ?? '';
+                } else {
+                    // Ajouter uniquement les étudiants qui ne sont pas encore dans la liste
+                    this.studentService.getStudentById(attendance.studentId).subscribe((student: Student) => {
+                        this.sessionData.students.push({
+                            ...student,
+                            isPresent: attendance.isPresent,
+                            description: attendance.description ?? ''
+                        });
+                    });
+                }
+            });
         },
         error: (error) => {
-          console.error('Error fetching students:', error);
+            console.error('Error fetching attendance:', error);
         }
-      });
-    }
+    });
+}
+
+  
+
+onValidateSession(): void {
+  console.log('Validating session with Series ID:', this.sessionData.sessionSeriesId);
+
+  if (!this.sessionData.sessionSeriesId) {
+      console.error('Session Series ID is undefined! Please ensure it is correctly set.');
+      return;
   }
 
-  private loadAttendanceData(): void {
-    this.attendanceService.getAttendanceBySessionId(this.sessionData.id).subscribe({
-      next: (attendances: Attendance[]) => {
-        attendances.forEach((attendance) => {
-          const existingStudent = this.sessionData.students.find((s: Student) => s.id === attendance.studentId);
-  
-          if (existingStudent) {
-            // Mettre à jour les informations de l'étudiant existant
-            existingStudent.isPresent = attendance.isPresent;
-            existingStudent.description = attendance.description ?? '';
-          } else {
-            // Obtenir les vraies informations de l'étudiant depuis le service si l'étudiant n'existe pas encore
-            this.studentService.getStudentById(attendance.studentId).subscribe((student: Student) => {
-              this.sessionData.students.push({
-                ...student,
-                isPresent: attendance.isPresent,
-                description: attendance.description ?? ''
-              });
-            });
-          }
-        });
+  const attendanceUpdates: Attendance[] = this.sessionData.students.map((student: Student) => ({
+      id: 0,
+      studentId: student.id!,
+      sessionId: this.sessionData.id,
+      groupId: this.sessionData.groupId,
+      sessionSeriesId: this.sessionData.sessionSeriesId, // Make sure this is not undefined
+      isPresent: student.isPresent !== undefined ? student.isPresent : true,
+      isJustified: student.isJustified !== undefined ? student.isJustified : false,
+      description: student.description ?? '',
+      dateCreation: new Date(),
+      dateUpdate: new Date(),
+      createdBy: 'system',
+      updatedBy: 'system',
+      active: true
+  }));
+
+  console.log('Attendance Data:', attendanceUpdates);
+
+  this.attendanceService.submitAttendance(attendanceUpdates).subscribe({
+      next: (response) => {
+          console.log('Attendance submitted successfully', response);
+          this.markSessionAsFinished();
+
+          this.loadAttendanceData();
       },
       error: (error) => {
-        console.error('Error fetching attendance:', error);
+          console.error('Failed to submit attendance', error);
+          alert('Failed to submit attendance: ' + error.message);
       }
-    });
-  }
-  
-
-  onValidateSession(): void {
-    console.log('Validating session with Series ID:', this.sessionData.sessionSeriesId);
-
-    // Construire la liste des présences
-    const attendanceUpdates: Attendance[] = this.sessionData.students.map((student: Student) => ({
-        id: 0, // Initialement zéro car ce sera géré par le backend
-        studentId: student.id!,
-        sessionId: this.sessionData.id,
-        groupId: this.sessionData.groupId,
-        sessionSeriesId: this.sessionData.sessionSeriesId,
-        isPresent: student.isPresent !== undefined ? student.isPresent : true,
-        isJustified: student.isJustified !== undefined ? student.isJustified : false,
-        description: student.description ?? '',
-        dateCreation: new Date(),
-        dateUpdate: new Date(),
-        createdBy: 'system',
-        updatedBy: 'system',
-        active: true
-    }));
-
-    this.attendanceService.submitAttendance(attendanceUpdates).subscribe({
-        next: (response) => {
-            console.log('Attendance submitted successfully', response);
-            this.markSessionAsFinished();
-
-            // Recharger la liste des présences après validation pour éviter la duplication
-            this.loadAttendanceData();
-        },
-        error: (error) => {
-            console.error('Failed to submit attendance', error);
-            alert('Failed to submit attendance: ' + error.message);
-        }
-    });
+  });
 }
 
   
