@@ -1,0 +1,12 @@
+<mat-card class="student-card" (click)="navigateToStudent(student)">
+    <mat-card-content>
+      <div class="student-info">
+        <img mat-card-avatar [src]="student.photo || 'assets/default-avatar.png'" alt="Avatar" class="student-avatar" />
+        <div class="student-details">
+          <h4>{{ student.firstName }} {{ student.lastName }}</h4>
+          <p>{{ student.email }}</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  

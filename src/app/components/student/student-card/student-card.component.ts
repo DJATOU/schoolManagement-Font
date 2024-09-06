@@ -52,7 +52,6 @@ export class StudentCardComponent implements OnInit {
 
   private setProfile(): void {
     if (this.student && this.student.id) {
-      // Assurez-vous que `levelName` est récupéré avant d'initialiser `profile`
       this.profile = {
         id: this.student.id,
         firstName: this.student.firstName,

@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { SearchService } from '../../../services/SearchService ';
+import { StudentListItemComponent } from '../student-list/student-list-item/student-list-item.component';
 
 @Component({
   selector: 'app-student-search',
@@ -16,7 +17,8 @@ import { SearchService } from '../../../services/SearchService ';
   templateUrl: './student-search.component.html',
   styleUrls: ['./student-search.component.scss'],
   imports: [
-    CommonModule, MatToolbarModule, MatPaginatorModule, StudentCardComponent, StudentListComponent, MatIconModule
+    CommonModule, MatToolbarModule, MatPaginatorModule, StudentCardComponent, 
+    StudentListComponent, MatIconModule,StudentListItemComponent
   ]
 })
 export class StudentSearchComponent implements OnInit {

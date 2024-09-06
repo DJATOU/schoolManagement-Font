@@ -22,6 +22,7 @@ import { RoomTableComponent } from './components/room/room-table/room-table.comp
 import { SubjectTableComponent } from './components/subject/subject-table/subject-table.component';
 import { GroupTypeTableComponent } from './components/groupType/group-type-table/group-type-table.component';
 import { PricingTableComponent } from './components/pricing/pricing-table/pricing-table.component';
+import { GroupProfileComponent } from './components/group/group-profile/group-profile.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -47,7 +48,7 @@ export const routes: Routes = [
   { path: 'pricing/table', component: PricingTableComponent},
   { path: 'student/:id', component: StudentProfileComponent },
   { path: 'teacher/:id', component: TeacherProfileComponent},
-  { path: 'group/:id', component: TeacherProfileComponent},
+  { path: 'group/:id', component: GroupProfileComponent},
 ];
   
   @NgModule({

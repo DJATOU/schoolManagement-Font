@@ -1,0 +1,49 @@
+.student-card {
+    display: flex;
+    //align-items: center;
+    justify-content: flex-start; /* Ensure content starts from the left */
+    margin-bottom: 15px;
+    padding: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    
+    &:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+  }
+  
+  .student-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .student-avatar {
+    width: 50px; /* Adjust the size if needed */
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 20px; /* Space between avatar and text */
+  }
+  
+  .student-details {
+    display: flex;
+    flex-direction: row; /* Align name and email horizontally */
+    align-items: center;
+  }
+  
+  .student-details h4 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 16px;
+    margin-right: 20px; /* Space between name and email */
+  }
+  
+  .student-details p {
+    margin: 0;
+    font-size: 14px;
+    color: #7f8c8d;
+  }
+  

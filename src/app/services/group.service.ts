@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { API_BASE_URL } from '../app.config';
 import { Group } from '../models/group/group';
+import { Student } from '../models/student/student';
+import { SessionSeries } from '../models/sessionSerie/sessionSerie';
 
 
 @Injectable({
@@ -12,6 +14,12 @@ export class GroupService {
   private apiUrl = `${API_BASE_URL}/api/groups`;
 
   constructor(private http: HttpClient) { }
+ 
+  
+  getGroupDetailsById(groupId: number): Observable<Group> {
+    return this.http.get<Group>(`${this.apiUrl}/details/${groupId}`);
+  }
+  
 
   // Fetch all groups
   getGroups(): Observable<Group[]> {
@@ -57,4 +65,22 @@ export class GroupService {
         map(group => group.levelId)  // Map the group to its levelId
       );
   }
+
+  countStudentsInGroup(groupId: number): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/${groupId}/student-count`);
+  }
+
+  getStudentsByGroupId(groupId: number): Observable<Student[]> {
+    return this.http.get<Student[]>(`${this.apiUrl}/${groupId}/students`);
+  }
+
+  getSeriesByGroupId(groupId: number): Observable<SessionSeries[]> {
+    return this.http.get<SessionSeries[]>(`${this.apiUrl}/${groupId}/series`);
+  }
+
+  addStudentToGroup(groupId: number, studentId: number): Observable<any> {
+    const payload = { studentId, groupId };
+    return this.http.post(`${this.apiUrl}/${groupId}/addStudents`, payload);
+  }
+  
 }

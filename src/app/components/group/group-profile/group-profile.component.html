@@ -1,0 +1,52 @@
+<div class="group-profile-container" *ngIf="!loadingGroup; else loadingSpinner">
+  <mat-card *ngIf="group" class="group-card">
+    <mat-card-header>
+      <mat-card-title>{{ group.name }}</mat-card-title>
+      <mat-card-subtitle>{{ group.description }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="group-info">
+        <p><strong>Type de groupe :</strong> {{ group.groupTypeName || group.groupTypeId }}</p>
+        <p><strong>Niveau :</strong> {{ group.levelName || group.levelId }}</p>
+        <p><strong>Sujet :</strong> {{ group.subjectName || group.subjectId }}</p>
+        <p><strong>Nombre de sessions par série :</strong> {{ group.sessionNumberPerSerie }}</p>
+        <p><strong>Prix :</strong> {{ group.priceAmount || group.pricing?.price }}</p>
+        <p><strong>Enseignant :</strong> {{ group.teacherName}}</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-accordion>
+    <mat-expansion-panel *ngIf="!loadingStudents" class="student-panel">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Étudiants</mat-panel-title>
+        <mat-panel-description>{{ students.length }} étudiant(s)</mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <!-- Use the StudentListComponent to display the students -->
+      <app-student-list [students]="students"></app-student-list>
+
+      <mat-card-actions>
+        <button mat-raised-button color="primary" (click)="addStudentToGroup()">Ajouter un étudiant</button>
+      </mat-card-actions>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel *ngIf="!loadingSeries" class="series-panel">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Séries</mat-panel-title>
+        <mat-panel-description>{{ series.length }} série(s)</mat-panel-description>
+      </mat-expansion-panel-header>
+      <div class="series-list">
+        <ul>
+          <li *ngFor="let serie of series">{{ serie.name }} ({{ serie.dateCreation | date }})</li>
+        </ul>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
+
+<ng-template #loadingSpinner>
+  <div class="loading-spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+</ng-template>

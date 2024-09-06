@@ -1,1 +1,4 @@
-<app-profile-list-item [profile]="profile"></app-profile-list-item>
+<mat-list>
+    <app-student-list-item *ngFor="let student of students" [student]="student"></app-student-list-item>
+</mat-list>
+  
