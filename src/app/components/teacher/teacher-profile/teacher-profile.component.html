@@ -1,14 +1,28 @@
 <div class="teacher-profile-container" *ngIf="!loading; else loadingSpinner">
   <mat-card class="teacher-card">
     <mat-card-header>
-      <div mat-card-avatar class="teacher-photo">
-        <img mat-card-image [src]="teacher?.photo" alt="Photo de l'enseignant">
+      <div class="header-container">
+        <div class="teacher-info-header">
+          <div class="teacher-photo-container">
+            <img [src]="teacherPhotoUrl" alt="Photo de l'Enseignant" class="teacher-photo">
+          </div>
+          <div class="teacher-name-specialization">
+            <mat-card-title>{{ teacher?.firstName }} {{ teacher?.lastName }}</mat-card-title>
+            <mat-card-subtitle>{{ teacher?.specialization }}</mat-card-subtitle>
+          </div>
+        </div>
+        <div class="header-buttons">
+          <button mat-icon-button class="edit-button" (click)="onEdit()" aria-label="Modifier" matTooltip="Modifier le profil">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button class="disable-button" (click)="onDisable()" aria-label="Supprimer" matTooltip="Supprimer le compte">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
       </div>
-      <mat-card-title>{{ teacher?.firstName }} {{ teacher?.lastName }}</mat-card-title>
-      <mat-card-subtitle>{{ teacher?.specialization }}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-      <div class="teacher-info">
+      <div class="teacher-info-grid">
         <div class="info-section">
           <h3>Informations Personnelles</h3>
           <p><strong>Sexe :</strong> {{ teacher?.gender }}</p>
@@ -28,11 +42,6 @@
       </div>
     </mat-card-content>
   </mat-card>
-  
-  <div class="button-container">
-    <button mat-raised-button color="primary" (click)="onEdit()">Modifier</button>
-    <button mat-raised-button color="warn" (click)="onDisable()">Supprimer</button>
-  </div>
 </div>
 
 <ng-template #loadingSpinner>

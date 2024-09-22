@@ -1,69 +1,127 @@
+/* Variables de couleur */
+$primary-color: #3f51b5; // Indigo
+$accent-color: #e91e63; // Rose
+$edit-color: #4caf50; // Vert pour Modifier
+$disable-color: #f44336; // Rouge pour Désactiver
+$primary-button-color: #3f51b5; // Indigo pour les boutons primaires
+
+/* Styles */
 .teacher-profile-container {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  padding: 24px;
+  align-items: center;
+  padding: 20px;
+  max-width: 1200px; // Limite la largeur totale de la carte
+  margin: 0 auto; // Centre la carte sur la page
+  zoom: 0.9; // Zoom global pour réduire la taille si nécessaire
+}
 
-  .teacher-card {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+.teacher-card {
+  width: 100%;
+  max-width: 1000px; // Augmente la largeur de la carte
+  margin-bottom: 20px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 
-    .teacher-photo {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      overflow: hidden;
-      margin-right: 16px;
+  mat-card-header {
+    background: linear-gradient(to top, #c1dfc4 0%, #deecdd 100%);
+    color: #fff;
+    padding: 10px; // Uniformiser le padding
 
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-    }
-
-    mat-card-title {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #333;
-    }
-
-    mat-card-subtitle {
-      font-size: 1.25rem;
-      color: #777;
-    }
-
-    mat-card-header {
+    .header-container {
       display: flex;
       align-items: center;
-      gap: 16px;
-      padding: 16px;
-    }
+      width: 100%;
 
-    mat-card-content {
-      padding: 24px;
-    }
+      .teacher-info-header {
+        display: flex;
+        align-items: center;
+        flex-grow: 1; // Permet à cet élément de prendre l'espace disponible
 
-    .teacher-info {
+        .teacher-photo-container {
+          margin-right: 15px;
+
+          .teacher-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #fff;
+          }
+        }
+
+        .teacher-name-specialization {
+          mat-card-title {
+            font-size: 26px;
+            font-weight: 600;
+            margin: 0;
+          }
+          mat-card-subtitle {
+            font-size: 18px;
+            color: #e0e0e0;
+          }
+        }
+      }
+
+      .header-buttons {
+        display: flex;
+        gap: 10px;
+
+        button {
+          color: #fff;
+          transition: transform 0.2s;
+          background-color: transparent;
+
+          &:hover {
+            transform: scale(1.1);
+          }
+
+          mat-icon {
+            font-size: 28px;
+          }
+
+          &.edit-button {
+            background-color: $edit-color;
+            &:hover {
+              background-color: darken($edit-color, 10%);
+            }
+          }
+
+          &.disable-button {
+            background-color: $disable-color;
+            &:hover {
+              background-color: darken($disable-color, 10%);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  mat-card-content {
+    padding: 30px;
+
+    .teacher-info-grid {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
-      gap: 32px;
 
       .info-section {
-        flex: 1;
-        background-color: #f9f9f9;
-        padding: 16px;
-        border-radius: 8px;
+        flex: 1 1 45%;
+        margin-bottom: 30px;
 
         h3 {
-          font-size: 1.2rem;
-          margin-bottom: 12px;
-          color: #333;
+          font-size: 22px;
+          margin-bottom: 15px;
+          color: $primary-color;
+          border-bottom: 2px solid $primary-color;
+          padding-bottom: 5px;
         }
 
         p {
-          margin: 4px 0;
-          font-size: 1rem;
+          margin: 8px 0;
+          font-size: 16px;
           color: #555;
 
           strong {
@@ -73,21 +131,69 @@
       }
     }
   }
+}
 
-  .button-container {
-    display: flex;
-    justify-content: flex-end;
-    gap: 16px;
+/* Boutons d'action */
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
 
-    button {
-      min-width: 150px;
+  button {
+    margin-left: 15px;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-transform: none;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: darken($primary-color, 10%);
+    }
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .teacher-profile-container {
+    zoom: 0.8;
+  }
+
+  .teacher-card mat-card-content .teacher-info-grid .info-section {
+    flex: 1 1 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .teacher-card mat-card-header .header-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    .teacher-info-header {
+      flex-direction: column;
+
+      .teacher-photo-container {
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+    }
+
+    .header-buttons {
+      margin-top: 10px;
     }
   }
 
-  .loading-spinner {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100px;
+  .teacher-card mat-card-content .teacher-info-grid .info-section {
+    flex: 1 1 100%;
+  }
+
+  .button-container {
+    flex-direction: column;
+    align-items: stretch;
+
+    button {
+      margin: 10px 0;
+      width: 100%;
+    }
   }
 }

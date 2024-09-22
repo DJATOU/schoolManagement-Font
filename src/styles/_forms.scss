@@ -31,3 +31,22 @@
 }
 
 
+/* Styles pour les petits écrans */
+@media (max-width: 1500px) {
+  .form-container {
+    padding: 1rem; /* Réduire le padding */
+    margin: 1rem; /* Réduire les marges */
+    max-width: 100%; /* Utiliser toute la largeur de l'écran */
+    height: auto; /* Laisser la hauteur s'adapter au contenu */
+  }
+
+  .tab-content {
+    gap: 1rem; /* Réduire l'espacement entre les éléments */
+  }
+
+  /* Si vous avez plusieurs colonnes, passez-les en une seule colonne */
+  .tab-content {
+    grid-template-columns: 1fr; /* S'assurer que le contenu s'empile verticalement */
+  }
+
+}

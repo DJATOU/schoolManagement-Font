@@ -1,6 +1,6 @@
 <mat-card class="profile-card" (click)="navigateToProfile()">
   <div class="profile-card-content">
-    <img mat-card-avatar [src]="profile.photo" alt="Profile Photo" class="profile-photo">
+    <img mat-card-avatar [src]="profilePhotoUrl" alt="Profile Photo" class="profile-photo">
     <div class="profile-info">
       <mat-card-title class="profile-name">{{ profile.firstName }} {{ profile.lastName }}</mat-card-title>
       <mat-card-subtitle class="profile-subtitle">{{ profile.subtitle }}</mat-card-subtitle>

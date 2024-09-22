@@ -127,7 +127,7 @@ export class GroupProfileComponent implements OnInit {
   }
 
 
-  onEdit(): void {
+  onEditGroup(): void {
     // Open edit dialog or navigate to edit form
   }
 

@@ -18,6 +18,7 @@ body {
   overflow-y: auto;
 }
 
+
 /* Adjust the calendar size */
 .fc {
   max-width: 900px;
@@ -263,3 +264,216 @@ mat-card-title {
 }
 
 
+
+
+
+@media (max-width: 600px) {
+  /* Ajustements pour le body */
+  body {
+    max-width: 100%;
+    margin: 0;
+    padding: 0 1rem; /* Ajouter un padding latéral */
+    font-size: 0.9rem; /* Réduire légèrement la taille de la police */
+  }
+
+  /* Ajustements pour le calendrier (.fc) */
+  .fc {
+    max-width: 100%;
+    font-size: 14px; /* Réduire la taille de la police */
+    margin: 0 0.5rem; /* Marges latérales */
+  }
+
+  /* Ajustements pour les événements du calendrier (.fc-event) */
+  .fc-event {
+    font-size: 12px; /* Réduire la taille de la police */
+    padding: 0.25rem; /* Réduire le padding */
+  }
+
+  /* Assurer que le texte des événements ne déborde pas */
+  .fc-event-title,
+  .fc-event-title-container {
+    white-space: normal; /* Permettre au texte de passer à la ligne */
+  }
+
+  /* Ajustements pour les cellules du calendrier */
+  .fc-daygrid-day {
+    height: auto; /* Laisser la hauteur s'adapter au contenu */
+  }
+
+  .fc-daygrid-day-events {
+    flex-wrap: nowrap; /* Éviter que les événements ne se superposent verticalement */
+    overflow-x: auto; /* Permettre le défilement horizontal si nécessaire */
+  }
+
+  /* Ajustements pour les modals et dialogues */
+  .modal-header {
+    font-size: 1.2rem; /* Réduire la taille de la police */
+    text-align: center; /* Centrer le texte */
+  }
+
+  .modal-content {
+    padding: 0.5rem; /* Réduire le padding */
+  }
+
+  .student-list-item {
+    flex-direction: column; /* Empiler verticalement */
+    align-items: flex-start;
+  }
+
+  .description-input {
+    margin-left: 0;
+    width: 100%; /* Occuper toute la largeur */
+  }
+
+  /* Ajustements pour le contenu principal */
+  .main-content {
+    padding: 1rem; /* Réduire le padding */
+  }
+
+  /* Ajustements pour le footer */
+  .footer {
+    padding: 0.5rem;
+    font-size: 0.875rem; /* Réduire la taille de la police */
+  }
+
+  /* Boutons et formulaires */
+  button,
+  input,
+  select,
+  textarea {
+    width: 100%; /* Occuper toute la largeur disponible */
+    font-size: 1rem; /* Taille de police adaptée */
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  /* Ajustements pour les images et médias */
+  img,
+  video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Éviter les débordements horizontaux */
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Autres ajustements spécifiques si nécessaire */
+  /* ... */
+}
+
+
+@media (min-width: 600px) and (max-width: 1500px) {
+  /* Ajustements pour le body */
+  body {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 2rem; /* Ajouter un padding latéral */
+    font-size: 1rem; /* Taille de police normale */
+  }
+
+  /* Ajustements pour le calendrier (.fc) */
+  .fc {
+    max-width: 100%;
+    font-size: 15px; /* Taille de police légèrement réduite */
+    margin: 0 auto; /* Centrer le calendrier */
+  }
+
+  /* Ajustements pour les événements du calendrier (.fc-event) */
+  .fc-event {
+    font-size: 14px; /* Taille de police adaptée */
+    padding: 0.5rem; /* Padding modéré */
+  }
+
+  /* Ajustements pour le texte des événements */
+  .fc-event-title,
+  .fc-event-title-container {
+    white-space: nowrap; /* Empêcher le passage à la ligne */
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Ajustements pour les cellules du calendrier */
+  .fc-daygrid-day {
+    height: 100px; /* Hauteur adaptée pour les écrans moyens */
+  }
+
+  .fc-daygrid-day-events {
+    flex-wrap: wrap; /* Permettre le retour à la ligne des événements */
+    overflow: visible;
+  }
+
+  /* Ajustements pour les modals et dialogues */
+  .modal-header {
+    font-size: 1.4rem; /* Taille de police légèrement réduite */
+    text-align: left; /* Alignement à gauche */
+  }
+
+  .modal-content {
+    padding: 1rem; /* Padding modéré */
+  }
+
+  .student-list-item {
+    flex-direction: row; /* Disposition en ligne */
+    align-items: center;
+  }
+
+  .description-input {
+    margin-left: 0.5rem;
+    width: auto; /* Largeur adaptée au contenu */
+  }
+
+  /* Ajustements pour le contenu principal */
+  .main-content {
+    padding: 1.5rem; /* Padding adapté */
+  }
+
+  /* Ajustements pour le footer */
+  .footer {
+    padding: 0.75rem;
+    font-size: 0.95rem; /* Taille de police adaptée */
+  }
+
+  /* Boutons et formulaires */
+  button,
+  input,
+  select,
+  textarea {
+    width: auto; /* Largeur adaptée au contenu */
+    font-size: 1rem; /* Taille de police normale */
+  }
+
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
+
+  /* Ajustements pour les images et médias */
+  img,
+  video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Éviter les débordements horizontaux */
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Ajustements spécifiques pour les tableaux */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    padding: 0.75rem;
+    text-align: left;
+  }
+
+  /* Autres ajustements spécifiques si nécessaire */
+  /* ... */
+}

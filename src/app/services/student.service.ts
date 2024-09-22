@@ -15,19 +15,44 @@ export class StudentService {
 
   getStudents(): Observable<Student[]> {
     return this.http.get<Student[]>(this.apiUrl).pipe(
-      tap(student => console.log("ooooooooooooooooooo", student))
+      tap(
+        students => {
+          console.log("Students fetched successfully getStudents:", students);
+        },
+        error => {
+          console.error("Error fetching students getStudents:", error);
+        }
+      )
     );
   }
-
+  
   getGroupsForStudent(id: number): Observable<Group[]> {
-    return this.http.get<Group[]>(`${this.apiUrl}/${id}/groups`);
+    return this.http.get<Group[]>(`${this.apiUrl}/${id}/groups`).pipe(
+      tap(
+        groups => {
+          console.log("Groups for student fetched successfully getGroupsForStudent:", groups);
+        },
+        error => {
+          console.error("Error fetching groups for student getGroupsForStudent:", error);
+        }
+      )
+    );
   }
-
+  
   getStudentById(id: number): Observable<Student> {
     return this.http.get<Student>(`${this.apiUrl}/id/${id}`).pipe(
-        tap(student => console.log("Student", student))
+      tap(
+        student => {
+          console.log("Student data fetched successfully getStudentById:", student);
+          console.log("Student photo URL getStudentById:", student.photo); // Log the photo URL specifically
+        },
+        error => {
+          console.error("Error fetching student by ID getStudentById:", error);
+        }
+      )
     );
-}
+  }
+  
 
   createStudent(studentData: FormData): Observable<Student> {
     console.log("nnnnnnnnnnnnnnn",studentData);

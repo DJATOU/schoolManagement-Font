@@ -177,3 +177,114 @@
     cursor: pointer;
   }
 }
+
+
+
+@media (min-width: 600px) and (max-width: 1500px) {
+  .mat-toolbar {
+    padding: 0 1.5rem; /* Ajustement du padding latéral */
+
+    .spacer {
+      gap: 0.8rem; /* Réduction de l'espacement entre les éléments */
+
+      button {
+        padding: 0.4rem; /* Réduction du padding des boutons */
+      }
+
+      .logo {
+        height: 2rem; /* Réduction de la taille du logo */
+      }
+    }
+
+    .search-container {
+      max-width: 60%; /* Ajustement de la largeur maximale */
+      margin: 0 1.5rem; /* Ajustement des marges latérales */
+      padding: 0.4rem 0.8rem; /* Réduction du padding */
+
+      mat-form-field {
+        margin-top: 2.5rem; /* Réduction de la marge supérieure */
+      }
+    }
+
+    .icone-search {
+      gap: 0.8rem; /* Réduction de l'espacement entre les icônes */
+      padding: 0.2rem 0.6rem; /* Réduction du padding */
+    }
+
+    .user-info {
+      .user-photo {
+        width: 1.8rem; /* Réduction de la taille de la photo utilisateur */
+        height: 1.8rem;
+      }
+
+      .user-name {
+        font-size: 13px; /* Ajustement de la taille de la police */
+      }
+    }
+
+    .mat-icon {
+      font-size: 22px; /* Ajustement de la taille des icônes */
+    }
+  }
+}
+
+
+@media (max-width: 600px) {
+  .mat-toolbar {
+    flex-direction: column; /* Empile les éléments verticalement */
+    padding: 0 1rem; /* Réduction du padding latéral */
+
+    .spacer {
+      justify-content: center;
+      margin-bottom: 0.5rem;
+
+      button {
+        padding: 0.3rem;
+      }
+
+      .logo {
+        height: 1.8rem; /* Réduction de la taille du logo */
+      }
+    }
+
+    .search-container {
+      max-width: 100%;
+      margin: 0;
+      padding: 0.3rem 0.5rem;
+      order: 2; /* Place la barre de recherche après la section icônes */
+
+      mat-form-field {
+        margin-top: 1rem;
+      }
+    }
+
+    .icone-search {
+      gap: 0.5rem;
+      padding: 0.2rem 0.4rem;
+      order: 1; /* Place les icônes en premier */
+
+      mat-icon {
+        font-size: 20px; /* Réduction de la taille des icônes */
+      }
+    }
+
+    .user-info {
+      justify-content: center;
+      margin-top: 0.5rem;
+      order: 3; /* Place les infos utilisateur en dernier */
+
+      .user-photo {
+        width: 1.5rem; /* Réduction de la taille de la photo utilisateur */
+        height: 1.5rem;
+      }
+
+      .user-name {
+        font-size: 12px; /* Réduction de la taille de la police */
+      }
+    }
+
+    .mat-icon {
+      font-size: 20px; /* Réduction de la taille des icônes */
+    }
+  }
+}

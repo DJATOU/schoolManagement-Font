@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../../environment';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -70,6 +71,7 @@ export class StudentProfileComponent implements OnInit {
   studentLevelId: number = -1;
   groupForm: FormGroup;
   loading = true;
+  studentPhotoUrl: string = ''; 
 
   constructor(
     private route: ActivatedRoute,
@@ -93,19 +95,30 @@ export class StudentProfileComponent implements OnInit {
     } else {
       this.showError(errorMessages.STUDENT_NOT_FOUND);
     }
-
     this.loadSelectOptions();
+    this.loadAllGroups(); // Ajouté pour charger les groupes
+    this.loadAllGroupTypes(); // Si nécessaire pour charger les types de groupes
   }
+  
 
   private getStudentIdFromRoute(): number | null {
     const id = this.route.snapshot.paramMap.get('id');
     return id ? +id : null;
   }
 
+ 
   private loadStudentData(studentId: number): void {
     this.studentService.getStudentById(studentId).subscribe({
       next: student => {
         this.student = student;
+        console.log('Student data:', this.student);
+
+        // Générer l'URL complète de la photo en utilisant les variables d'environnement
+        if (this.student?.photo) {
+          this.studentPhotoUrl = `${environment.apiUrl}${environment.imagesPath}${this.student.photo}`;
+        }
+        console.log('Student photo URL:', this.studentPhotoUrl);  // Vérifier l'URL générée
+
         this.loading = false;
         this.loadStudentLevel();
         this.loadStudentGroups();
@@ -115,10 +128,8 @@ export class StudentProfileComponent implements OnInit {
         this.showError(errorMessages.STUDENT_NOT_FOUND);
       }
     });
-
-    this.loadAllGroups();
-    this.loadAllGroupTypes();
   }
+
 
   private loadStudentLevel(): void {
     if (this.student?.levelId) {
@@ -264,7 +275,8 @@ export class StudentProfileComponent implements OnInit {
     console.log('All groups:', this.allGroups);
     
     const possibleGroups = this.allGroups.filter(group => group.levelId === this.studentLevelId);
-  
+    console.log("this.studentLevelId)",this.studentLevelId);
+
     if (possibleGroups.length === 0) {
       this.showError(errorMessages.INVALID_GROUP_LEVEL);
       return;

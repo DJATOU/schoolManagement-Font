@@ -3,6 +3,7 @@ import { MatCardModule } from '@angular/material/card';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
+import { environment } from '../../../../environment';
 
 interface Profile {
   id: string;
@@ -25,6 +26,7 @@ interface Profile {
 export class ProfileCardComponent implements OnInit {
   @Input() profile!: Profile;
   @Input() profileType!: string;
+  profilePhotoUrl: string = '';
 
   constructor(private router: Router) {}
 
@@ -36,6 +38,13 @@ export class ProfileCardComponent implements OnInit {
       console.error('Profile ID is missing:', this.profile);
     } else {
       console.log('Profile is properly defined:', this.profile);
+
+      // Générer l'URL complète de la photo de profil
+      if (this.profile.photo) {
+        this.profilePhotoUrl = `${environment.apiUrl}${environment.imagesPath}${this.profile.photo}`;
+      } else {
+        this.profilePhotoUrl = 'assets/default-avatar.png';  // Utiliser une image par défaut si aucune photo n'est disponible
+      }
     }
   }
 
@@ -49,11 +58,11 @@ export class ProfileCardComponent implements OnInit {
 
   sendEmail(event: Event): void {
     event.stopPropagation();
-    // Logic to send an email
+    // Logique pour envoyer un email
   }
 
   callPhone(event: Event): void {
     event.stopPropagation();
-    // Logic to call the profile
+    // Logique pour appeler le numéro de téléphone du profil
   }
 }

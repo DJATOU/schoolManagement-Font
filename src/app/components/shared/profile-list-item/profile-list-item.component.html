@@ -1,7 +1,7 @@
 <mat-card class="student-card">
   <div class="student-card-content">
     <div class="student-avatar">
-      <img [src]="profile.photo || 'https://via.placeholder.com/50'" alt="{{ profile.firstName }}'s Photo" />
+      <img mat-card-avatar [src]="profilePhotoUrl" alt="Profile Photo" class="profile-photo">
     </div>
     <div class="student-info">
       <h2>{{ profile.firstName }} {{ profile.lastName }}</h2>

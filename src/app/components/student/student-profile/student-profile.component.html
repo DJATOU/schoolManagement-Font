@@ -4,9 +4,9 @@
       <div class="header-container">
         <div class="student-info-header">
           <div class="student-photo-container">
-            <img [src]="student?.photo" alt="Photo de l'étudiant" class="student-photo">
+            <img [src]="studentPhotoUrl" alt="Photo de l'étudiant" class="student-photo">
           </div>
-          <div>
+          <div class="student-name-level">
             <mat-card-title>{{ student?.firstName }} {{ student?.lastName }}</mat-card-title>
             <mat-card-subtitle>{{ student?.level }}</mat-card-subtitle>
           </div>
@@ -54,19 +54,22 @@
     </mat-card-content>
   </mat-card>
 
-  <mat-accordion>
+  <!-- Accordeon avec barre de défilement pour les groupes -->
+  <mat-accordion class="group-accordion">
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
           Voir les Groupes
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <div class="group-cards">
-        <app-group-card *ngFor="let group of studentGroups"
-                        [group]="group"
-                        [levels]="levels"
-                        [groupTypes]="allGroupTypes">
-        </app-group-card>
+      <div class="group-cards-scroll">
+        <div class="group-cards">
+          <app-group-card *ngFor="let group of studentGroups"
+                          [group]="group"
+                          [levels]="levels"
+                          [groupTypes]="allGroupTypes">
+          </app-group-card>
+        </div>
       </div>
     </mat-expansion-panel>
   </mat-accordion>

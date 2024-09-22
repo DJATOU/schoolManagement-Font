@@ -7,7 +7,7 @@ export interface Student {
     phoneNumber: string;
     dateOfBirth: Date;
     placeOfBirth: string;
-    photo: number[];
+    photo: string;
     level: number;
     levelId: number;
     levelName?: string;
