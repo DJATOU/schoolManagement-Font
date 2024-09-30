@@ -15,6 +15,10 @@ import { MatIcon } from '@angular/material/icon';
 import { MatList, MatListItem } from '@angular/material/list';
 import { ProfileListItemComponent } from '../../shared/profile-list-item/profile-list-item.component';
 import { StudentListComponent } from "../../student/student-list/student-list.component";
+import { StudentService } from '../../../services/student.service';
+import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { EditGroupDialogComponent } from '../edit-group-dialog/edit-group-dialog.component';
 
 @Component({
   selector: 'app-group-profile',
@@ -45,8 +49,10 @@ export class GroupProfileComponent implements OnInit {
 
   constructor(
     private groupService: GroupService,
+    private studentService: StudentService,
     private route: ActivatedRoute,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar,
   ) {}
 
   ngOnInit(): void {
@@ -128,9 +134,31 @@ export class GroupProfileComponent implements OnInit {
 
 
   onEditGroup(): void {
-    // Open edit dialog or navigate to edit form
+    const dialogRef = this.dialog.open(EditGroupDialogComponent, {
+      width: '600px',
+      data: { group: this.group },
+    });
+
+    dialogRef.afterClosed().subscribe((result: Group | undefined) => {
+      if (result) {
+        this.groupService.updateGroup(result).subscribe({
+          next: (updatedGroup) => {
+            this.group = updatedGroup;
+            //this.loadGroupDetails(); // Si vous avez une méthode pour recharger les détails du groupe
+            this.showSuccessMessage('Groupe mis à jour avec succès.');
+          },
+          error: (error) => {
+            console.error('Erreur lors de la mise à jour du groupe :', error);
+            this.showErrorMessage('Erreur lors de la mise à jour du groupe.');
+          },
+        });
+      } else {
+        console.log('Modification annulée.');
+      }
+    });
   }
 
+  
   onPrint() {
    
   }
@@ -138,4 +166,56 @@ export class GroupProfileComponent implements OnInit {
   onDisable(){
     
   }
+
+  removeStudentFromGroup(student: Student): void {
+    this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        title: "Suppression d'un étudiant",
+        message: 'Voulez-vous vraiment supprimer cet étudiant du groupe ?',
+        confirmText: 'Oui, supprimer',
+        cancelText: 'Non, annuler',
+        confirmColor: 'warn'
+      }
+    }).afterClosed().subscribe((result: boolean) => {
+      if (result) {
+        if (this.group && this.group.id !== undefined) {
+          const groupId = this.group.id;
+          console.log("rrrrrr", student.id);
+          this.studentService.removeStudentFromGroup(groupId, student.id).subscribe({
+            next: () => {
+              this.snackBar.open('Étudiant retiré du groupe avec succès', 'Fermer', {
+                duration: 3000,
+                panelClass: ['success-snackbar']
+              });
+              this.loadStudents(groupId); // Recharger les étudiants après suppression
+            },
+            error: () => {
+              this.snackBar.open('Erreur lors du retrait de l\'étudiant du groupe', 'Fermer', {
+                duration: 3000,
+                panelClass: ['error-snackbar']
+              });
+            }
+          });
+        } else {
+          this.snackBar.open('Le groupe ou l\'ID du groupe est indéfini', 'Fermer', {
+            duration: 3000,
+            panelClass: ['error-snackbar']
+          });
+        }
+      } else {
+        console.log('Suppression annulée');
+      }
+    });
+  }
+  
+  showSuccessMessage(message: string): void {
+    // Implémentez la logique pour afficher un message de succès
+    console.log(message);
+  }
+
+  showErrorMessage(message: string): void {
+    // Implémentez la logique pour afficher un message d'erreur
+    console.error(message);
+  }
+  
 }

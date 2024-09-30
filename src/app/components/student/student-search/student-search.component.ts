@@ -10,6 +10,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { SearchService } from '../../../services/SearchService ';
 import { StudentListItemComponent } from '../student-list/student-list-item/student-list-item.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { FadeInDirective } from '../../shared/FadeInDirective';
 
 @Component({
   selector: 'app-student-search',
@@ -18,7 +20,7 @@ import { StudentListItemComponent } from '../student-list/student-list-item/stud
   styleUrls: ['./student-search.component.scss'],
   imports: [
     CommonModule, MatToolbarModule, MatPaginatorModule, StudentCardComponent, 
-    StudentListComponent, MatIconModule,StudentListItemComponent
+    StudentListComponent, MatIconModule,StudentListItemComponent,MatProgressSpinnerModule,FadeInDirective
   ]
 })
 export class StudentSearchComponent implements OnInit {
@@ -29,6 +31,7 @@ export class StudentSearchComponent implements OnInit {
   totalStudents: number = 0;
   pageSize: number = 8; // Adjust as needed
   pageSizeOptions: number[] = [4, 8]; // Adjust as needed
+  isLoading = true;
 
   constructor(
     private studentService: StudentService, 
@@ -48,6 +51,7 @@ export class StudentSearchComponent implements OnInit {
   }
   
   handleSearch(searchTerm: string): void {
+    this.isLoading = true;
     if (!searchTerm) {
       this.loadAllStudents(); // Load all students if no search term is specified.
     } else {
@@ -57,24 +61,33 @@ export class StudentSearchComponent implements OnInit {
         } else {
           this.filteredStudents = students;
           this.updatePageStudents();
+          this.isLoading = false;
         }
       });
     }
   }
   
   loadAllStudents(): void {
+    this.isLoading = true; 
     this.studentService.getStudents().subscribe(students => {
       this.filteredStudents = students;
       this.totalStudents = students.length;
       this.updatePageStudents();
+      this.isLoading = false; // Désactiver le loader
     });
   }
 
   changePage(event: PageEvent) {
+    this.isLoading = true; // Activer le loader lors du changement de page
     const startIndex = event.pageIndex * event.pageSize;
     const endIndex = startIndex + event.pageSize;
-    this.currentPageStudents = this.filteredStudents.slice(startIndex, endIndex);
+  
+    setTimeout(() => {
+      this.currentPageStudents = this.filteredStudents.slice(startIndex, endIndex);
+      this.isLoading = false; // Désactiver le loader après le changement
+    }, 1000); // Simuler un délai de chargement
   }
+  
 
   changeViewMode(mode: string): void {
     this.viewMode = mode;

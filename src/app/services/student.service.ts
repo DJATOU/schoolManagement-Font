@@ -27,7 +27,7 @@ export class StudentService {
   }
   
   getGroupsForStudent(id: number): Observable<Group[]> {
-    return this.http.get<Group[]>(`${this.apiUrl}/${id}/groups`).pipe(
+    return this.http.get<Group[]>(`${this.apiUrl2}/${id}/groups`).pipe(
       tap(
         groups => {
           console.log("Groups for student fetched successfully getGroupsForStudent:", groups);
@@ -55,12 +55,18 @@ export class StudentService {
   
 
   createStudent(studentData: FormData): Observable<Student> {
-    console.log("nnnnnnnnnnnnnnn",studentData);
     return this.http.post<Student>(`${this.apiUrl}/createStudent`, studentData);
   }
 
-  updateStudent(id: number, student: Student): Observable<Student> {
+  updateStudent1(id: number, student: Student): Observable<Student> {
     return this.http.put<Student>(`${this.apiUrl}/${id}`, student);
+  }
+
+  updateStudent(student: Student): Observable<Student> {
+    if (!student.id) {
+      throw new Error('Student ID is required for update.');
+    }
+    return this.http.put<Student>(`${this.apiUrl}/${student.id}`, student);
   }
 
   searchStudents(firstName: string, lastName: string, level: number, groupId: string, establishment: string): Observable<Student[]> {
@@ -108,6 +114,13 @@ export class StudentService {
   generateStudentPdf(studentId: number, lang: string = 'fr'): Observable<Blob> {
     const pdfUrl = `${API_BASE_URL}/api/pdf/student/${studentId}?lang=${lang}`;
     return this.http.get(pdfUrl, { responseType: 'blob' });
+  }
+
+  removeStudentFromGroup(groupId: number | undefined, studentId: number | undefined): Observable<any> {
+    if (groupId === undefined || studentId === undefined) {
+      throw new Error('Group ID and Student ID must be defined');
+    }
+    return this.http.delete(`${this.apiUrl2}/${groupId}/students/${studentId}`);
   }
   
   

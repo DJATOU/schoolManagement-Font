@@ -236,22 +236,24 @@ private createAndAssignNewSeries(submissionData: any, groupName: string, totalSe
 }
 
 private constructSeriesData(groupId: number, totalSessionsPerSeries: number, groupName: string, seriesCount: number): SessionSeries {
-    const now = new Date();
-    const month = now.toLocaleString('default', { month: 'long' });
-    const year = now.getFullYear();
-    const seriesName = `Série ${groupName} - ${month}-${year}-${seriesCount.toString().padStart(3, '0')}`;
+  const now = new Date();
+  const month = now.toLocaleString('default', { month: 'long' });
+  const year = now.getFullYear();
+  const seriesName = `Série ${groupName} - ${month}-${year}-${seriesCount.toString().padStart(3, '0')}`;
 
-    console.log(`Constructing new series data: ${seriesName}`);
+  console.log(`Constructing new series data: ${seriesName}`);
 
-    return {
-        groupId: groupId,
-        totalSessions: totalSessionsPerSeries,
-        sessionsCompleted: 0,
-        name: seriesName,
-        serieTimeStart: new Date().toISOString(),
-        serieTimeEnd: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString(),
-    };
+  return {
+      groupId: groupId,
+      totalSessions: totalSessionsPerSeries,
+      sessionsCompleted: 0,
+      numberOfSessionsCreated: 0, // Initialisation à 0
+      name: seriesName,
+      serieTimeStart: now.toISOString(),
+      serieTimeEnd: new Date(new Date().setMonth(now.getMonth() + 1)).toISOString(),
+  };
 }
+
 
 private submitSession(submissionData: any): void {
     console.log('Submitting session with data:', submissionData);

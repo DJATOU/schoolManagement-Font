@@ -88,3 +88,37 @@ mat-paginator {
     // Adjust for smaller screens, if necessary
   }
 }
+
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: #777;
+}
+
+
+.card-view,
+.list-view {
+  transition: all 0.3s ease-in-out;
+}
+
+.card-view {
+  opacity: 1;
+}
+
+.list-view {
+  opacity: 1;
+}
+
+.student-view.ng-leave, .student-view.ng-enter {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+

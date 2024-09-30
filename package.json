@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "purgecss": "purgecss --config purgecss.config.js"
   },
   "private": true,
   "dependencies": {
@@ -29,6 +30,7 @@
     "@fullcalendar/interaction": "^6.1.11",
     "@fullcalendar/list": "^6.1.11",
     "@fullcalendar/timegrid": "^6.1.11",
+    "@types/pdfmake": "^0.2.9",
     "gsap": "^3.12.5",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
@@ -38,6 +40,7 @@
     "ngx-lottie": "^11.0.2",
     "ngx-mat-timepicker": "^17.1.0",
     "ngx-material-timepicker": "^13.1.1",
+    "pdfmake": "^0.2.13",
     "rxjs": "~7.8.0",
     "tslib": "^2.6.2",
     "undici": "^6.15.0",
@@ -50,9 +53,9 @@
     "@angular-eslint/builder": "17.2.1",
     "@angular-eslint/eslint-plugin": "17.2.1",
     "@angular-eslint/eslint-plugin-template": "17.2.1",
-    "@angular-eslint/schematics": "17.2.1",
+    "@angular-eslint/schematics": "^18.0.0",
     "@angular-eslint/template-parser": "17.2.1",
-    "@angular/cli": "^18.2.3",
+    "@angular/cli": "^17.3.10",
     "@angular/compiler-cli": "^17.3.12",
     "@types/jasmine": "~5.1.0",
     "@typescript-eslint/eslint-plugin": "6.19.0",
@@ -64,6 +67,9 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "postcss": "^8.4.47",
+    "postcss-scss": "^4.0.9",
+    "purgecss": "^6.0.0",
     "typescript": "^5.4.5"
   }
 }

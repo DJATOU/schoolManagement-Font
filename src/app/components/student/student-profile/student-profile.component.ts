@@ -28,6 +28,7 @@ import { ApiError, ApiResponse } from '../../../models/response';
 import { PaymentHistoryDialogComponent } from '../../payment/payment-history/payment-history-dialog/payment-history-dialog.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AttendanceHistoryDialogComponent } from '../../attendance/attendance-history-dialog/attendance-history-dialog.component';
+import { EditStudentDialogComponent } from '../edit-student-dialog/edit-student-dialog.component';
 
 const errorMessages = {
   PAYMENT_EXCEEDS_SESSIONS: "Le paiement ne peut pas être effectué car il dépasse le coût des sessions actuellement créées.",
@@ -154,15 +155,11 @@ export class StudentProfileComponent implements OnInit {
     }
   }
 
- 
-  
   private updateUI(): void {
     // Mettez à jour l'interface ici après avoir récupéré les données
     this.loading = false;
   }
   
-
-
   private loadStudentGroups(): void {
     if (this.student?.id !== undefined) {
       this.studentService.getGroupsForStudent(this.student.id).subscribe({
@@ -273,32 +270,48 @@ export class StudentProfileComponent implements OnInit {
 
   openGroupDialog(): void {
     console.log('All groups:', this.allGroups);
-    
-    const possibleGroups = this.allGroups.filter(group => group.levelId === this.studentLevelId);
-    console.log("this.studentLevelId)",this.studentLevelId);
 
-    if (possibleGroups.length === 0) {
-      this.showError(errorMessages.INVALID_GROUP_LEVEL);
-      return;
+    // Filtrer tous les groupes correspondant au niveau de l'étudiant
+    const groupsForLevel = this.allGroups.filter(group => group.levelId === this.studentLevelId);
+    
+    if (groupsForLevel.length === 0) {
+        // Aucun groupe disponible pour le niveau de l'étudiant
+        this.showErrorMessage('Aucun groupe disponible pour ce niveau.');
+        return;
     }
-  
+
+    // Filtrer pour exclure les groupes déjà ajoutés à l'étudiant
+    const possibleGroups = groupsForLevel.filter(group => 
+      !this.studentGroups.some(studentGroup => studentGroup.id === group.id)
+    );
+    
+    if (possibleGroups.length === 0) {
+        // Tous les groupes de ce niveau ont déjà été ajoutés à l'étudiant
+        this.showErrorMessage('Tous les groupes de ce niveau ont déjà été ajoutés à cet étudiant.');
+        return;
+    }
+
     console.log('Possible groups for level:', possibleGroups);
-  
+
+    // Ouvrir un dialogue pour sélectionner les groupes
     const dialogRef = this.dialog.open(GroupDialogComponent, {
       width: '400px',
       data: {
-        allGroups: possibleGroups,
-        selectedGroups: this.groupForm.value.groupIds
+        allGroups: possibleGroups,  // Passer les groupes filtrés qui ne sont pas déjà ajoutés
+        selectedGroups: this.groupForm.value.groupIds  // Groupes déjà sélectionnés dans le formulaire
       }
     });
-  
+
+    // Mettre à jour le formulaire avec les groupes sélectionnés
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.groupForm.patchValue({ groupIds: result });
         this.onSubmitGroups();
       }
     });
-  }
+}
+
+
   
   submitPayment(paymentData: any): void {
     console.log('Submitting payment data:', paymentData);
@@ -307,7 +320,28 @@ export class StudentProfileComponent implements OnInit {
  
 
   onEdit(): void {
-    // Open edit dialog or navigate to edit form
+    const dialogRef = this.dialog.open(EditStudentDialogComponent, {
+      width: '600px',
+      data: { student: this.student },
+    });
+
+    dialogRef.afterClosed().subscribe((result: Student | undefined) => {
+      if (result) {
+        this.studentService.updateStudent(result).subscribe({
+          next: (updatedStudent) => {
+            this.student = updatedStudent;
+            this.loadStudentLevel(); // Recharger le niveau
+            this.showSuccessMessage('Étudiant mis à jour avec succès.');
+          },
+          error: (error) => {
+            console.error('Error updating student:', error);
+            this.showErrorMessage('Erreur lors de la mise à jour de l\'étudiant.');
+          },
+        });
+      } else {
+        console.log('Modification annulée.');
+      }
+    });
   }
 
   onDisable(): void {

@@ -16,6 +16,7 @@ import { PaymentConfirmationDialogComponent } from '../payment-confirmation-dial
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PaymentDetail } from '../../../models/paymentDetail/paymentDetail';
 import { PricingService } from '../../../services/pricing.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-payment-dialog',
@@ -95,16 +96,47 @@ export class PaymentDialogComponent implements OnInit {
     if (group?.priceId) {
       this.pricingService.getPricingById(group.priceId).subscribe({
         next: (pricing) => {
-          const groupPrice = pricing.price * group.sessionNumberPerSerie;
+          const pricePerSession = pricing.price;
+          const totalSessionsInSeries = group.sessionNumberPerSerie;
+          const groupPrice = pricePerSession * totalSessionsInSeries;
   
-          this.paymentService.getPaymentDetailsForSeries(this.studentId, paymentData.sessionSeriesId).subscribe({
-            next: (paymentDetails) => {
-              this.paymentService.getPaymentHistoryForSeries(this.studentId, paymentData.sessionSeriesId).subscribe({
-                next: (paymentHistory) => {
-                  const totalPaidPreviously = paymentHistory.reduce((acc, curr) => acc + curr.amountPaid, 0);
-                  const totalOwed = groupPrice; // Utiliser le prix récupéré via l'entité Pricing
-                  const remainingAmount = totalOwed - (totalPaidPreviously + paymentData.amountPaid);
+          // Calculer le coût total des sessions créées
+          const totalCreatedSessionsCost = sessionSeries!.numberOfSessionsCreated * pricePerSession;
   
+          // Récupérer le montant total déjà payé par l'étudiant pour cette série
+          this.paymentService.getPaymentHistoryForSeries(this.studentId, paymentData.sessionSeriesId).subscribe({
+            next: (paymentHistory) => {
+              const totalPaidPreviously = paymentHistory.reduce((acc, curr) => acc + curr.amountPaid, 0);
+              const newTotalPaid = totalPaidPreviously + paymentData.amountPaid;
+  
+              // Vérifier si le nouveau total payé dépasse le coût total de la série
+              if (newTotalPaid > groupPrice) {
+                const surplus = newTotalPaid - groupPrice;
+                this.snackBar.open(
+                  `Le montant payé dépasse le coût total de la série de ${surplus} euros.`,
+                  'Fermer',
+                  { duration: 5000 }
+                );
+                return;
+              }
+  
+              // Vérifier si le nouveau total payé dépasse le coût des sessions créées
+              if (newTotalPaid > totalCreatedSessionsCost) {
+                this.snackBar.open(
+                  "Le paiement ne peut pas être effectué car il dépasse le coût des sessions actuellement créées. Veuillez completer la création des sessions pour cette série.",
+                  'Fermer',
+                  { duration: 5000 }
+                );
+                return;
+              }
+  
+              // Si tout est en ordre, calculer le montant restant
+              const remainingAmount = groupPrice - newTotalPaid;
+  
+              // Récupérer les détails de paiement pour la série
+              this.paymentService.getPaymentDetailsForSeries(this.studentId, paymentData.sessionSeriesId).subscribe({
+                next: (paymentDetails) => {
+                  // Ouvrir le dialogue de confirmation avec les données nécessaires
                   const dialogRef = this.dialog.open(PaymentConfirmationDialogComponent, {
                     width: '500px',
                     data: {
@@ -112,12 +144,13 @@ export class PaymentDialogComponent implements OnInit {
                       seriesPrice: groupPrice,
                       paymentDetails: paymentDetails,
                       paymentHistory: paymentHistory,
-                      totalPaid: totalPaidPreviously + paymentData.amountPaid,
-                      totalOwed: totalOwed,
+                      totalPaid: newTotalPaid,
+                      totalOwed: groupPrice,
                       remainingAmount: remainingAmount
                     }
                   });
   
+                  // Après la fermeture du dialogue de confirmation
                   dialogRef.afterClosed().subscribe(result => {
                     if (result) {
                       this.submitPayment(paymentData);
@@ -125,24 +158,24 @@ export class PaymentDialogComponent implements OnInit {
                   });
                 },
                 error: (err) => {
-                  console.error('Error fetching payment history:', err);
+                  console.error('Erreur lors de la récupération des détails de paiement:', err);
                 }
               });
             },
             error: (err) => {
-              console.error('Error fetching payment details:', err);
+              console.error('Erreur lors de la récupération de l’historique des paiements:', err);
             }
           });
         },
         error: (err) => {
-          console.error('Error fetching pricing:', err);
+          console.error('Erreur lors de la récupération des informations de tarification:', err);
         }
       });
+    } else {
+      this.snackBar.open('Les informations de tarification du groupe sont introuvables.', 'Fermer', { duration: 5000 });
     }
   }
   
-  
-
   onSubmit(): void {
     if (this.paymentForm.valid) {
       const paymentData: Payment = {
@@ -157,15 +190,20 @@ export class PaymentDialogComponent implements OnInit {
   submitPayment(paymentData: Payment): void {
     this.paymentService.addPayment(paymentData).subscribe({
       next: (response) => {
-        this.snackBar.open('Payment successful', 'Close', { duration: 3000 });
+        this.snackBar.open('Paiement effectué avec succès', 'Fermer', { duration: 3000 });
         this.dialogRef.close(response);
       },
-      error: (err) => {
-        console.error('Error processing payment:', err);
-        this.snackBar.open('An error occurred while processing the payment.', 'Close', { duration: 3000 });
+      error: (err: HttpErrorResponse) => {
+        console.error('Erreur lors du traitement du paiement:', err);
+        let errorMessage = 'Une erreur est survenue lors du traitement du paiement.';
+        if (err.error && err.error.message) {
+          errorMessage = err.error.message;
+        }
+        this.snackBar.open(errorMessage, 'Fermer', { duration: 5000 });
       }
     });
   }
+  
 
   onCancel(): void {
     this.dialogRef.close();

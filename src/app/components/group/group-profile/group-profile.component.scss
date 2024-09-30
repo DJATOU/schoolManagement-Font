@@ -54,7 +54,7 @@ $delete-color: #f44336; // Rouge pour Supprimer
           }
           mat-card-subtitle {
             font-size: 18px;
-            color: #e0e0e0;
+            color: #3b3939;
           }
         }
       }
@@ -167,9 +167,36 @@ $delete-color: #f44336; // Rouge pour Supprimer
       }
     }
 
+    /* Liste défilable des étudiants */
     .student-list-container,
     .series-list {
+      max-height: 400px; /* Limite la hauteur pour permettre le défilement */
+      overflow-y: auto;
       padding: 15px;
+
+      /* Scrollbar styling for WebKit browsers (Chrome, Safari, etc.) */
+      &::-webkit-scrollbar {
+        width: 12px; /* Largeur de la scrollbar */
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: $primary-color; /* Couleur du pouce de la scrollbar */
+        border-radius: 10px; /* Bords arrondis pour un effet plus élégant */
+        border: 3px solid #f1f1f1; /* Bordure externe pour créer un effet espacé */
+      }
+
+      &::-webkit-scrollbar-track {
+        background: #f1f1f1; /* Couleur de fond de la scrollbar */
+      }
+
+      /* Hover effect for scrollbar thumb */
+      &::-webkit-scrollbar-thumb:hover {
+        background-color: darken($primary-color, 10%); /* Couleur plus sombre lors du survol */
+      }
+
+      /* Firefox support */
+      scrollbar-width: thin; /* Rend la scrollbar plus fine sur Firefox */
+      scrollbar-color: $primary-color #f1f1f1; /* Couleur du pouce et de l'arrière-plan */
 
       ul {
         list-style: none;
@@ -226,6 +253,53 @@ $delete-color: #f44336; // Rouge pour Supprimer
     }
   }
 }
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .group-accordion {
+    zoom: 0.8;
+  }
+
+  .group-card mat-card-content .group-info-grid .info-section {
+    flex: 1 1 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .group-card mat-card-header .header-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    .group-info-header {
+      flex-direction: column;
+
+      .group-icon-container {
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+    }
+
+    .header-buttons {
+      margin-top: 10px;
+    }
+  }
+
+  .group-card mat-card-content .group-info-grid .info-section {
+    flex: 1 1 100%;
+  }
+
+  .button-container {
+    flex-direction: column;
+    align-items: stretch;
+
+    button {
+      margin: 10px 0;
+      width: 100%;
+    }
+  }
+}
+
 
 /* Styles pour le Spinner de Chargement */
 .loading-spinner {

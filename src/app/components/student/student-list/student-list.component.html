@@ -1,4 +1,9 @@
 <mat-list>
-    <app-student-list-item *ngFor="let student of students" [student]="student"></app-student-list-item>
+    <app-student-list-item
+      *ngFor="let student of students"
+      [student]="student"
+      [showDeleteButton]="showDeleteButton"
+      (deleteStudent)="onDeleteStudent(student)"
+    ></app-student-list-item>
 </mat-list>
   

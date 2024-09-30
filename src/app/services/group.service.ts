@@ -11,8 +11,9 @@ import { SessionSeries } from '../models/sessionSerie/sessionSerie';
   providedIn: 'root'
 })
 export class GroupService {
-  private apiUrl = `${API_BASE_URL}/api/groups`;
 
+  private apiUrl = `${API_BASE_URL}/api/groups`;
+  private apiUrl2 = `${API_BASE_URL}/api/student-groups`;
   constructor(private http: HttpClient) { }
  
   
@@ -34,16 +35,30 @@ export class GroupService {
   getGroupById(groupId: number): Observable<Group> {
     return this.http.get<Group>(`${this.apiUrl}/${groupId}`);
   }
+
+  getGroupsOfStudent(studentId: number): Observable<Group[]> {
+    return this.http.get<Group[]>(`${this.apiUrl}/${studentId}/groups`);
+  }
+  
   // Create a new group
   createGroup(groupData: FormData): Observable<Group> {
     console.log('Group created:', groupData);
     return this.http.post<Group>(`${this.apiUrl}/createGroupe`, groupData);
   }
 
-  // Update an existing group
-  updateGroup(id: number, groupData: FormData): Observable<Group> {
-    return this.http.put<Group>(`${this.apiUrl}/update/${id}`, groupData);
+ 
+  updateGroup(group: Group): Observable<Group> {
+    if (!group.id) {
+      throw new Error('Group ID is required for update.');
+    }
+    return this.http.put<Group>(`${this.apiUrl}/${group.id}`, group);
   }
+
+  updateGroupPartial(groupId: number, partialGroup: Partial<Group>): Observable<Group> {
+    return this.http.patch<Group>(`${this.apiUrl}/${groupId}`, partialGroup);
+  }
+  
+  
 
   // Search groups by a specific criteria, e.g., name
   searchGroupsByName(name: string): Observable<Group[]> {
@@ -79,8 +94,9 @@ export class GroupService {
   }
 
   addStudentToGroup(groupId: number, studentId: number): Observable<any> {
-    const payload = { studentId, groupId };
-    return this.http.post(`${this.apiUrl}/${groupId}/addStudents`, payload);
+    return this.http.post(`${this.apiUrl2}/${studentId}/addStudents`, { studentId });
   }
+  
+
   
 }

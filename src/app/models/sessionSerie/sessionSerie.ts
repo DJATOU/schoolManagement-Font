@@ -6,4 +6,5 @@ export interface SessionSeries extends BaseModel {
   groupId: number;
   totalSessions: number;
   sessionsCompleted:number;
+  numberOfSessionsCreated: number;
 }

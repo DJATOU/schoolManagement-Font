@@ -15,12 +15,27 @@
   </mat-toolbar>
 
   <div class="student-view" [ngClass]="{'card-view': viewMode === 'card', 'list-view': viewMode === 'list'}">
-    <ng-container *ngIf="viewMode === 'card'">
-      <app-student-card *ngFor="let student of currentPageStudents" [student]="student"></app-student-card>
+    <ng-container *ngIf="!isLoading && filteredStudents.length > 0; else loadingOrEmptyState">
+      <div class="student-view" [ngClass]="{'card-view': viewMode === 'card', 'list-view': viewMode === 'list'}">
+        <ng-container *ngIf="viewMode === 'card'">
+          <app-student-card *ngFor="let student of currentPageStudents" [student]="student" class="fade-in"></app-student-card>
+        </ng-container>
+        <ng-container *ngIf="viewMode === 'list'">
+          <app-student-list-item *ngFor="let student of currentPageStudents" [student]="student" class="fade-in"></app-student-list-item>
+        </ng-container>
+      </div>
     </ng-container>
-    <ng-container *ngIf="viewMode === 'list'">
-      <app-student-list-item *ngFor="let student of currentPageStudents" [student]="student"></app-student-list-item>
-    </ng-container>
+    
+
+<ng-template #loadingOrEmptyState>
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner></mat-spinner> <!-- Angular Material Spinner -->
+  </div>
+  <div *ngIf="!isLoading && filteredStudents.length === 0" class="empty-state">
+    <p>Aucun étudiant trouvé.</p>
+  </div>
+</ng-template>
+
   </div>
   
 
