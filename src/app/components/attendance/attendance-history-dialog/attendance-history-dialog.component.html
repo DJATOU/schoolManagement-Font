@@ -59,5 +59,6 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
+  <button mat-button (click)="generatePdf()" [disabled]="!selectedSeries">Imprimer</button>
   <button mat-button (click)="dialogRef.close()">Fermer</button>
 </mat-dialog-actions>

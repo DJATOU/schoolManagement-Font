@@ -4,6 +4,7 @@ import { Observable, tap } from 'rxjs';
 import { Student } from '../models/student/student';
 import { API_BASE_URL } from '../app.config';
 import { Group } from '../models/group/group';
+import { StudentFullHistoryDTO } from '../models/student/StudentFullHistoryDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -123,5 +124,9 @@ export class StudentService {
     return this.http.delete(`${this.apiUrl2}/${groupId}/students/${studentId}`);
   }
   
+
   
+getStudentFullHistory(studentId: number): Observable<StudentFullHistoryDTO> {
+  return this.http.get<StudentFullHistoryDTO>(`${this.apiUrl}/${studentId}/full-history`);
+}
 }

@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { PaymentDetail } from '../../../../models/paymentDetail/paymentDetail';
 import { Group } from '../../../../models/group/group';
-import { Session } from '../../../../models/session/session';
 import { SessionSeries } from '../../../../models/sessionSerie/sessionSerie';
 import { PaymentService } from '../../../../services/payment.service';
 import { SeriesService } from '../../../../services/series.service';
@@ -15,7 +14,6 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { StudentService } from '../../../../services/student.service';
 import { PricingService } from '../../../../services/pricing.service';
-import { SessionService } from '../../../../services/SessionService';
 import { Observable } from 'rxjs';
 
 // Importations pour pdfMake
@@ -45,8 +43,7 @@ import { Content, TDocumentDefinitions } from 'pdfmake/interfaces';
 export class PaymentHistoryDialogComponent implements OnInit {
   studentGroups: Group[] = [];
   sessionSeries: SessionSeries[] = [];
-  sessions: Session[] = [];
-  paymentHistory: MatTableDataSource<PaymentDetail> = new MatTableDataSource<PaymentDetail>();
+  paymentHistory = new MatTableDataSource<PaymentDetail>();
 
   selectedGroup: number | null = null;
   selectedSeries: number | null = null;
@@ -64,18 +61,17 @@ export class PaymentHistoryDialogComponent implements OnInit {
     private paymentService: PaymentService,
     private studentService: StudentService,
     private seriesService: SeriesService,
-    private sessionService: SessionService,
     private pricingService: PricingService,
     public dialogRef: MatDialogRef<PaymentHistoryDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { studentId: number }
   ) {}
 
   ngOnInit(): void {
-    this.loadGroups();
     this.loadStudentInfo();
+    this.loadGroups();
   }
 
-  loadStudentInfo(): void {
+  private loadStudentInfo(): void {
     this.studentService.getStudentById(this.data.studentId).subscribe({
       next: (student) => {
         this.studentName = `${student.firstName} ${student.lastName}`;
@@ -86,7 +82,7 @@ export class PaymentHistoryDialogComponent implements OnInit {
     });
   }
 
-  loadGroups(): void {
+  private loadGroups(): void {
     this.studentService.getGroupsForStudent(this.data.studentId).subscribe({
       next: (groups) => {
         this.studentGroups = groups;
@@ -104,7 +100,6 @@ export class PaymentHistoryDialogComponent implements OnInit {
           this.sessionSeries = series;
           this.selectedSeries = null;
           this.paymentHistory.data = [];
-          this.sessions = [];
         },
         error: (error) => {
           console.error('Error loading session series:', error);
@@ -115,7 +110,6 @@ export class PaymentHistoryDialogComponent implements OnInit {
 
   loadPaymentHistory(): void {
     if (this.selectedSeries && this.selectedGroup) {
-      // Récupérer le groupe sélectionné à partir de la liste des groupes
       const selectedGroupObject = this.studentGroups.find(group => group.id === this.selectedGroup);
 
       if (!selectedGroupObject) {
@@ -123,9 +117,8 @@ export class PaymentHistoryDialogComponent implements OnInit {
         return;
       }
 
-      const pricingId = selectedGroupObject.priceId; // Assurez-vous que le champ correspond
+      const pricingId = selectedGroupObject.priceId;
 
-      // Charger le prix du groupe
       this.loadGroupPricing(pricingId).subscribe({
         next: (pricing) => {
           const sessionPrice = pricing.price ?? 0;
@@ -155,9 +148,9 @@ export class PaymentHistoryDialogComponent implements OnInit {
     }
   }
 
-  loadSessionPaymentDetails(sessionPrice: number): void {
-    if (this.selectedGroup !== null && this.selectedGroup !== undefined && this.selectedSeries !== null && this.selectedSeries !== undefined) {
-      this.paymentService.getPaymentDetailsForSessions(this.data.studentId, this.selectedSeries!).subscribe({
+  private loadSessionPaymentDetails(sessionPrice: number): void {
+    if (this.selectedGroup !== null && this.selectedSeries !== null) {
+      this.paymentService.getPaymentDetailsForSessions(this.data.studentId, this.selectedSeries).subscribe({
         next: (paymentDetails) => {
           this.paymentHistory.data = paymentDetails.map(detail => ({
             sessionId: detail.sessionId,
@@ -179,7 +172,7 @@ export class PaymentHistoryDialogComponent implements OnInit {
     }
   }
 
-  getPaymentStatusWithPrice(detail: PaymentDetail, sessionPrice: number): string {
+  private getPaymentStatusWithPrice(detail: PaymentDetail, sessionPrice: number): string {
     if (detail.amountPaid >= sessionPrice) {
       return 'Payée';
     } else if (detail.amountPaid > 0 && detail.amountPaid < sessionPrice) {
@@ -189,7 +182,7 @@ export class PaymentHistoryDialogComponent implements OnInit {
     }
   }
 
-  getSeriesStatus(): string {
+  private getSeriesStatus(): string {
     if (this.seriesRemaining === 0) {
       return 'Payée';
     } else if (this.seriesPaid > 0) {
@@ -199,12 +192,25 @@ export class PaymentHistoryDialogComponent implements OnInit {
     }
   }
 
-  loadGroupPricing(groupId: number): Observable<{ price: number }> {
+  private loadGroupPricing(groupId: number): Observable<{ price: number }> {
     return this.pricingService.getPricingById(groupId);
   }
 
-  // Méthode pour convertir l'image en Base64 (si nécessaire pour le logo)
-  convertImageToBase64(url: string): Promise<string> {
+  private getFillColorForStatus(status: string): string {
+    switch (status) {
+      case 'Payée':
+        return '#d0f0c0'; // Vert
+      case 'Partiellement Payée':
+        return '#ffe4b5'; // Orange
+      case 'Non Payée':
+        return '#ffcccb'; // Rouge
+      default:
+        return '#ffffff'; // Blanc
+    }
+  }
+
+  // Méthode pour convertir l'image en Base64
+  private convertImageToBase64(url: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.crossOrigin = 'Anonymous';
@@ -225,12 +231,27 @@ export class PaymentHistoryDialogComponent implements OnInit {
   }
 
   async generatePdf(): Promise<void> {
+    let logoBase64 = '';
+    try {
+      logoBase64 = await this.convertImageToBase64('assets/succes_assistance.png');
+    } catch (error) {
+      console.error('Erreur lors du chargement du logo :', error);
+    }
+
     const documentDefinition: TDocumentDefinitions = {
       content: [
         {
-          text: 'Historique des Paiements',
-          style: 'header',
-          alignment: 'center'
+          columns: [
+            {
+              image: logoBase64,
+              width: 100
+            },
+            {
+              text: 'Historique des Paiements',
+              style: 'header',
+              alignment: 'right'
+            }
+          ]
         },
         { text: '\n\n' },
         {
@@ -263,13 +284,23 @@ export class PaymentHistoryDialogComponent implements OnInit {
           text: 'Détails des Paiements',
           style: 'sectionHeader'
         },
-        this.getPaymentHistoryTable()
+        this.getPaymentHistoryTable(),
+        { text: '\n\n' },
+        {
+          text: 'Signature étudiant : ________________________',
+          alignment: 'right',
+          margin: [0, 50, 0, 0]
+        },
+        {
+          text: 'Signature de l\'Administration : ________________________',
+          alignment: 'right',
+          margin: [0, 50, 0, 0]
+        }
       ],
       styles: {
         header: {
           fontSize: 22,
           bold: true,
-          alignment: 'center',
           color: '#2F5496',
           margin: [0, 0, 0, 10]
         },
@@ -304,19 +335,18 @@ export class PaymentHistoryDialogComponent implements OnInit {
         } as Content;
       }
     };
-  
+
     const pdfDocGenerator = pdfMake.createPdf(documentDefinition);
-  
-    // Ouvrir le PDF dans une nouvelle fenêtre de manière sécurisée
+
     pdfDocGenerator.getBlob((blob) => {
       const blobUrl = URL.createObjectURL(blob);
       window.open(blobUrl, '_blank');
     });
   }
-  
-  getPaymentHistoryTable(): any {
+
+  private getPaymentHistoryTable(): any {
     const body = [];
-  
+
     // En-têtes du tableau
     body.push([
       { text: 'Session', style: 'tableHeader' },
@@ -324,31 +354,33 @@ export class PaymentHistoryDialogComponent implements OnInit {
       { text: 'Montant Payé', style: 'tableHeader' },
       { text: 'Statut du Paiement', style: 'tableHeader' }
     ]);
-  
+
     // Données du tableau
-    for (const payment of this.paymentHistory.data) {
+    if (this.paymentHistory.data && this.paymentHistory.data.length > 0) {
+      for (const payment of this.paymentHistory.data) {
+        const status = payment.status || 'N/A';
+        const fillColor = this.getFillColorForStatus(status);
+
+        body.push([
+          { text: payment.sessionName || 'N/A', fillColor },
+          { text: payment.paymentDate ? new Date(payment.paymentDate).toLocaleDateString() : 'N/A', fillColor },
+          { text: `${payment.amountPaid} DA`, fillColor },
+          { text: status, fillColor }
+        ]);
+      }
+    } else {
       body.push([
-        payment.sessionName,
-        payment.paymentDate ? new Date(payment.paymentDate).toLocaleDateString() : 'N/A',
-        `${payment.amountPaid} DA`,
-        payment.status
+        { text: 'Aucun paiement trouvé', colSpan: 4, alignment: 'center' }
       ]);
     }
-  
+
     return {
       table: {
         headerRows: 1,
         widths: ['*', '*', '*', '*'],
         body: body
       },
-      layout: {
-        fillColor: (rowIndex: number) => {
-          return rowIndex % 2 === 0 ? '#F3F3F3' : null;
-        },
-        hLineWidth: () => 0,
-        vLineWidth: () => 0
-      }
+      layout: 'lightHorizontalLines'
     };
   }
-  
 }
