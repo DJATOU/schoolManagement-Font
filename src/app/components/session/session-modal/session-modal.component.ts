@@ -11,11 +11,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { Attendance } from '../../../models/Attendance/attendance';
 import { Session } from '../../../models/session/session';
-import { Student } from '../../../models/student/student';
+import { Student } from '../../student/domain/student';
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { AddStudentDialogComponent } from '../add-student-dialog/add-student-dialog.component';
-import { StudentService } from '../../../services/student.service';
+import { StudentService } from '../../student/services/student.service';
 import { EditSessionDialogComponent } from '../edit/edit-session-dialog/edit-session-dialogue.component';
 import { GroupService } from '../../../services/group.service';
 
@@ -60,6 +60,7 @@ export class SessionModalComponent implements OnInit {
                     id: student.id as number,
                     isPresent: student.isPresent ?? true,
                     description: student.description ?? '',
+                    isCatchUp: false 
                 })) ?? [];
         } catch (error) {
             console.error('Error fetching students:', error);
@@ -163,8 +164,14 @@ onValidateSession(): void {
       dateUpdate: new Date(),
       createdBy: 'system',
       updatedBy: 'system',
-      active: true
+      active: true,
+      isCatchUp: student.isCatchUp
   }));
+
+   // Log pour vérifier les valeurs de isCatchUp
+   attendanceUpdates.forEach(attendance => {
+    console.log(`Student ID: ${attendance.studentId}, isCatchUp: ${attendance.isCatchUp}`);
+  });
 
   console.log('Attendance Data:', attendanceUpdates);
 
@@ -255,7 +262,8 @@ openAddStudentDialog(): void {
             this.sessionData.students.push({
               ...selectedStudent,
               isPresent: true,
-              description: ''
+              description: '',
+              isCatchUp: true
             });
           }
         });

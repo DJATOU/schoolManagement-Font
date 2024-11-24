@@ -12,5 +12,6 @@ export interface Attendance {
     updatedBy: string;
     active: boolean;
     description?: string;
+    isCatchUp?: boolean; 
   }
   

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { StudentService } from '../../../services/student.service';
-import { Student } from '../../../models/student/student';
+import { StudentService } from '../services/student.service';
+import { Student } from '../domain/student';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { StudentCardComponent } from '../student-card/student-card.component';
 import { StudentListComponent } from '../student-list/student-list.component';

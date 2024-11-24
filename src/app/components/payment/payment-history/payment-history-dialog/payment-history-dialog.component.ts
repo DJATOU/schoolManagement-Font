@@ -12,7 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { StudentService } from '../../../../services/student.service';
+import { StudentService } from '../../../student/services/student.service';
 import { PricingService } from '../../../../services/pricing.service';
 import { Observable } from 'rxjs';
 

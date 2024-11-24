@@ -1,10 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
-import { Student } from '../models/student/student';
-import { API_BASE_URL } from '../app.config';
-import { Group } from '../models/group/group';
-import { StudentFullHistoryDTO } from '../models/student/StudentFullHistoryDTO';
+import { Student } from '../domain/student';
+import { API_BASE_URL } from '../../../app.config';
+import { Group } from '../../../models/group/group';
+import { StudentFullHistoryDTO } from '../domain/StudentFullHistoryDTO';
 
 @Injectable({
   providedIn: 'root'

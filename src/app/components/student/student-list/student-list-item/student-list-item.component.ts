@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Importer CommonModule
-import { Student } from '../../../../models/student/student';
+import { Student } from '../../domain/student';
 import { MatListItem } from '@angular/material/list';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { Router } from '@angular/router';

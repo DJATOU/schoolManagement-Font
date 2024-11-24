@@ -1,4 +1,4 @@
-import { GroupHistoryDTO } from "../group/GroupHistoryDTO";
+import { GroupHistoryDTO } from "../../../models/group/GroupHistoryDTO";
 
 export interface StudentFullHistoryDTO {
     studentId: number;

@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { Student } from '../../../models/student/student';
+import { Student } from '../domain/student';
 import { ProfileCardComponent } from '../../shared/profile-card/profile-card.component';
 import { LevelService } from '../../../services/level.service';
 

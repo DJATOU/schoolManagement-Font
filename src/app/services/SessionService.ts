@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { API_BASE_URL } from '../app.config';
 import { Session } from '../models/session/session';
-import { Student } from '../models/student/student';
+import { Student } from '../components/student/domain/student';
 
 @Injectable({
   providedIn: 'root'

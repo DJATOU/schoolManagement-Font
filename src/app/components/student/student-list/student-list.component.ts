@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
 import { CommonModule } from '@angular/common';
-import { Student } from '../../../models/student/student';
+import { Student } from '../domain/student';
 import { StudentListItemComponent } from './student-list-item/student-list-item.component';
 
 @Component({

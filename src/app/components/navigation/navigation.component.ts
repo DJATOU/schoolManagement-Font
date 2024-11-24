@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Observable, debounceTime, map, of, startWith, switchMap } from 'rxjs';
-import { StudentService } from '../../services/student.service';
+import { StudentService } from '../student/services/student.service';
 import { TeacherService } from '../../services/teacher.service';  // Import TeacherService
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';

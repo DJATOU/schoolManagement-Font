@@ -16,7 +16,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 import { Level } from '../../../models/level/level';
 import { LevelService } from '../../../services/level.service';
-import { StudentService } from '../../../services/student.service';
+import { StudentService } from '../services/student.service';
 import { SummaryDialogComponent } from '../../summary-dialog/summary-dialog.component';
 
 @Component({

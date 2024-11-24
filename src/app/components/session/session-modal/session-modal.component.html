@@ -35,6 +35,7 @@
               [disabled]="isFinished"
               (change)="onPresentChange(student)">
               {{ student.firstName }} {{ student.lastName }}
+              <span *ngIf="student.isCatchUp" class="catch-up-label">(Rattrapage)</span>
             </mat-checkbox>
             
             <input 

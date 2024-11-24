@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { API_BASE_URL } from '../app.config';
 import { Group } from '../models/group/group';
-import { Student } from '../models/student/student';
+import { Student } from '../components/student/domain/student';
 import { SessionSeries } from '../models/sessionSerie/sessionSerie';
 
 

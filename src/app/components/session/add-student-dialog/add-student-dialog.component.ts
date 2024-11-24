@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { StudentService } from '../../../services/student.service';
-import { Student } from '../../../models/student/student';
+import { StudentService } from '../../student/services/student.service';
+import { Student } from '../../student/domain/student';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';

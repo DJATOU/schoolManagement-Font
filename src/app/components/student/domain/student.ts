@@ -18,5 +18,6 @@ export interface Student {
     isPresent?: boolean;
     isJustified?: boolean;
     description?: string;
+    isCatchUp ?: boolean;
   }
   
