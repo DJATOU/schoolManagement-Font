@@ -26,4 +26,8 @@ export class PricingService {
   disablePricings(id_list: Number[]): Observable<boolean> {
     return this.http.delete<boolean>(`${this.apiUrl}/disable/${id_list}`);
   }
+
+  getPricingById(id: number): Observable<Pricing> {
+    return this.http.get<Pricing>(`${this.apiUrl}/${id}`);
+  }
 }

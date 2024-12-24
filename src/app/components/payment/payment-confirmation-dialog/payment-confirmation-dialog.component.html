@@ -1,10 +1,10 @@
 <h2 mat-dialog-title>Payment Confirmation</h2>
 <mat-dialog-content>
   <h3>Payment Summary</h3>
-  <p><strong>Série de Sessions :</strong> {{ data.paymentDetails[0]?.sessionTitle }}</p>
+  <p><strong>Series Name:</strong> {{ data.seriesName }}</p> <!-- Affiche le nom de la série -->
+  <p><strong>Total Series Price:</strong> {{ data.seriesPrice | currency }}</p> <!-- Affiche le prix total de la série -->
   <p><strong>Total Amount Owed:</strong> {{ data.totalOwed | currency }}</p>
   <p><strong>Total Amount Paid:</strong> {{ data.totalPaid | currency }}</p>
-
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button (click)="onCancel()">Cancel</button>

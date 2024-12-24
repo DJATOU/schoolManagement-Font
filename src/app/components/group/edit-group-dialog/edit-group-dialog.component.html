@@ -1,0 +1,45 @@
+<h2 mat-dialog-title>Modifier le Groupe</h2>
+<form [formGroup]="editGroupForm" (ngSubmit)="onSave()">
+  <mat-dialog-content>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Nom du groupe</mat-label>
+      <input matInput formControlName="name" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Niveau</mat-label>
+      <mat-select formControlName="levelId">
+        <mat-option *ngFor="let level of levels" [value]="level.id">{{ level.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Type de groupe</mat-label>
+      <mat-select formControlName="groupTypeId">
+        <mat-option *ngFor="let groupType of groupTypes" [value]="groupType.id">{{ groupType.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Ajoutez d'autres champs selon vos besoins, comme les sujets, enseignants, etc. -->
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Nombre de sessions par série</mat-label>
+      <input matInput type="number" formControlName="sessionNumberPerSerie" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Prix</mat-label>
+      <input matInput type="number" formControlName="priceAmount" />
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()" type="button">Annuler</button>
+    <button mat-button color="primary" type="submit">Enregistrer</button>
+  </mat-dialog-actions>
+</form>

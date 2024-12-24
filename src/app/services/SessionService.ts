@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { catchError, Observable, tap, throwError } from 'rxjs';
 import { API_BASE_URL } from '../app.config';
 import { Session } from '../models/session/session';
-import { Student } from '../models/student/student';
+import { Student } from '../components/student/domain/student';
 
 @Injectable({
   providedIn: 'root'
@@ -34,12 +34,12 @@ export class SessionService {
   }
   
   // Get a single session by ID
-  getSessionById(id: string): Observable<Session> {
+  getSessionById(id: number): Observable<Session> {
     return this.http.get<Session>(`${this.apiUrl}/${id}`);
   }
 
   // Update a session
-  updateSession(id: string, session: any): Observable<Session> {
+  updateSession(id: number, session: Session): Observable<Session> {
     return this.http.patch<Session>(`${this.apiUrl}/${id}`, session);
   }
 
@@ -53,20 +53,38 @@ export class SessionService {
     return this.http.patch<Session>(`${this.apiUrl}/${sessionId}/finish`, {});
   }
 
+  markSessionAsUnfinished(sessionId: number): Observable<Session> {
+    return this.http.patch<Session>(`${this.apiUrl}/${sessionId}/unfinish`, {});
+  }
+  
   
   // Get sessions by series ID
-  getSessionsBySeriesId(seriesId: number): Observable<Session[]> {
-    return this.http.get<Session[]>(`${this.apiUrl}/series/${seriesId}`);
+  getSessionsBySeriesId(sessionSeriesId: number): Observable<Session[]> {
+    return this.http.get<Session[]>(`${this.apiUrl}/series/${sessionSeriesId}`);
   }
  
 
 
   getSessionsInDateRange(groupId: number, start: Date, end: Date): Observable<Session[]> {
+    console.log("Entering getSessionsInDateRange");
     const params = new HttpParams()
       .set('groupId', groupId.toString())
       .set('start', start.toISOString())
       .set('end', end.toISOString());
-    return this.http.get<Session[]>(`${this.apiUrl}/sessions`, { params });
-  }
+
+    console.log('Params:', params.toString());
+
+    return this.http.get<Session[]>(`${this.apiUrl}/sessions`, { params }).pipe(
+      tap(sessions => {
+        console.log('Sessions retrieved:', sessions); // Vérifiez ici les IDs
+      }),
+      catchError(error => {
+        console.error('Error fetching sessions:', error);
+        return throwError(error);
+      })
+    );
+}
+
+  
 
 }

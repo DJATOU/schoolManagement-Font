@@ -1,0 +1,76 @@
+<mat-dialog-content>
+    <!-- Sélection des groupes et séries -->
+    <mat-form-field appearance="fill">
+      <mat-label>Groupes</mat-label>
+      <mat-select [(ngModel)]="selectedGroup" (selectionChange)="loadSessionSeries()">
+        <mat-option *ngFor="let group of studentGroups" [value]="group.id">
+          {{ group.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  
+    <mat-form-field appearance="fill" *ngIf="selectedGroup">
+      <mat-label>Séries</mat-label>
+      <mat-select [(ngModel)]="selectedSeries" (selectionChange)="loadPaymentHistory()">
+        <mat-option *ngFor="let series of sessionSeries" [value]="series.id">
+          {{ series.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  
+    <!-- Résumé de la série -->
+    <div [ngClass]="{
+        'summary-paid': seriesStatus === 'Payée',
+        'summary-partially-paid': seriesStatus === 'Partiellement Payée',
+        'summary-unpaid': seriesStatus === 'Non Payée'
+      }" class="series-summary" *ngIf="selectedSeries">
+      <p><strong>Statut Série :</strong> {{ seriesStatus }}</p>
+      <p><strong>Montant Total Série :</strong> {{ seriesTotal | currency:'DA' }}</p>
+      <p><strong>Montant Payé :</strong> {{ seriesPaid | currency:'DA' }}</p>
+      <p><strong>Reste à Payer :</strong> {{ seriesRemaining | currency:'DA' }}</p>
+    </div>
+  
+    <!-- Tableau des sessions et des paiements -->
+    <table mat-table [dataSource]="paymentHistory" class="mat-elevation-z8">
+      <!-- Session Column -->
+      <ng-container matColumnDef="session">
+        <th mat-header-cell *matHeaderCellDef> Session </th>
+        <td mat-cell *matCellDef="let payment" [ngClass]="{
+          'row-paid': payment.status === 'Payée',
+          'row-partially-paid': payment.status === 'Partiellement Payée',
+          'row-unpaid': payment.status === 'Non Payée'
+        }"> {{ payment.sessionName }} </td>
+      </ng-container>
+  
+      <!-- Payment Date Column -->
+      <ng-container matColumnDef="paymentDate">
+        <th mat-header-cell *matHeaderCellDef> Date de Paiement </th>
+        <td mat-cell *matCellDef="let payment"> {{ payment.paymentDate | date: 'mediumDate' }} </td>
+      </ng-container>
+  
+      <!-- Amount Paid Column -->
+      <ng-container matColumnDef="amountPaid">
+        <th mat-header-cell *matHeaderCellDef> Montant Payé </th>
+        <td mat-cell *matCellDef="let payment" [ngClass]="{
+          'paid': payment.status === 'Payée',
+          'partially-paid': payment.status === 'Partiellement Payée',
+          'unpaid': payment.status === 'Non Payée'
+        }"> {{ payment.amountPaid | currency:'DA' }} </td>
+      </ng-container>
+  
+      <!-- Payment Status Column -->
+      <ng-container matColumnDef="paymentStatus">
+        <th mat-header-cell *matHeaderCellDef> Statut du Paiement </th>
+        <td mat-cell *matCellDef="let payment"> {{ payment.status }} </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </mat-dialog-content>
+  
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="generatePdf()" [disabled]="!selectedSeries">Imprimer</button>
+    <button mat-button (click)="dialogRef.close()">Fermer</button>
+  </mat-dialog-actions>
+  

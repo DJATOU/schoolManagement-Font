@@ -1,14 +1,13 @@
-<mat-card class="profile-card">
-    <div class="profile-card-content">
-      <div class="profile-info">
-        <mat-card-title class="profile-name">
-          {{ group.name || 'Unknown Group' }}
-        </mat-card-title>
-        <mat-card-subtitle class="profile-subtitle">
-          <div>Level: {{ level }}</div>
-          <div>Type: {{ type }}</div>
-        </mat-card-subtitle>
-      </div>
+<mat-card class="profile-card" (click)="navigateToGroupProfile()">
+  <div class="profile-card-content">
+    <div class="profile-info">
+      <mat-card-title class="profile-name">
+        {{ group.name || 'Unknown Group' }}
+      </mat-card-title>
+      <mat-card-subtitle class="profile-subtitle">
+        <div>Level: {{ level }}</div>
+        <div>Type: {{ type }}</div>
+      </mat-card-subtitle>
     </div>
-  </mat-card>
-  
+  </div>
+</mat-card>

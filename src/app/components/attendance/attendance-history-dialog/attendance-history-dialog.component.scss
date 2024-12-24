@@ -1,0 +1,72 @@
+mat-dialog-content {
+  .mat-form-field {
+    width: 100%;
+  }
+
+  .mat-select {
+    width: 100%;
+  }
+
+  table {
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  th.mat-header-cell {
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  td.mat-cell {
+    padding: 8px;
+  }
+
+  .mat-elevation-z8 {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+}
+
+mat-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px;
+}
+
+/* Styles pour les couleurs de ligne */
+.row-present {
+  background-color: #d4edda; /* Vert pour présent */
+}
+
+.row-justified {
+  background-color: #ffeeba; /* Orange pour absent justifié */
+}
+
+.row-not-justified {
+  background-color: #f8d7da; /* Rouge pour absent non justifié */
+}
+
+/* Légende des couleurs */
+.legend {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.legend-box {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.legend .present {
+  background-color: #d4edda; /* Vert */
+}
+
+.legend .justified {
+  background-color: #ffeeba; /* Orange */
+}
+
+.legend .not-justified {
+  background-color: #f8d7da; /* Rouge */
+}

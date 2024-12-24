@@ -1,0 +1,133 @@
+<h2 mat-dialog-title>Edit Session</h2>
+<form [formGroup]="sessionForm" (ngSubmit)="onSave()" class="edit-session-form fade-in">
+  <mat-tab-group class="tab-group">
+    <mat-tab label="Session Details">
+      <div formGroupName="sessionDetails" class="form-section">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Title</mat-label>
+          <input matInput formControlName="title" aria-label="Session Title" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" aria-label="Session Description"></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Session Type</mat-label>
+          <input matInput formControlName="sessionType" aria-label="Session Type" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Feedback Link</mat-label>
+          <input matInput formControlName="feedbackLink" aria-label="Feedback Link" />
+        </mat-form-field>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Session Timing">
+        <div formGroupName="sessionTiming" class="form-section">
+          <div class="form-row">
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label>Session Start Date</mat-label>
+              <input matInput [matDatepicker]="startDatePicker" placeholder="Choose a date" formControlName="sessionDateStart" aria-label="Session Start Date" />
+              <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+              <mat-datepicker #startDatePicker></mat-datepicker>
+            </mat-form-field>
+          </div>
+      
+          <div class="form-row time-row">
+            <mat-form-field appearance="fill" class="time-select">
+              <mat-label>Hour</mat-label>
+              <mat-select formControlName="startHour" panelClass="custom-panel">
+                <mat-option *ngFor="let hour of hours" [value]="hour">{{ hour }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+      
+            <span>:</span>
+      
+            <mat-form-field appearance="fill" class="time-select">
+              <mat-label>Minute</mat-label>
+              <mat-select formControlName="startMinute" panelClass="custom-panel">
+                <mat-option *ngFor="let minute of minutes" [value]="minute">{{ minute }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+      
+            <mat-form-field appearance="fill" class="time-select period-select">
+              <mat-label>AM/PM</mat-label>
+              <mat-select formControlName="startPeriod" panelClass="custom-panel">
+                <mat-option *ngFor="let period of periods" [value]="period">{{ period }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+      
+          <div class="form-row">
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label>Session End Date</mat-label>
+              <input matInput [matDatepicker]="endDatePicker" placeholder="Choose a date" formControlName="sessionDateEnd" aria-label="Session End Date"/>
+              <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+              <mat-datepicker #endDatePicker></mat-datepicker>
+            </mat-form-field>
+          </div>
+      
+          <div class="form-row time-row">
+            <mat-form-field appearance="fill" class="time-select">
+              <mat-label>Hour</mat-label>
+              <mat-select formControlName="endHour" panelClass="custom-panel">
+                <mat-option *ngFor="let hour of hours" [value]="hour">{{ hour }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+      
+            <span>:</span>
+      
+            <mat-form-field appearance="fill" class="time-select">
+              <mat-label>Minute</mat-label>
+              <mat-select formControlName="endMinute" panelClass="custom-panel">
+                <mat-option *ngFor="let minute of minutes" [value]="minute">{{ minute }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+      
+            <mat-form-field appearance="fill" class="time-select period-select">
+              <mat-label>AM/PM</mat-label>
+              <mat-select formControlName="endPeriod" panelClass="custom-panel">
+                <mat-option *ngFor="let period of periods" [value]="period">{{ period }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-tab>
+      
+      
+    <mat-tab label="Identifiers">
+      <div formGroupName="identifiers" class="form-section">
+        <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Group</mat-label>
+            <mat-select formControlName="groupId" aria-label="Group">
+              <mat-option *ngFor="let group of groups" [value]="group.id">{{ group.name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Room</mat-label>
+          <mat-select formControlName="roomId" aria-label="Room">
+            <mat-option *ngFor="let room of rooms" [value]="room.id">{{ room.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Teacher</mat-label>
+          <mat-select formControlName="teacherId" aria-label="Teacher">
+            <mat-option *ngFor="let teacher of teachers" [value]="teacher.id">
+              {{ teacher.firstName }} {{ teacher.lastName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
+  <mat-dialog-actions class="action-buttons">
+    <button mat-button type="submit" color="primary">Save</button>
+    <button mat-button type="button" (click)="onCancel()" color="warn">Cancel</button>
+  </mat-dialog-actions>
+</form>

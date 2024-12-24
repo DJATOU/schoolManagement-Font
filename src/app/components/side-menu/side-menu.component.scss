@@ -66,3 +66,76 @@
   color: #333;
   margin-right: 10px;
 }
+
+
+@media (min-width: 600px) and (max-width: 1500px) {
+  /* Ajustements pour la barre latérale (.sidenav) */
+  .sidenav {
+    padding: 0;
+    overflow-y: auto; /* Permettre le défilement vertical si nécessaire */
+  }
+
+  /* Ajustements pour le custom accordion */
+  .custom-accordion .mat-expansion-panel-header {
+    padding: 8px; /* Réduction du padding */
+    font-size: 13px; /* Réduction de la taille de police */
+  }
+
+  .custom-accordion .mat-action-list mat-list-item {
+    padding: 6px 8px; /* Ajustement du padding */
+    font-size: 12px; /* Réduction de la taille de police */
+  }
+
+  .custom-accordion .mat-action-list mat-list-item:hover {
+    padding-left: 16px; /* Ajustement du padding pour éviter le défilement horizontal */
+  }
+
+  .mat-list-item {
+    font-size: 12px; /* Réduction de la taille de police */
+  }
+
+  .mat-panel-title mat-icon {
+    margin-right: 8px;
+  }
+
+  .custom-accordion .mat-action-list mat-list-item mat-icon {
+    margin-right: 8px;
+  }
+}
+
+
+@media (max-width: 600px) {
+  /* Ajustements pour la barre latérale (.sidenav) */
+  .sidenav {
+    padding: 0;
+    width: 100%; /* La barre latérale occupe toute la largeur */
+    position: relative; /* Pour un positionnement correct */
+  }
+
+  /* Ajustements pour le custom accordion */
+  .custom-accordion .mat-expansion-panel-header {
+    padding: 6px; /* Réduction du padding */
+    font-size: 12px; /* Réduction de la taille de police */
+  }
+
+  .custom-accordion .mat-action-list mat-list-item {
+    padding: 4px 6px; /* Réduction du padding */
+    font-size: 11px; /* Réduction de la taille de police */
+  }
+
+  .custom-accordion .mat-action-list mat-list-item:hover {
+    padding-left: 14px; /* Ajustement du padding */
+  }
+
+  .mat-list-item {
+    font-size: 11px; /* Réduction de la taille de police */
+  }
+
+  .mat-panel-title mat-icon {
+    margin-right: 6px;
+  }
+
+  .custom-accordion .mat-action-list mat-list-item mat-icon {
+    margin-right: 6px;
+  }
+}

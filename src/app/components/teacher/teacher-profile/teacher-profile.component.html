@@ -1,37 +1,47 @@
-
-<div class="teacher-profile-container" *ngIf="!loading; else loadingSpinner">
+<div class="teacher-profile-container fade-in" *ngIf="!loading; else loadingSpinner">
   <mat-card class="teacher-card">
     <mat-card-header>
-      <div mat-card-avatar class="teacher-photo"><img mat-card-image [src]="teacher?.photo" alt="Photo de l'enseignant"></div>
-      <mat-card-title>{{ teacher?.firstName }} {{ teacher?.lastName }}</mat-card-title>
-      <mat-card-subtitle>{{ teacher?.specialization }}</mat-card-subtitle>
+      <div class="header-container">
+        <div class="teacher-info-header">
+          <div class="teacher-photo-container">
+            <img [src]="teacherPhotoUrl" alt="Photo de l'Enseignant" class="teacher-photo">
+          </div>
+          <div class="teacher-name-specialization">
+            <mat-card-title>{{ teacher?.firstName }} {{ teacher?.lastName }}</mat-card-title>
+            <mat-card-subtitle>{{ teacher?.specialization }}</mat-card-subtitle>
+          </div>
+        </div>
+        <div class="header-buttons">
+          <button mat-icon-button class="edit-button" (click)="onEdit()" aria-label="Modifier" matTooltip="Modifier le profil">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button class="disable-button" (click)="onDisable()" aria-label="Supprimer" matTooltip="Supprimer le compte">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
     </mat-card-header>
     <mat-card-content>
-      <div class="teacher-info">
+      <div class="teacher-info-grid">
         <div class="info-section">
-          <h3>Personal Information</h3>
-          <p><strong>Gender:</strong> {{ teacher?.gender }}</p>
-          <p><strong>Email:</strong> {{ teacher?.email }}</p>
-          <p><strong>Phone Number:</strong> {{ teacher?.phoneNumber }}</p>
-          <p><strong>Date of Birth:</strong> {{ teacher?.dateOfBirth | date: 'mediumDate' }}</p>
-          <p><strong>Place of Birth:</strong> {{ teacher?.placeOfBirth }}</p>
-          <p><strong>Address:</strong> {{ teacher?.address }}</p>
-          <p><strong>Communication Preferences:</strong> {{ teacher?.communicationPreference }}</p>
+          <h3>Informations Personnelles</h3>
+          <p><strong>Sexe :</strong> {{ teacher?.gender }}</p>
+          <p><strong>Email :</strong> {{ teacher?.email }}</p>
+          <p><strong>Téléphone :</strong> {{ teacher?.phoneNumber }}</p>
+          <p><strong>Date de Naissance :</strong> {{ teacher?.dateOfBirth | date: 'mediumDate' }}</p>
+          <p><strong>Lieu de Naissance :</strong> {{ teacher?.placeOfBirth }}</p>
+          <p><strong>Adresse :</strong> {{ teacher?.address }}</p>
+          <p><strong>Préférences de Communication :</strong> {{ teacher?.communicationPreference }}</p>
         </div>
         <div class="info-section">
-          <h3>Professional Information</h3>
-          <p><strong>Specialization:</strong> {{ teacher?.specialization }}</p>
-          <p><strong>Qualifications:</strong> {{ teacher?.qualifications }}</p>
-          <p><strong>Years of Experience:</strong> {{ teacher?.yearsOfExperience }}</p>
+          <h3>Informations Professionnelles</h3>
+          <p><strong>Spécialisation :</strong> {{ teacher?.specialization }}</p>
+          <p><strong>Qualifications :</strong> {{ teacher?.qualifications }}</p>
+          <p><strong>Années d'Expérience :</strong> {{ teacher?.yearsOfExperience }}</p>
         </div>
       </div>
     </mat-card-content>
   </mat-card>
-  
-  <div class="button-container">
-    <button mat-raised-button color="primary" (click)="onEdit()">Edit</button>
-    <button mat-raised-button color="warn" (click)="onDisable()">Delete</button>
-  </div>
 </div>
 
 <ng-template #loadingSpinner>

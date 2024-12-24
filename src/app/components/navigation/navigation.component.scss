@@ -1,74 +1,150 @@
 .mat-toolbar {
   display: flex;
   justify-content: space-between;
-  align-items: center; // Assure un alignement vertical centralisé de tous les éléments
-  background: linear-gradient(to right, rgb(182, 244, 146), rgb(51, 139, 147));
-  padding: 0 1rem; // Ajoute un padding horizontal pour éviter que les éléments ne touchent les bords
+  align-items: center;
+  background: linear-gradient(to right, #2c3e50, #4ca1af); // Dégradé plus sombre et moderne
+  padding: 0 2rem;
 
   .spacer {
     display: flex;
     align-items: center;
-    gap: 1rem; // Ajoute un espacement entre le bouton de menu et le logo
+    gap: 1rem;
 
     button {
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0.5rem; // Ajoute du padding interne au bouton pour agrandir la zone cliquable
-      color: white; // Couleur de l'icône du bouton
+      padding: 0.5rem;
+      color: white;
       background: transparent;
       border: none;
       cursor: pointer;
+      transition: transform 0.2s ease-in-out;
+
+      &:hover {
+        transform: scale(1.1);
+        filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5)); // Légère ombre lumineuse
+      }
     }
 
     .logo {
-      height: 3rem; // Hauteur du logo ajustée
-      max-width: 100%; // S'assure que le logo ne dépasse pas de ses dimensions
+      height: 3.75rem; // Ajustement de la taille du logo
+      max-width: 100%;
       cursor: pointer;
     }
   }
 
   .icone-search {
     display: flex;
-    align-items: center; // Assure un alignement vertical centralisé des icônes
-    gap: 1rem;
+    align-items: center;
+    gap: 1rem; // Ajustement de l'espacement entre les icônes
+    padding: 0.3rem 0.8rem; // Réduction du padding pour un design plus compact
+    border-radius: 50px;
+    background-color: rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.4);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    }
 
     mat-icon {
-      color: white; // Change la couleur des icônes
+      color: white;
+      font-size: 24px; // Ajustement de la taille de l'icône
+      transition: color 0.3s ease, transform 0.3s ease, filter 0.3s;
       cursor: pointer;
-      transition: color 0.3s, transform 0.3s;
 
       &:hover {
-        color: #FFD700; // Change la couleur au survol, par exemple or
-        transform: scale(1.2); // Agrandit légèrement l'icône au survol
+        color: #1abc9c; // Changement de couleur au survol
+        transform: scale(1.2);
+        filter: drop-shadow(0 0 10px rgba(26, 188, 156, 0.5)); // Effet lumineux
       }
 
       &.selected-icon {
-        color: #FFD700; // Couleur pour l'icône sélectionnée
-        border-bottom: 2px solid #FFD700; // Ajoute une bordure inférieure pour indiquer la sélection
+        color: #1abc9c;
+        transform: scale(1.2);
+        filter: drop-shadow(0 0 10px rgba(26, 188, 156, 0.5));
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 0.5rem;
       }
     }
   }
 
   .search-container {
     flex-grow: 1;
-    max-width: 40rem;
+    max-width: 50%; // Augmente la largeur pour un meilleur centrage
     display: flex;
-    align-items: center; // Assure un alignement vertical centralisé du champ de recherche
-    margin: 2.5rem 5rem 1rem 5rem; // Ajuste les marges pour centrer le champ de recherche
-    //padding: 0.5rem 0; // Ajoute un padding pour descendre la barre de recherche
-
+    justify-content: center; // Centre la barre de recherche horizontalement
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background-color: transparent; // Supprime tout fond supplémentaire
+    border-radius: 50px; // Forme arrondie, mais sans fond visible
+    margin: 0 2rem; // Centre la barre de recherche au sein de la toolbar
+    border: none; // Supprime toute bordure autour du conteneur
+  
     mat-form-field {
       width: 100%;
-      margin: 0; // Supprime les marges par défaut
-
+      //max-height: 4rem;
+      margin-top: 2.5rem;
+      background-color: transparent; // Supprime tout fond à l'intérieur du champ de formulaire
+      border: none; // Supprime la bordure du champ de formulaire
+  
+      .mat-form-field-wrapper {
+        padding: 0;
+        background: none;
+        box-shadow: none;
+        border: none;
+      }
+  
+      .mat-form-field-underline {
+        display: none; // Supprime la ligne sous l'input
+      }
+  
+      .mat-form-field-flex {
+        background-color: transparent;
+        box-shadow: none;
+        border: none;
+      }
+  
       .mat-icon {
+        font-size: 1.5rem;
+        margin-right: 8px; // Espacement entre l'icône et l'input
         cursor: pointer;
       }
+  
+      input {
+        padding-left: 0.5rem;
+        font-size: 16px;
+        color: #333;
+        //height: 2.5rem;
+        border: none; // Supprime toute bordure autour de l'input
+        box-shadow: none; // Supprime toute ombre
+        background-color: transparent; // Assure un fond transparent
+        outline: none; // Supprime l'effet de contour au focus
+      }
     }
-
+  
     .search-icon {
-      color: white; // Change la couleur de l'icône de recherche
+      color: #c79f81;
+      background-color: #fff;
+      border-radius: 50%;
+      padding: 0.5rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+  
+      &:hover {
+        background-color: #1abc9c;
+        color: #fff;
+      }
+    }
+  
+    .mat-autocomplete-panel {
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
   }
 
@@ -77,24 +153,138 @@
     align-items: center;
 
     .user-photo {
-      width: 2.5rem; // Réduit la taille de la photo
-      height: 2.5rem;
-      border-radius: 50%; // Rend la photo circulaire
+      width: 2rem; // Réduction de la taille de la photo utilisateur
+      height: 2rem;
+      border-radius: 50%;
       margin-right: 0.5rem;
       cursor: pointer;
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+
+      &:hover {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); // Légère ombre
+        transform: scale(1.1); // Agrandissement léger au survol
+      }
     }
 
     .user-name {
-      color: white; // Change la couleur du texte du nom d'utilisateur
+      color: white;
+      font-weight: bold;
+      font-size: 14px; // Réduction de la taille de la police
+    }
+  }
+
+  button {
+    cursor: pointer;
+  }
+}
+
+
+
+@media (min-width: 600px) and (max-width: 1500px) {
+  .mat-toolbar {
+    padding: 0 1.5rem; /* Ajustement du padding latéral */
+
+    .spacer {
+      gap: 0.8rem; /* Réduction de l'espacement entre les éléments */
+
+      button {
+        padding: 0.4rem; /* Réduction du padding des boutons */
+      }
+
+      .logo {
+        height: 3.75rem; /* Réduction de la taille du logo */
+      }
+    }
+
+    .search-container {
+      max-width: 60%; /* Ajustement de la largeur maximale */
+      margin: 0 1.5rem; /* Ajustement des marges latérales */
+      padding: 0.4rem 0.8rem; /* Réduction du padding */
+
+      mat-form-field {
+        margin-top: 2.5rem; /* Réduction de la marge supérieure */
+      }
+    }
+
+    .icone-search {
+      gap: 0.8rem; /* Réduction de l'espacement entre les icônes */
+      padding: 0.2rem 0.6rem; /* Réduction du padding */
+    }
+
+    .user-info {
+      .user-photo {
+        width: 1.8rem; /* Réduction de la taille de la photo utilisateur */
+        height: 1.8rem;
+      }
+
+      .user-name {
+        font-size: 13px; /* Ajustement de la taille de la police */
+      }
+    }
+
+    .mat-icon {
+      font-size: 22px; /* Ajustement de la taille des icônes */
     }
   }
 }
 
-.mat-icon {
-  color: white; // Couleur des icônes par défaut
-  cursor: pointer;
 
-  &:hover {
-    color: #FFD700; // Couleur des icônes au survol
+@media (max-width: 600px) {
+  .mat-toolbar {
+    flex-direction: column; /* Empile les éléments verticalement */
+    padding: 0 1rem; /* Réduction du padding latéral */
+
+    .spacer {
+      justify-content: center;
+      margin-bottom: 0.5rem;
+
+      button {
+        padding: 0.3rem;
+      }
+
+      .logo {
+        height: 3.75rem; /* Réduction de la taille du logo */
+      }
+    }
+
+    .search-container {
+      max-width: 100%;
+      margin: 0;
+      padding: 0.3rem 0.5rem;
+      order: 2; /* Place la barre de recherche après la section icônes */
+
+      mat-form-field {
+        margin-top: 1rem;
+      }
+    }
+
+    .icone-search {
+      gap: 0.5rem;
+      padding: 0.2rem 0.4rem;
+      order: 1; /* Place les icônes en premier */
+
+      mat-icon {
+        font-size: 20px; /* Réduction de la taille des icônes */
+      }
+    }
+
+    .user-info {
+      justify-content: center;
+      margin-top: 0.5rem;
+      order: 3; /* Place les infos utilisateur en dernier */
+
+      .user-photo {
+        width: 1.5rem; /* Réduction de la taille de la photo utilisateur */
+        height: 1.5rem;
+      }
+
+      .user-name {
+        font-size: 12px; /* Réduction de la taille de la police */
+      }
+    }
+
+    .mat-icon {
+      font-size: 20px; /* Réduction de la taille des icônes */
+    }
   }
 }

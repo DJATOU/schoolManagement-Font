@@ -13,7 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
+import { environment } from '../../../../environment';
 @Component({
   selector: 'app-teacher-profile',
   standalone: true,
@@ -35,6 +35,7 @@ export class TeacherProfileComponent implements OnInit {
   teacher: Teacher | undefined;
   loading = true;
   groupForm: FormGroup;
+  teacherPhotoUrl: string = ''; 
 
   constructor(
     private route: ActivatedRoute,
@@ -60,6 +61,10 @@ export class TeacherProfileComponent implements OnInit {
     this.teacherService.getTeacher(id).subscribe((teacher) => {
       this.teacher = teacher;
       this.loading = false;
+          // Générer l'URL complète de la photo en utilisant les variables d'environnement
+          if (this.teacher?.photo) {
+            this.teacherPhotoUrl = `${environment.apiUrl}${environment.imagesPath}${this.teacher.photo}`;
+          }
     });
   }
 

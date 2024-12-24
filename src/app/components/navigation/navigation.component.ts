@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Observable, debounceTime, map, of, startWith, switchMap } from 'rxjs';
-import { StudentService } from '../../services/student.service';
+import { StudentService } from '../student/services/student.service';
 import { TeacherService } from '../../services/teacher.service';  // Import TeacherService
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -12,12 +12,13 @@ import { MatIcon } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { SearchService } from '../../services/SearchService ';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-navigation',
   standalone: true,
   imports: [
-    CommonModule, MatFormFieldModule, MatInputModule, MatIcon, MatToolbarModule, FormsModule, MatAutocompleteModule, ReactiveFormsModule, MatMenuModule, RouterLink
+    CommonModule, MatFormFieldModule, MatInputModule, MatIcon, MatToolbarModule, FormsModule, MatAutocompleteModule, ReactiveFormsModule, MatMenuModule, RouterLink, MatTooltip
   ],
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss']
@@ -28,7 +29,7 @@ export class NavigationComponent implements OnInit {
   selectedIcon: string = '';
   searchControl = new FormControl('');
   filteredSuggestions: Observable<string[]> | undefined;
-  placeholder: string = 'Search for students...';
+  placeholder: string = 'Rechercher un élève...';
   currentSearchType: string = 'student';
 
   @Output() sidenavToggle = new EventEmitter<void>();
@@ -100,9 +101,9 @@ export class NavigationComponent implements OnInit {
 
   private getPlaceholderByType(type: string): string {
     switch (type) {
-      case 'student': return 'Search for students...';
-      case 'group': return 'Search for groups...';
-      case 'teacher': return 'Search for teachers...';
+      case 'student': return 'Rechercher un élève...';
+      case 'group': return 'Rechercher un groupe...';
+      case 'teacher': return 'Rechercher un enseignant...';
       default: return 'Search...';
     }
   }

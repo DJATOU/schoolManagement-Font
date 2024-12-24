@@ -1,0 +1,64 @@
+<mat-dialog-content>
+  <!-- Sélection des groupes et séries -->
+  <mat-form-field appearance="fill">
+    <mat-label>Groupes</mat-label>
+    <mat-select [(ngModel)]="selectedGroup" (selectionChange)="loadSessionSeries()">
+      <mat-option *ngFor="let group of studentGroups" [value]="group.id">
+        {{ group.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" *ngIf="selectedGroup">
+    <mat-label>Séries</mat-label>
+    <mat-select [(ngModel)]="selectedSeries" (selectionChange)="loadAttendanceHistory()">
+      <mat-option *ngFor="let series of sessionSeries" [value]="series.id">
+        {{ series.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Légende pour expliquer les couleurs -->
+  <div class="legend">
+      <p><span class="legend-box present"></span> Présent</p>
+      <p><span class="legend-box justified"></span> Absent Justifié</p>
+      <p><span class="legend-box not-justified"></span> Absent Non Justifié</p>
+  </div>
+
+  <!-- Tableau des présences -->
+  <table mat-table [dataSource]="attendanceHistory" class="mat-elevation-z8">
+    <!-- Définitions des colonnes -->
+    <ng-container matColumnDef="session">
+      <th mat-header-cell *matHeaderCellDef> Session </th>
+      <td mat-cell *matCellDef="let attendance" [ngClass]="getRowClass(attendance)"> {{ attendance.sessionName }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="attendanceDate">
+      <th mat-header-cell *matHeaderCellDef> Date </th>
+      <td mat-cell *matCellDef="let attendance" [ngClass]="getRowClass(attendance)"> {{ attendance.sessionDate | date: 'mediumDate' }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="isPresent">
+      <th mat-header-cell *matHeaderCellDef> Présent </th>
+      <td mat-cell *matCellDef="let attendance" [ngClass]="getRowClass(attendance)"> {{ attendance.isPresent ? 'Oui' : 'Non' }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="isJustified">
+      <th mat-header-cell *matHeaderCellDef> Justifié </th>
+      <td mat-cell *matCellDef="let attendance" [ngClass]="getRowClass(attendance)"> {{ attendance.isJustified ? 'Oui' : 'Non' }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef> Description </th>
+      <td mat-cell *matCellDef="let attendance" [ngClass]="getRowClass(attendance)"> {{ attendance.description }} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="getRowClass(row)"></tr>
+  </table>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button (click)="generatePdf()" [disabled]="!selectedSeries">Imprimer</button>
+  <button mat-button (click)="dialogRef.close()">Fermer</button>
+</mat-dialog-actions>

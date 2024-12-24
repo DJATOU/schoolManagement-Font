@@ -1,29 +1,27 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSelectModule } from '@angular/material/select';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
-import { GroupType } from '../../../models/GroupType/groupType';
-import { Group } from '../../../models/group/group';
-import { Level } from '../../../models/level/level';
-import { Student } from '../../../models/student/student';
-import { GroupTypeService } from '../../../services/GroupTypeService';
+import { SharedModule } from '../../../shared/shared/shared.module';
+import { GroupCardComponent } from '../../group/group-card/group-card.component';
+import { PaymentDialogComponent } from '../../payment/payment-dialog/payment-dialog.component';
+import { GroupDialogComponent } from '../../group/group-dialog/group-dialog.component';
+import { EditStudentDialogComponent } from '../edit-student-dialog/edit-student-dialog.component';
+import { StudentService } from '../services/student.service';
 import { GroupService } from '../../../services/group.service';
 import { LevelService } from '../../../services/level.service';
-import { StudentService } from '../../../services/student.service';
-import { GroupCardComponent } from '../../group/group-card/group-card.component';
-import { GroupDialogComponent } from '../../group/group-dialog/group-dialog.component';
-import { PaymentDialogComponent } from '../../payment/payment-dialog/payment-dialog.component';
-import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
+import { GroupTypeService } from '../../../services/GroupTypeService';
+import { Component, OnInit } from '@angular/core';
+import { Student } from '../domain/student';
+import { Group } from '../../../models/group/group';
+import { GroupType } from '../../../models/GroupType/groupType';
+import { Level } from '../../../models/level/level';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 import { ApiError, ApiResponse } from '../../../models/response';
+import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
+import { PaymentHistoryDialogComponent } from '../../payment/payment-history/payment-history-dialog/payment-history-dialog.component';
+import { AttendanceHistoryDialogComponent } from '../../attendance/attendance-history-dialog/attendance-history-dialog.component';
+import { environment } from '../../../../environment';
+import { PdfGeneratorService } from '../services/pdf-generator.service';
 
 const errorMessages = {
   PAYMENT_EXCEEDS_SESSIONS: "Le paiement ne peut pas être effectué car il dépasse le coût des sessions actuellement créées.",
@@ -39,19 +37,11 @@ const errorMessages = {
   selector: 'app-student-profile',
   standalone: true,
   imports: [
-    CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDialogModule,
-    MatProgressSpinnerModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatExpansionModule,
+    SharedModule,
     GroupCardComponent,
     PaymentDialogComponent,
-    GroupDialogComponent
+    GroupDialogComponent,
+    EditStudentDialogComponent
   ],
   templateUrl: './student-profile.component.html',
   styleUrls: ['./student-profile.component.scss'],
@@ -61,11 +51,12 @@ export class StudentProfileComponent implements OnInit {
   student: Student | null = null;
   allGroups: Group[] = [];
   allGroupTypes: GroupType[] = [];
-  allLevels: Level[] = [];
+  levels: Level[] = [];
   studentGroups: Group[] = [];
   studentLevelId: number = -1;
   groupForm: FormGroup;
   loading = true;
+  studentPhotoUrl: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -75,7 +66,8 @@ export class StudentProfileComponent implements OnInit {
     private levelService: LevelService,
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private pdfGeneratorService: PdfGeneratorService // Injection du service
   ) {
     this.groupForm = this.fb.group({
       groupIds: [[]]
@@ -89,6 +81,9 @@ export class StudentProfileComponent implements OnInit {
     } else {
       this.showError(errorMessages.STUDENT_NOT_FOUND);
     }
+    this.loadSelectOptions();
+    this.loadAllGroups(); // Ajouté pour charger les groupes
+    this.loadAllGroupTypes(); // Si nécessaire pour charger les types de groupes
   }
 
   private getStudentIdFromRoute(): number | null {
@@ -100,6 +95,14 @@ export class StudentProfileComponent implements OnInit {
     this.studentService.getStudentById(studentId).subscribe({
       next: student => {
         this.student = student;
+        console.log('Student data:', this.student);
+
+        // Générer l'URL complète de la photo en utilisant les variables d'environnement
+        if (this.student?.photo) {
+          this.studentPhotoUrl = `${environment.apiUrl}${environment.imagesPath}${this.student.photo}`;
+        }
+        console.log('Student photo URL:', this.studentPhotoUrl);  // Vérifier l'URL générée
+
         this.loading = false;
         this.loadStudentLevel();
         this.loadStudentGroups();
@@ -109,28 +112,34 @@ export class StudentProfileComponent implements OnInit {
         this.showError(errorMessages.STUDENT_NOT_FOUND);
       }
     });
-
-    this.loadAllGroups();
-    this.loadAllGroupTypes();
   }
 
   private loadStudentLevel(): void {
-    if (this.student?.id !== undefined) {
-      this.levelService.getLevels().subscribe({
-        next: levels => {
-          this.allLevels = levels;
-          const studentLevel = this.allLevels.find(level => level.id?.toString() === this.student?.level);
-          this.studentLevelId = studentLevel?.id || -1;
-          
-          if (this.student) {
-            this.student.level = studentLevel?.description ?? '';
-          }
+    if (this.student?.levelId) {
+      console.log('Attempting to fetch level with ID:', this.student.levelId); // Log pour vérifier l'ID du niveau
+      this.levelService.getLevelById(this.student.levelId).subscribe({
+        next: level => {
+          console.log('Level fetched successfully:', level); // Log pour vérifier la réponse du backend
+          this.student!.levelName = level.name;
+          this.studentLevelId = level.id ?? 0;
+          console.log('Level name set:', this.student?.levelName);
+          this.updateUI();
         },
-        error: () => {
+        error: error => {
+          console.error('Error fetching level:', error); // Log pour vérifier les erreurs
           this.showError(errorMessages.GENERIC_ERROR);
+          this.updateUI();
         }
       });
+    } else {
+      console.warn('No level ID provided for student:', this.student);
+      this.updateUI();
     }
+  }
+
+  private updateUI(): void {
+    // Mettez à jour l'interface ici après avoir récupéré les données
+    this.loading = false;
   }
 
   private loadStudentGroups(): void {
@@ -167,6 +176,10 @@ export class StudentProfileComponent implements OnInit {
         this.showError(errorMessages.GENERIC_ERROR);
       }
     });
+  }
+
+  loadSelectOptions(): void {
+    this.levelService.getLevels().subscribe(data => this.levels = data);
   }
 
   onSubmitGroups(): void {
@@ -239,24 +252,39 @@ export class StudentProfileComponent implements OnInit {
 
   openGroupDialog(): void {
     console.log('All groups:', this.allGroups);
+
+    // Filtrer tous les groupes correspondant au niveau de l'étudiant
+    const groupsForLevel = this.allGroups.filter(group => group.levelId === this.studentLevelId);
     
-    const possibleGroups = this.allGroups.filter(group => group.levelId === this.studentLevelId);
-  
-    if (possibleGroups.length === 0) {
-      this.showError(errorMessages.INVALID_GROUP_LEVEL);
-      return;
+    if (groupsForLevel.length === 0) {
+        // Aucun groupe disponible pour le niveau de l'étudiant
+        this.showErrorMessage('Aucun groupe disponible pour ce niveau.');
+        return;
     }
-  
+
+    // Filtrer pour exclure les groupes déjà ajoutés à l'étudiant
+    const possibleGroups = groupsForLevel.filter(group =>
+      !this.studentGroups.some(studentGroup => studentGroup.id === group.id)
+    );
+    
+    if (possibleGroups.length === 0) {
+        // Tous les groupes de ce niveau ont déjà été ajoutés à l'étudiant
+        this.showErrorMessage('Tous les groupes de ce niveau ont déjà été ajoutés à cet étudiant.');
+        return;
+    }
+
     console.log('Possible groups for level:', possibleGroups);
-  
+
+    // Ouvrir un dialogue pour sélectionner les groupes
     const dialogRef = this.dialog.open(GroupDialogComponent, {
       width: '400px',
       data: {
-        allGroups: possibleGroups,
-        selectedGroups: this.groupForm.value.groupIds
+        allGroups: possibleGroups,  // Passer les groupes filtrés qui ne sont pas déjà ajoutés
+        selectedGroups: this.groupForm.value.groupIds  // Groupes déjà sélectionnés dans le formulaire
       }
     });
-  
+
+    // Mettre à jour le formulaire avec les groupes sélectionnés
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.groupForm.patchValue({ groupIds: result });
@@ -264,27 +292,34 @@ export class StudentProfileComponent implements OnInit {
       }
     });
   }
-  
+
   submitPayment(paymentData: any): void {
     console.log('Submitting payment data:', paymentData);
-    // Implement the API call to submit the payment data
-    // this.paymentService.addPayment(paymentData).subscribe({
-    //   next: response => {
-    //     this.snackBar.open('Payment added successfully', 'Close', {
-    //       duration: 3000,
-    //       panelClass: ['success-snackbar']
-    //     });
-    //   },
-    //   error: (error: ApiError) => {
-    //     this.handlePaymentError(error);
-    //   }
-    // });
   }
 
- 
-
   onEdit(): void {
-    // Open edit dialog or navigate to edit form
+    const dialogRef = this.dialog.open(EditStudentDialogComponent, {
+      width: '600px',
+      data: { student: this.student },
+    });
+
+    dialogRef.afterClosed().subscribe((result: Student | undefined) => {
+      if (result) {
+        this.studentService.updateStudent(result).subscribe({
+          next: (updatedStudent) => {
+            this.student = updatedStudent;
+            this.loadStudentLevel(); // Recharger le niveau
+            this.showSuccessMessage('Étudiant mis à jour avec succès.');
+          },
+          error: (error) => {
+            console.error('Error updating student:', error);
+            this.showErrorMessage('Erreur lors de la mise à jour de l\'étudiant.');
+          },
+        });
+      } else {
+        console.log('Modification annulée.');
+      }
+    });
   }
 
   onDisable(): void {
@@ -296,7 +331,7 @@ export class StudentProfileComponent implements OnInit {
         confirmText: 'Yes, delete',
         cancelText: 'No, cancel',
         confirmColor: 'warn'
-      } 
+      }
     }).afterClosed().subscribe((result: boolean) => {
       if (result) {
         this.studentService.disableStudent(this.student!.id || -1).subscribe({
@@ -316,6 +351,59 @@ export class StudentProfileComponent implements OnInit {
     });
   }
 
+  onPrint(lang: string = 'ar') {
+    if (this.student?.id) {
+      this.studentService.generateStudentPdf(this.student.id, lang).subscribe({
+        next: (pdfBlob: Blob) => {
+          const blob = new Blob([pdfBlob], { type: 'application/pdf' });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `student-profile-${this.student?.id}.pdf`;
+          a.click();
+          window.URL.revokeObjectURL(url);
+        },
+        error: (error) => {
+          console.error('Error generating PDF:', error);
+          this.showErrorMessage('Failed to generate PDF.');
+        }
+      });
+    } else {
+      this.showErrorMessage('Student not found.');
+    }
+  }
+
+  openPaymentHistoryDialog(): void {
+    this.dialog.open(PaymentHistoryDialogComponent, {
+      width: '600px',
+      data: { studentId: this.student?.id } // Passer l'ID de l'étudiant pour filtrer les données
+    });
+  }
+
+  openAttendanceHistoryDialog(): void {
+    this.dialog.open(AttendanceHistoryDialogComponent, {
+      width: '600px',
+      data: { studentId: this.student?.id } // Passer l'ID de l'étudiant pour filtrer les données
+    });
+  }
+
+  generateFullHistoryPdf(): void {
+    if (this.student?.id) {
+      this.studentService.getStudentFullHistory(this.student.id).subscribe({
+        next: (fullHistory) => {
+          console.log('Full History:', fullHistory);
+          this.pdfGeneratorService.generateFullHistoryPdf(fullHistory, 'assets/succes_assistance.png');
+        },
+        error: (error) => {
+          console.error('Error fetching full history:', error);
+          this.showErrorMessage('Erreur lors de la récupération de l\'historique complet.');
+        }
+      });
+    } else {
+      this.showErrorMessage('Étudiant introuvable.');
+    }
+  }
+
   showSuccessMessage(message: string): void {
     this.snackBar.open(message, 'OK', {
       duration: 3000,
@@ -328,9 +416,5 @@ export class StudentProfileComponent implements OnInit {
       duration: 3000,
       panelClass: ['snack-bar-error']
     });
-  }
-  
-  onPrint(): void {
-    window.print();
   }
 }

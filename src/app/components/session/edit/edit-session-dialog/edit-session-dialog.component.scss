@@ -1,0 +1,107 @@
+.edit-session-form {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 10px 0;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.time-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.time-select {
+  flex: 1;
+}
+
+.period-select {
+  max-width: 80px;
+}
+
+.mat-form-field {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.mat-form-field-appearance-fill .mat-form-field-flex {
+  padding: 0 12px;
+}
+
+.mat-form-field-appearance-fill .mat-form-field-outline {
+  border-radius: 8px;
+}
+
+.custom-panel {
+  z-index: 1001 !important; /* Ensure the dropdown has a high z-index */
+}
+
+.mat-tab-label {
+  font-weight: bold;
+  font-size: 14px;
+  text-transform: uppercase;
+  color: #4a4a4a;
+}
+
+.mat-tab-label-active {
+  color: #3f51b5; /* Primary color for active tab */
+}
+
+.mat-tab-group {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.mat-tab-body-content {
+  padding: 20px;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px 0;
+  gap: 10px;
+}
+
+mat-dialog-actions button {
+  padding: 8px 16px;
+  font-weight: bold;
+}
+
+button[color="primary"] {
+  background-color: #3f51b5;
+  color: #fff;
+}
+
+button[color="warn"] {
+  background-color: #f44336;
+  color: #fff;
+}
+
+button[color="primary"]:hover,
+button[color="warn"]:hover {
+  opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+  }
+
+  .mat-form-field {
+    width: 100%;
+  }
+}

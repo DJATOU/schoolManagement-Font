@@ -1,0 +1,96 @@
+<div class="group-profile-container fade-in" *ngIf="!loadingGroup && group; else loadingSpinner">
+  <mat-card class="group-card">
+    <mat-card-header>
+      <div class="header-container">
+        <div class="group-info-header">
+          <div class="group-icon-container">
+            <mat-icon class="group-icon">group</mat-icon>
+          </div>
+          <div class="group-name-type">
+            <mat-card-title>{{ group.name }}</mat-card-title>
+            <mat-card-subtitle>{{ group.groupTypeName || group.groupTypeId }}</mat-card-subtitle>
+          </div>
+        </div>
+        <div class="header-buttons">
+          <button mat-icon-button class="edit-button" (click)="onEditGroup()" aria-label="Modifier le groupe" matTooltip="Modifier le groupe">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button class="delete-button" (click)="onDisable()" aria-label="Supprimer le groupe" matTooltip="Supprimer le groupe">
+            <mat-icon>block</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="group-info-grid">
+        <div class="info-section">
+          <h3>Informations sur le Groupe</h3>
+          <p><strong>Type de groupe :</strong> {{ group.groupTypeName || group.groupTypeId }}</p>
+          <p><strong>Niveau :</strong> {{ group.levelName || group.levelId }}</p>
+          <p><strong>Sujet :</strong> {{ group.subjectName || group.subjectId }}</p>
+          <p><strong>Nombre de sessions par série :</strong> {{ group.sessionNumberPerSerie }}</p>
+          <p><strong>Prix :</strong> {{ group.priceAmount || group.pricing?.price }}</p>
+          <p><strong>Enseignant :</strong> {{ group.teacherName }}</p>
+        </div>
+        <div class="info-section">
+          <h3>Description</h3>
+          <p>{{ group.description }}</p>
+        </div>
+      </div>
+      <div class="button-container">
+        <button mat-raised-button color="primary" (click)="addStudentToGroup()">Ajouter un étudiant</button>
+        <button mat-raised-button color="accent">Créer une nouvelle série</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Accordéon pour les étudiants et séries -->
+  <mat-accordion class="group-accordion">
+    <!-- Panneau pour les étudiants -->
+    <mat-expansion-panel *ngIf="!loadingStudents" class="student-panel">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Étudiants</mat-panel-title>
+        <mat-panel-description>{{ students.length }} étudiant(s)</mat-panel-description>
+      </mat-expansion-panel-header>
+      <div class="student-list-container">
+        <!-- Mise à jour pour afficher le bouton "Supprimer" -->
+        <app-student-list
+          [students]="students"
+          [showDeleteButton]="true"
+          (deleteStudent)="removeStudentFromGroup($event)"
+        ></app-student-list>
+      </div>
+    </mat-expansion-panel>
+
+    <!-- Panneau pour les séries -->
+    <mat-expansion-panel *ngIf="!loadingSeries" class="series-panel">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Séries</mat-panel-title>
+        <mat-panel-description>{{ series.length }} série(s)</mat-panel-description>
+      </mat-expansion-panel-header>
+      <div class="series-list">
+        <ul>
+          <li *ngFor="let serie of series">
+            <div class="serie-item">
+              <span>{{ serie.name }} ({{ serie.dateCreation | date }})</span>
+              <div class="serie-buttons">
+                <button mat-icon-button color="primary" matTooltip="Modifier la série">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" matTooltip="Supprimer la série">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
+
+<ng-template #loadingSpinner>
+  <div class="loading-spinner">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+</ng-template>

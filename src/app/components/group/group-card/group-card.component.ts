@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { Group } from '../../../models/group/group';
 import { Level } from '../../../models/level/level';
 import { GroupType } from '../../../models/GroupType/groupType';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-group-card',
@@ -21,11 +22,22 @@ export class GroupCardComponent implements OnInit {
   level: string = 'Unknown Level';
   type: string = 'Unknown Type';
 
+  constructor(private router: Router) {}
+  
   ngOnInit(): void {
+    this.setLevelAndType();
+  }
+
+  private setLevelAndType(): void {
     const levelData = this.levels.find(level => level.id === this.group.levelId);
     const typeData = this.groupTypes.find(type => type.id === this.group.groupTypeId);
 
-    this.level = levelData ? levelData.name : 'Unknown Level';
-    this.type = typeData ? typeData.name : 'Unknown Type';
+    // Assurez-vous que `levelData` et `typeData` existent avant d'accéder à leurs propriétés
+    this.level = levelData?.name || 'Unknown Level';
+    this.type = typeData?.name || 'Unknown Type';
+  }
+
+  navigateToGroupProfile(): void {
+    this.router.navigate(['/group', this.group.id]);
   }
 }

@@ -16,7 +16,8 @@ export class LevelService {
     return this.http.get<Level[]>(this.apiUrl);
   }
 
-  getLevelById(id: string): Observable<Level> {
+  getLevelById(id: number): Observable<Level> {
+    console.log("level log id", id)
     return this.http.get<Level>(`${this.apiUrl}/id/${id}`);
   }
 
@@ -28,7 +29,7 @@ export class LevelService {
     return this.http.put<Level>(`${this.apiUrl}/${id}`, Level);
   }
 
-  disableLevels(id_list: Number[]): Observable<boolean> {
+  desactivateLevels(id_list: number[]): Observable<boolean> {
     return this.http.delete<boolean>(`${this.apiUrl}/disable/${id_list}`);
   }
 }

@@ -3,6 +3,7 @@ export interface Attendance {
     studentId: number;
     sessionId: number;
     isPresent: boolean;
+    isJustified: boolean;
     sessionSeriesId?: number;
     groupId: number;
     dateCreation: Date;
@@ -11,5 +12,6 @@ export interface Attendance {
     updatedBy: string;
     active: boolean;
     description?: string;
+    isCatchUp?: boolean; 
   }
   

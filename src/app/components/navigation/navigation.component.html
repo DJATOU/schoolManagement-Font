@@ -1,20 +1,20 @@
 <mat-toolbar color="primary">
   <div class="spacer">
-    <button mat-icon-button (click)="toggleSidenav()">
+    <button mat-icon-button (click)="toggleSidenav()" matTooltip="Ouvrir/Fermer le menu">
       <mat-icon>menu</mat-icon>
     </button>
-    <img src="assets/succes assistance.png" alt="School Logo" class="logo" [routerLink]="['/dashboard']">
+    <img src="assets/succes_assistance.png" alt="Logo de l'école" class="logo" [routerLink]="['/dashboard']">
   </div>
 
   <div class="icone-search">
-    <mat-icon tabindex="0" (click)="setSearchType('student')" [ngClass]="{'selected-icon': selectedIcon === 'student'}">face</mat-icon>
-    <mat-icon tabindex="0" (click)="setSearchType('group')" [ngClass]="{'selected-icon': selectedIcon === 'group'}">group</mat-icon>
-    <mat-icon tabindex="0" (click)="setSearchType('teacher')" [ngClass]="{'selected-icon': selectedIcon === 'teacher'}">person_outline</mat-icon>
+    <mat-icon tabindex="0" (click)="setSearchType('student')" [ngClass]="{'selected-icon': selectedIcon === 'student'}" matTooltip="Rechercher un élève">face</mat-icon>
+    <mat-icon tabindex="0" (click)="setSearchType('group')" [ngClass]="{'selected-icon': selectedIcon === 'group'}" matTooltip="Rechercher un groupe">group</mat-icon>
+    <mat-icon tabindex="0" (click)="setSearchType('teacher')" [ngClass]="{'selected-icon': selectedIcon === 'teacher'}" matTooltip="Rechercher un enseignant">person_outline</mat-icon>
   </div>
 
   <div class="search-container" [class.hide-search]="hideSearch">
     <mat-form-field>
-      <mat-icon matPrefix class="search-icon" (click)="onSearch()">search</mat-icon>
+      <mat-icon matPrefix class="search-icon" (click)="onSearch()" matTooltip="Chercher">search</mat-icon>
       <input matInput 
              [placeholder]="placeholder" 
              [formControl]="searchControl" 
@@ -25,13 +25,13 @@
           {{ suggestion }}
         </mat-option>
       </mat-autocomplete>
-      <mat-icon matSuffix *ngIf="searchControl.value" (click)="searchControl.setValue('')">close</mat-icon>
+      <mat-icon matSuffix *ngIf="searchControl.value" (click)="searchControl.setValue('')" matTooltip="Effacer">close</mat-icon>
     </mat-form-field>
   </div>
 
   <div class="user-info">
-    <img src="assets/pic.jpg" alt="User Photo" class="user-photo" [matMenuTriggerFor]="userMenu">
-    <span class="user-name">Mr. Robinson</span>
+    <img src="assets/pic.jpg" alt="Photo de l'utilisateur" class="user-photo" [matMenuTriggerFor]="userMenu" matTooltip="Menu utilisateur">
+    <span class="user-name">M. DJATOU</span>
   </div>
   
   <mat-menu #userMenu="matMenu">

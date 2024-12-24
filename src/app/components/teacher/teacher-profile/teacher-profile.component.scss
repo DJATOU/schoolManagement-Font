@@ -1,52 +1,199 @@
+/* Variables de couleur */
+$primary-color: #3f51b5; // Indigo
+$accent-color: #e91e63; // Rose
+$edit-color: #4caf50; // Vert pour Modifier
+$disable-color: #f44336; // Rouge pour Désactiver
+$primary-button-color: #3f51b5; // Indigo pour les boutons primaires
+
+/* Styles */
 .teacher-profile-container {
-  max-width: 1200px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.teacher-card, .group-card {
-  margin-bottom: 2rem;
-}
-
-.teacher-photo {
-  background-size: cover;
-  background-position: center;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-}
-
-.teacher-info {
   display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  max-width: 1200px; // Limite la largeur totale de la carte
+  margin: 0 auto; // Centre la carte sur la page
+  zoom: 0.9; // Zoom global pour réduire la taille si nécessaire
 }
 
-.info-section {
-  flex: 1 1 48%;
-  margin-bottom: 1rem;
+.teacher-card {
+  width: 100%;
+  max-width: 1000px; // Augmente la largeur de la carte
+  margin-bottom: 20px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+  mat-card-header {
+    background: linear-gradient(to top, #c1dfc4 0%, #deecdd 100%);
+    color: #fff;
+    padding: 10px; // Uniformiser le padding
+
+    .header-container {
+      display: flex;
+      align-items: center;
+      width: 100%;
+
+      .teacher-info-header {
+        display: flex;
+        align-items: center;
+        flex-grow: 1; // Permet à cet élément de prendre l'espace disponible
+
+        .teacher-photo-container {
+          margin-right: 15px;
+
+          .teacher-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #fff;
+          }
+        }
+
+        .teacher-name-specialization {
+          mat-card-title {
+            font-size: 26px;
+            font-weight: 600;
+            margin: 0;
+          }
+          mat-card-subtitle {
+            font-size: 18px;
+            color: #e0e0e0;
+          }
+        }
+      }
+
+      .header-buttons {
+        display: flex;
+        gap: 10px;
+
+        button {
+          color: #fff;
+          transition: transform 0.2s;
+          background-color: transparent;
+
+          &:hover {
+            transform: scale(1.1);
+          }
+
+          mat-icon {
+            font-size: 28px;
+          }
+
+          &.edit-button {
+            background-color: $edit-color;
+            &:hover {
+              background-color: darken($edit-color, 10%);
+            }
+          }
+
+          &.disable-button {
+            background-color: $disable-color;
+            &:hover {
+              background-color: darken($disable-color, 10%);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  mat-card-content {
+    padding: 30px;
+
+    .teacher-info-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      .info-section {
+        flex: 1 1 45%;
+        margin-bottom: 30px;
+
+        h3 {
+          font-size: 22px;
+          margin-bottom: 15px;
+          color: $primary-color;
+          border-bottom: 2px solid $primary-color;
+          padding-bottom: 5px;
+        }
+
+        p {
+          margin: 8px 0;
+          font-size: 16px;
+          color: #555;
+
+          strong {
+            color: #000;
+          }
+        }
+      }
+    }
+  }
 }
 
-h3 {
-  margin-top: 0;
-}
-
+/* Boutons d'action */
 .button-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
+  margin-top: 20px;
+
+  button {
+    margin-left: 15px;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-transform: none;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: darken($primary-color, 10%);
+    }
+  }
 }
 
-button {
-  padding: 0.75rem 2rem;
-  font-size: 1rem;
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .teacher-profile-container {
+    zoom: 0.8;
+  }
+
+  .teacher-card mat-card-content .teacher-info-grid .info-section {
+    flex: 1 1 100%;
+  }
 }
 
-.loading-spinner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+@media (max-width: 600px) {
+  .teacher-card mat-card-header .header-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    .teacher-info-header {
+      flex-direction: column;
+
+      .teacher-photo-container {
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+    }
+
+    .header-buttons {
+      margin-top: 10px;
+    }
+  }
+
+  .teacher-card mat-card-content .teacher-info-grid .info-section {
+    flex: 1 1 100%;
+  }
+
+  .button-container {
+    flex-direction: column;
+    align-items: stretch;
+
+    button {
+      margin: 10px 0;
+      width: 100%;
+    }
+  }
 }

@@ -1,0 +1,361 @@
+/* Variables de couleur */
+$primary-color: #3f51b5; // Indigo
+$accent-color: #e91e63; // Rose
+$edit-color: #4caf50; // Vert pour Modifier
+$delete-color: #f44336; // Rouge pour Supprimer
+
+/* Styles */
+.group-profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  zoom: 0.8;
+}
+
+.group-card {
+  width: 100%;
+  max-width: 1000px;
+  margin-bottom: 20px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+  mat-card-header {
+    background: linear-gradient(to top, #c1dfc4 0%, #deecdd 100%);
+    color: #fff;
+    padding: 10px;
+
+    .header-container {
+      display: flex;
+      align-items: center;
+      width: 100%;
+
+      .group-info-header {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+
+        .group-icon-container {
+          margin-right: 15px;
+
+          .group-icon {
+            font-size: 60px;
+          }
+        }
+
+        .group-name-type {
+          mat-card-title {
+            font-size: 26px;
+            font-weight: 600;
+            margin: 0;
+          }
+          mat-card-subtitle {
+            font-size: 18px;
+            color: #3b3939;
+          }
+        }
+      }
+
+      .header-buttons {
+        display: flex;
+        gap: 10px;
+
+        button {
+          color: #fff;
+          transition: transform 0.2s;
+          background-color: transparent;
+
+          &:hover {
+            transform: scale(1.1);
+          }
+
+          mat-icon {
+            font-size: 28px;
+          }
+
+          &.edit-button {
+            background-color: $edit-color;
+
+            &:hover {
+              background-color: darken($edit-color, 10%);
+            }
+          }
+
+          &.delete-button {
+            background-color: $delete-color;
+
+            &:hover {
+              background-color: darken($delete-color, 10%);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  mat-card-content {
+    padding: 30px;
+
+    .group-info-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      .info-section {
+        flex: 1 1 45%;
+        margin-bottom: 30px;
+
+        h3 {
+          font-size: 22px;
+          margin-bottom: 15px;
+          color: $primary-color;
+          border-bottom: 2px solid $primary-color;
+          padding-bottom: 5px;
+        }
+
+        p {
+          margin: 8px 0;
+          font-size: 16px;
+          color: #555;
+
+          strong {
+            color: #000;
+          }
+        }
+      }
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: flex-end;
+
+      button {
+        margin-left: 15px;
+        padding: 10px 20px;
+        font-size: 16px;
+        text-transform: none;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: darken($primary-color, 10%);
+        }
+      }
+    }
+  }
+}
+
+/* Styles pour l'Accordéon des Étudiants et Séries */
+.group-accordion {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+
+  .mat-expansion-panel {
+    background-color: #f9f9f9;
+    box-shadow: none;
+
+    .mat-expansion-panel-header {
+      background: linear-gradient(to top, #c1dfc4 0%, #deecdd 100%);
+      color: $primary-color;
+      font-weight: bold;
+
+      &:hover {
+        background-color: lighten($primary-color, 40%);
+      }
+    }
+
+    /* Liste défilable des étudiants */
+    .student-list-container,
+    .series-list {
+      max-height: 400px; /* Limite la hauteur pour permettre le défilement */
+      overflow-y: auto;
+      padding: 15px;
+
+      /* Scrollbar styling for WebKit browsers (Chrome, Safari, etc.) */
+      &::-webkit-scrollbar {
+        width: 12px; /* Largeur de la scrollbar */
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: $primary-color; /* Couleur du pouce de la scrollbar */
+        border-radius: 10px; /* Bords arrondis pour un effet plus élégant */
+        border: 3px solid #f1f1f1; /* Bordure externe pour créer un effet espacé */
+      }
+
+      &::-webkit-scrollbar-track {
+        background: #f1f1f1; /* Couleur de fond de la scrollbar */
+      }
+
+      /* Hover effect for scrollbar thumb */
+      &::-webkit-scrollbar-thumb:hover {
+        background-color: darken($primary-color, 10%); /* Couleur plus sombre lors du survol */
+      }
+
+      /* Firefox support */
+      scrollbar-width: thin; /* Rend la scrollbar plus fine sur Firefox */
+      scrollbar-color: $primary-color #f1f1f1; /* Couleur du pouce et de l'arrière-plan */
+
+      ul {
+        list-style: none;
+        padding: 0;
+
+        li {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 10px 0;
+          border-bottom: 1px solid #e0e0e0;
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          .serie-item {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+
+            span {
+              flex-grow: 1;
+              font-size: 16px;
+              color: #555;
+            }
+
+            .serie-buttons {
+              display: flex;
+              gap: 5px;
+
+              button {
+                color: #fff;
+                background-color: $primary-color;
+
+                &:hover {
+                  background-color: darken($primary-color, 10%);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    mat-card-actions {
+      padding: 15px;
+      display: flex;
+      justify-content: flex-end;
+
+      button {
+        margin-left: 10px;
+      }
+    }
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .group-accordion {
+    zoom: 0.8;
+  }
+
+  .group-card mat-card-content .group-info-grid .info-section {
+    flex: 1 1 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .group-card mat-card-header .header-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    .group-info-header {
+      flex-direction: column;
+
+      .group-icon-container {
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+    }
+
+    .header-buttons {
+      margin-top: 10px;
+    }
+  }
+
+  .group-card mat-card-content .group-info-grid .info-section {
+    flex: 1 1 100%;
+  }
+
+  .button-container {
+    flex-direction: column;
+    align-items: stretch;
+
+    button {
+      margin: 10px 0;
+      width: 100%;
+    }
+  }
+}
+
+
+/* Styles pour le Spinner de Chargement */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+
+  mat-progress-spinner {
+    width: 80px !important;
+    height: 80px !important;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .group-profile-container {
+    zoom: 0.8;
+  }
+
+  .group-card mat-card-content .group-info-grid .info-section {
+    flex: 1 1 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .group-card mat-card-header .header-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    .group-info-header {
+      flex-direction: column;
+
+      .group-icon-container {
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+    }
+
+    .header-buttons {
+      margin-top: 10px;
+    }
+  }
+
+  .group-card mat-card-content .group-info-grid .info-section {
+    flex: 1 1 100%;
+  }
+
+  .button-container {
+    flex-direction: column;
+    align-items: stretch;
+
+    button {
+      margin: 10px 0;
+      width: 100%;
+    }
+  }
+}

@@ -16,10 +16,10 @@
 
   <div class="teacher-view" [ngClass]="{'card-view': viewMode === 'card', 'list-view': viewMode === 'list'}">
     <ng-container *ngIf="viewMode === 'card'">
-      <app-teacher-card *ngFor="let teacher of currentPageTeachers" [teacher]="teacher"></app-teacher-card>
+      <app-teacher-card *ngFor="let teacher of currentPageTeachers" [teacher]="teacher" class="fade-in"></app-teacher-card>
     </ng-container>
     <ng-container *ngIf="viewMode === 'list'">
-      <app-teacher-list *ngFor="let teacher of currentPageTeachers" [teacher]="teacher"></app-teacher-list>
+      <app-teacher-list *ngFor="let teacher of currentPageTeachers" [teacher]="teacher" class="fade-in"></app-teacher-list>
     </ng-container>
   </div>
 

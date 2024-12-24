@@ -1,11 +1,16 @@
-<mat-list-item class="profile-list-item">
-    <div class="profile-avatar">
-      <img [src]="profile.photo" alt="Profile Photo">
+<mat-card class="student-card">
+  <div class="student-card-content">
+    <div class="student-avatar">
+      <img mat-card-avatar [src]="profilePhotoUrl" alt="Profile Photo" class="profile-photo">
     </div>
-    <div class="profile-details">
-      <h3>{{ profile.firstName }} {{ profile.lastName }}</h3>
-      <p>Email: {{ profile.email }}</p>
-      <button mat-button>Contact</button>
+    <div class="student-info">
+      <h2>{{ profile.firstName }} {{ profile.lastName }}</h2>
+      <p>{{ profile.email }}</p>
     </div>
-</mat-list-item>
-  
+    <div class="student-contact">
+      <button mat-flat-button color="primary">
+        <mat-icon>email</mat-icon> Contact
+      </button>
+    </div>
+  </div>
+</mat-card>

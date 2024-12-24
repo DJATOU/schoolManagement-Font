@@ -74,3 +74,53 @@
     background-color: #e0e0e0; 
   }
   
+
+  @media (max-width: 600px) {
+    .profile-card {
+      width: 100%; /* Occupe toute la largeur disponible */
+      height: auto; /* Hauteur automatique pour s'adapter au contenu */
+      padding: 0.5rem;
+      margin-bottom: 1rem; /* Espace entre les cartes */
+    }
+  
+    .profile-card-content {
+      flex-direction: row; /* Disposition en ligne */
+      align-items: center;
+    }
+  
+    .profile-photo {
+      width: 4rem; /* Réduction de la taille de la photo */
+      height: 4rem;
+      margin-right: 0.5rem;
+      margin-bottom: 0;
+    }
+  
+    .profile-info {
+      text-align: left;
+    }
+  
+    .profile-name {
+      font-size: 1em; /* Réduction de la taille de police */
+      margin: 0;
+    }
+  
+    .profile-subtitle {
+      font-size: 0.8em; /* Réduction de la taille de police */
+    }
+  
+    .card-actions {
+      justify-content: flex-start;
+      gap: 4px; /* Réduction de l'espacement entre les boutons */
+      margin-top: 0.5rem;
+    }
+  
+    .contact-button {
+      width: 32px; /* Réduction de la taille des boutons */
+      height: 32px;
+    }
+  
+    .contact-button i.material-icons {
+      font-size: 16px; /* Réduction de la taille des icônes */
+    }
+  }
+  

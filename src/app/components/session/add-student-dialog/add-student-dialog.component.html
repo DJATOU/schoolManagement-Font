@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Select a Student</h1>
+<div mat-dialog-content>
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Select Student</mat-label>
+    <mat-select [(ngModel)]="selectedStudent">
+      <mat-option *ngFor="let student of students" [value]="student">
+        {{ student.firstName }} {{ student.lastName }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-button color="primary" (click)="onConfirm()">Add</button>
+</div>

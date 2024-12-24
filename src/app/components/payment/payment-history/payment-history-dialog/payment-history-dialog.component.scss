@@ -1,0 +1,67 @@
+/* Styles pour les statuts de paiement */
+.paid {
+  color: green;
+}
+
+.partially-paid {
+  color: orange;
+}
+
+.unpaid {
+  color: red;
+}
+
+/* Styles pour les lignes du tableau en fonction du statut */
+.row-paid {
+  background-color: #d0f0c0;
+}
+
+.row-partially-paid {
+  background-color: #ffe4b5;
+}
+
+.row-unpaid {
+  background-color: #ffcccb;
+}
+
+/* Style pour le résumé de la série */
+.series-summary {
+  padding: 16px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+/* Styles pour le statut du résumé de la série */
+.summary-paid {
+  background-color: #d0f0c0;
+  border: 1px solid green;
+}
+
+.summary-partially-paid {
+  background-color: #ffe4b5;
+  border: 1px solid orange;
+}
+
+.summary-unpaid {
+  background-color: #ffcccb;
+  border: 1px solid red;
+}
+
+/* Optionnel : Styles pour améliorer l'apparence générale */
+mat-form-field {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+table {
+  width: 100%;
+}
+
+mat-header-cell,
+mat-cell {
+  padding: 8px;
+}
+
+mat-header-cell {
+  font-weight: bold;
+}

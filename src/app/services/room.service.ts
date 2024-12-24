@@ -26,4 +26,9 @@ export class RoomService {
   disableRooms(id_list: Number[]): Observable<boolean> {
     return this.http.delete<boolean>(`${this.apiUrl}/disable/${id_list}`);
   }
+
+  getRoom(id: number): Observable<Room> {
+    return this.http.get<Room>(`${this.apiUrl}/${id}`);
+  }
+  
 }
