@@ -15,6 +15,7 @@ export class PdfGeneratorService {
   }
 
   async generateFullHistoryPdf(fullHistory: StudentFullHistoryDTO, logoUrl: string): Promise<void> {
+    
     let logoBase64 = '';
     try {
       logoBase64 = await this.convertImageToBase64(logoUrl);
@@ -206,7 +207,9 @@ export class PdfGeneratorService {
         );
 
         if (group.series && group.series.length > 0) {
+          console.log('poooooooooooo', group.catchUp);
           group.series.forEach(series => {
+            if(!group.catchUp) {
             content.push(
               {
                 columns: [
@@ -220,6 +223,14 @@ export class PdfGeneratorService {
                 margin: [0, 0, 0, 10]
               }
             );
+          } else {
+            content.push({
+              text: `Session de rattrapage : ${series.seriesName}`,
+              style: 'subsectionHeader',
+              alignment: 'left'
+            });
+
+            }
 
             if (series.sessions && series.sessions.length > 0) {
               content.push(this.getSessionsTable(series.sessions));
@@ -249,6 +260,7 @@ export class PdfGeneratorService {
   }
 
   private getSessionsTable(sessions: SessionHistoryDTO[]): Content {
+    
     const body: any[] = [];
   
     // Définir la ligne d'en-tête
@@ -269,15 +281,20 @@ export class PdfGeneratorService {
     sessions.forEach(session => {
       const fillColor = this.getFillColorForAttendance(session);
 
-      // Ajouter des logs pour chaque session pour vérifier les valeurs
-      console.log('Session:', session);
-      console.log('fillColor:', fillColor);
+      // Gestion de la justification
+    let justificationText = '';
+    if (session.attendanceStatus?.toLowerCase() === 'absent') {
+      justificationText = session.isJustified ? 'Oui' : 'Non';
+    } else {
+      // Présent ou Non renseigné => pas de justification
+      justificationText = '';
+    }
   
       const row: any[] = [
         { text: session.sessionName || 'N/A', fillColor },
         { text: session.sessionDate ? new Date(session.sessionDate).toLocaleDateString() : 'N/A', fillColor },
         { text: session.attendanceStatus || 'Non renseigné', fillColor },
-        { text: session.isJustified ? 'Oui' : 'Non', fillColor },
+        { text: justificationText, fillColor },
         { text: session.description || '', fillColor },
         { text: session.paymentDate ? new Date(session.paymentDate).toLocaleDateString() : 'N/A', fillColor },
         { text: session.paymentStatus || 'Non payé', fillColor },

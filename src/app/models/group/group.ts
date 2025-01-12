@@ -18,6 +18,7 @@ export interface Group {
   teacherName?: string;   // Add this field for the teacher's name
   studentIds?: Set<number>;
   pricing?: Pricing;
+  catchUp?: boolean;
 }
 
    

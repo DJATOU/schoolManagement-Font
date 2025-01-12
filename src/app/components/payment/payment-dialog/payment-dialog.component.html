@@ -4,9 +4,19 @@
     <mat-form-field appearance="fill">
       <mat-label>Group</mat-label>
       <mat-select formControlName="groupId" required>
-        <mat-option *ngFor="let group of groups" [value]="group.id">{{ group.name }}</mat-option>
+        <mat-option
+          *ngFor="let group of groups"
+          [value]="group.id"
+          [class.rattrapage-option]="group.catchUp"
+        >
+          {{ group.name }}
+          <ng-container *ngIf="group.catchUp">
+            &nbsp;(Rattrapage)
+          </ng-container>
+        </mat-option>
       </mat-select>
     </mat-form-field>
+    
 
     <mat-form-field appearance="fill">
       <mat-label>Session Series</mat-label>

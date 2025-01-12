@@ -7,4 +7,8 @@ mat-form-field {
     justify-content: flex-end;
     gap: 1rem;
   }
+
+  ::ng-deep .rattrapage-option {
+    background-color: #ffeeba !important;
+  }
   

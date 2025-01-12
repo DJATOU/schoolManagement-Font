@@ -112,11 +112,6 @@ export class StudentService {
     return this.http.get<Student[]>(`${this.apiUrl}/levels/${levelId}`);
   }
 
-  generateStudentPdf(studentId: number, lang: string = 'fr'): Observable<Blob> {
-    const pdfUrl = `${API_BASE_URL}/api/pdf/student/${studentId}?lang=${lang}`;
-    return this.http.get(pdfUrl, { responseType: 'blob' });
-  }
-
   removeStudentFromGroup(groupId: number | undefined, studentId: number | undefined): Observable<any> {
     if (groupId === undefined || studentId === undefined) {
       throw new Error('Group ID and Student ID must be defined');

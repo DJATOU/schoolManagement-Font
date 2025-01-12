@@ -97,7 +97,7 @@ $history-color: #9c27b0; // Violet pour Historique de Paiement
             }
           }
 
-          &.print-button {
+          &.full-history-button {
             background-color: $print-color;
             &:hover {
               background-color: darken($print-color, 10%);

@@ -4,4 +4,5 @@ export interface GroupHistoryDTO {
     groupId: number;
     groupName: string;
     series: SeriesHistoryDTO[];
+    catchUp: boolean;
   }

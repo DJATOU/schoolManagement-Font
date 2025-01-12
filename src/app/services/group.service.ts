@@ -97,6 +97,10 @@ export class GroupService {
     return this.http.post(`${this.apiUrl2}/${studentId}/addStudents`, { studentId });
   }
   
+  getGroupsForPayment(studentId: number): Observable<Group[]> {
+    return this.http.get<Group[]>(`${this.apiUrl}/${studentId}/groups-for-payment`);
+  }
+  
 
   
 }

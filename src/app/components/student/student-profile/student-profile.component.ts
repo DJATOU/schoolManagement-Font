@@ -38,10 +38,7 @@ const errorMessages = {
   standalone: true,
   imports: [
     SharedModule,
-    GroupCardComponent,
-    PaymentDialogComponent,
-    GroupDialogComponent,
-    EditStudentDialogComponent
+    GroupCardComponent
   ],
   templateUrl: './student-profile.component.html',
   styleUrls: ['./student-profile.component.scss'],
@@ -156,6 +153,8 @@ export class StudentProfileComponent implements OnInit {
     }
   }
 
+  
+
   private loadAllGroups(): void {
     this.groupService.getGroups().subscribe({
       next: groups => {
@@ -231,24 +230,41 @@ export class StudentProfileComponent implements OnInit {
   }
 
   openPaymentDialog(): void {
-    if (this.student?.id && this.studentGroups.length > 0) {
-      const dialogRef = this.dialog.open(PaymentDialogComponent, {
-        width: '400px',
-        data: {
-          studentId: this.student.id,
-          groups: this.studentGroups
-        }
-      });
-  
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          this.submitPayment(result);
-        }
-      });
-    } else {
-      this.showError('The student must be enrolled in at least one group to proceed with the payment.');
+    if (!this.student?.id) {
+      this.showError('Invalid student');
+      return;
     }
+  
+    // Charger la liste "fixe + rattrapage" avant d'ouvrir la dialog
+    this.groupService.getGroupsForPayment(this.student.id).subscribe({
+      next: (allGroups) => {
+        if (allGroups.length === 0) {
+          this.showError('No group available for payment');
+          return;
+        }
+  
+        // Ouvrir la dialog en passant cette liste élargie :
+        const dialogRef = this.dialog.open(PaymentDialogComponent, {
+          width: '400px',
+          data: {
+            studentId: this.student!.id,
+            groups: allGroups  // => contiendra fixes + rattrapage
+          }
+        });
+  
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            this.submitPayment(result);
+          }
+        });
+      },
+      error: (err) => {
+        console.error('Error fetching groups for payment', err);
+        this.showError(errorMessages.GENERIC_ERROR);
+      }
+    });
   }
+  
 
   openGroupDialog(): void {
     console.log('All groups:', this.allGroups);
@@ -349,28 +365,6 @@ export class StudentProfileComponent implements OnInit {
         console.log('Operation canceled.');
       }
     });
-  }
-
-  onPrint(lang: string = 'ar') {
-    if (this.student?.id) {
-      this.studentService.generateStudentPdf(this.student.id, lang).subscribe({
-        next: (pdfBlob: Blob) => {
-          const blob = new Blob([pdfBlob], { type: 'application/pdf' });
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `student-profile-${this.student?.id}.pdf`;
-          a.click();
-          window.URL.revokeObjectURL(url);
-        },
-        error: (error) => {
-          console.error('Error generating PDF:', error);
-          this.showErrorMessage('Failed to generate PDF.');
-        }
-      });
-    } else {
-      this.showErrorMessage('Student not found.');
-    }
   }
 
   openPaymentHistoryDialog(): void {
