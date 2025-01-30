@@ -49,6 +49,13 @@ export class SessionService {
     );
   }
 
+  getStudentsForSession(groupId: number, sessionDate: Date): Observable<Student[]> {
+    return this.http.get<Student[]>(
+      `${this.apiUrl2}/${groupId}/studentsForSession?date=${sessionDate}`
+    );
+  }
+  
+
   markSessionAsFinished(sessionId: number): Observable<Session> {
     return this.http.patch<Session>(`${this.apiUrl}/${sessionId}/finish`, {});
   }

@@ -49,24 +49,33 @@ export class SessionModalComponent implements OnInit {
   ) {}
 
   private async loadStudentsData(): Promise<void> {
+    // On ne charge les étudiants que si la liste est vide
     if (!this.sessionData.students || this.sessionData.students.length === 0) {
-        try {
-            const students = await this.sessionService.getStudentsByGroupId(this.sessionData.groupId).toPromise();
-            
-            // Assurez-vous que sessionData.students est initialisé s'il est undefined
-            this.sessionData.students = students?.filter(student => student.id !== undefined)
-                .map((student) => ({
-                    ...student,
-                    id: student.id as number,
-                    isPresent: student.isPresent ?? true,
-                    description: student.description ?? '',
-                    isCatchUp: false 
-                })) ?? [];
-        } catch (error) {
-            console.error('Error fetching students:', error);
-        }
+      try {
+        // Supposons que sessionTimeStart soit un champ Date ou string dans sessionData
+        const sessionDate = this.sessionData.sessionTimeStart;
+  
+        // Appel à ton service GET /groups/{groupId}/studentsForSession?date=... 
+        // pour ne récupérer que les étudiants assignés avant sessionDate
+        const students = await this.sessionService
+          .getStudentsForSession(this.sessionData.groupId, sessionDate)
+          .toPromise();
+  
+        // On initialise isPresent à false pour éviter de forcer tout le monde en "présent"
+        this.sessionData.students = students?.map(student => ({
+          ...student,
+          id: student.id as number,
+          isPresent: true,    // On laisse l'admin cocher manuellement 
+          description: '',
+          isCatchUp: false     // Par défaut, non rattrapage
+        })) ?? [];
+  
+      } catch (error) {
+        console.error('Error fetching students:', error);
+      }
     }
-}
+  }
+  
 
 
 async ngOnInit(): Promise<void> {

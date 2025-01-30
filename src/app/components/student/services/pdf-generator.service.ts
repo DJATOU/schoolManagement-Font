@@ -179,19 +179,20 @@ export class PdfGeneratorService {
 
   private getFullHistoryContent(fullHistory: StudentFullHistoryDTO): Content[] {
     const content: Content[] = [];
-
+  
     if (fullHistory.groups && fullHistory.groups.length > 0) {
+      // Trier les groupes par nom
       const sortedGroups = fullHistory.groups.sort((a, b) => a.groupName.localeCompare(b.groupName));
       sortedGroups.forEach(group => {
+  
+        // Ligne de séparation + titre du groupe
         content.push(
           {
             canvas: [
               {
                 type: 'line',
-                x1: 0,
-                y1: 0,
-                x2: 515,
-                y2: 0,
+                x1: 0, y1: 0,
+                x2: 515, y2: 0,
                 lineWidth: 2,
                 lineColor: '#2F5496'
               }
@@ -205,59 +206,75 @@ export class PdfGeneratorService {
           },
           { text: '\n' }
         );
-
+  
+        // S'il y a des séries
         if (group.series && group.series.length > 0) {
-          console.log('poooooooooooo', group.catchUp);
           group.series.forEach(series => {
-            if(!group.catchUp) {
-            content.push(
-              {
-                columns: [
-                  { text: `Série : ${series.seriesName}`, style: 'subsectionHeader', alignment: 'left' },
-                  { text: `Paiement : ${series.paymentStatus}`, alignment: 'right', style: 'subsectionHeader' }
-                ]
-              },
-              {
-                text: `Montant payé : ${series.totalAmountPaid} DA / ${series.totalCost} DA`,
-                alignment: 'right',
+  
+            // Vérifier si la série a des sessions
+            if (!series.sessions || series.sessions.length === 0) {
+              // Aucune session => message
+              content.push({
+                text: 'Aucune session disponible pour cette série.',
+                italics: true,
                 margin: [0, 0, 0, 10]
-              }
-            );
-          } else {
-            content.push({
-              text: `Session de rattrapage : ${series.seriesName}`,
-              style: 'subsectionHeader',
-              alignment: 'left'
-            });
-
-            }
-
-            if (series.sessions && series.sessions.length > 0) {
-              content.push(this.getSessionsTable(series.sessions));
+              });
             } else {
-              content.push(
-                { text: 'Aucune session disponible pour cette série.', italics: true, margin: [0, 0, 0, 10] }
-              );
+              // sessions présentes => distinguer rattrapage ou normal
+              // Test : si toutes les sessions sont catchUpSession = true => rattrapage
+              const allAreCatchUp = series.sessions.every(s => s.catchUpSession === true);
+  
+              if (allAreCatchUp) {
+                // Affichage "Session de rattrapage"
+                content.push({
+                  text: `Session de rattrapage : ${series.seriesName}`,
+                  style: 'subsectionHeader',
+                  alignment: 'left'
+                });
+              } else {
+                // Série “normale” => afficher paiement
+                content.push(
+                  {
+                    columns: [
+                      { text: `Série : ${series.seriesName}`, style: 'subsectionHeader', alignment: 'left' },
+                      { text: `Paiement : ${series.paymentStatus}`, alignment: 'right', style: 'subsectionHeader' }
+                    ]
+                  },
+                  {
+                    text: `Montant payé : ${series.totalAmountPaid} DA / ${series.totalCost} DA`,
+                    alignment: 'right',
+                    margin: [0, 0, 0, 10]
+                  }
+                );
+              }
+  
+              // Afficher le tableau des sessions
+              content.push(this.getSessionsTable(series.sessions));
+              content.push({ text: '\n' });
             }
-
-            content.push({ text: '\n' });
           });
         } else {
-          content.push(
-            { text: 'Aucune série disponible pour ce groupe.', italics: true, margin: [0, 0, 0, 10] }
-          );
+          // Pas de séries du tout
+          content.push({
+            text: 'Ce groupe ne contient aucune session validée ou payée pour l\'étudiant.',
+            italics: true,
+            margin: [0, 0, 0, 10]
+          });
         }
-
+  
         content.push({ text: '\n' });
       });
     } else {
-      content.push(
-        { text: 'Aucun groupe disponible pour cet étudiant.', italics: true }
-      );
+      // Aucun groupe dans fullHistory
+      content.push({
+        text: 'Aucun groupe disponible pour cet étudiant.',
+        italics: true
+      });
     }
-
+  
     return content;
   }
+  
 
   private getSessionsTable(sessions: SessionHistoryDTO[]): Content {
     
@@ -281,6 +298,10 @@ export class PdfGeneratorService {
     sessions.forEach(session => {
       const fillColor = this.getFillColorForAttendance(session);
 
+      const sessionTitle = session.catchUpSession
+      ? `Session de rattrapage: ${session.sessionName}`
+      : session.sessionName || 'N/A';
+      
       // Gestion de la justification
     let justificationText = '';
     if (session.attendanceStatus?.toLowerCase() === 'absent') {
@@ -291,7 +312,7 @@ export class PdfGeneratorService {
     }
   
       const row: any[] = [
-        { text: session.sessionName || 'N/A', fillColor },
+        { text: sessionTitle || 'N/A', fillColor },
         { text: session.sessionDate ? new Date(session.sessionDate).toLocaleDateString() : 'N/A', fillColor },
         { text: session.attendanceStatus || 'Non renseigné', fillColor },
         { text: justificationText, fillColor },
