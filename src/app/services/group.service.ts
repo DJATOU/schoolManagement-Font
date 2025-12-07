@@ -100,7 +100,30 @@ export class GroupService {
   getGroupsForPayment(studentId: number): Observable<Group[]> {
     return this.http.get<Group[]>(`${this.apiUrl}/${studentId}/groups-for-payment`);
   }
-  
 
-  
+  /**
+   * PHASE 3A: Upload photo pour un groupe
+   * @param groupId ID du groupe
+   * @param file Fichier photo à uploader
+   * @returns Observable avec le nom du fichier uploadé
+   */
+  uploadGroupPhoto(groupId: number, file: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post<string>(`${this.apiUrl}/${groupId}/photo`, formData, {
+      responseType: 'text' as 'json' // Le backend retourne un string, pas du JSON
+    });
+  }
+
+  /**
+   * PHASE 3A: Récupère l'URL de la photo d'un groupe
+   * @param groupId ID du groupe
+   * @returns URL de la photo
+   */
+  getGroupPhotoUrl(groupId: number): string {
+    return `${this.apiUrl}/${groupId}/photo`;
+  }
+
+
 }

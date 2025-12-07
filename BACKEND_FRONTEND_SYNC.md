@@ -1,0 +1,1 @@
+../schoolManagement/BACKEND_FRONTEND_SYNC.md

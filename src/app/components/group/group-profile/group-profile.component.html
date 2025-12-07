@@ -3,9 +3,14 @@
     <mat-card-header>
       <div class="header-container">
         <div class="group-info-header">
-          <div class="group-icon-container">
-            <mat-icon class="group-icon">group</mat-icon>
+          <div class="group-photo-container" *ngIf="group.photo; else groupIcon">
+            <img [src]="groupPhotoUrl" alt="Photo du groupe" class="group-photo">
           </div>
+          <ng-template #groupIcon>
+            <div class="group-icon-container">
+              <mat-icon class="group-icon">group</mat-icon>
+            </div>
+          </ng-template>
           <div class="group-name-type">
             <mat-card-title>{{ group.name }}</mat-card-title>
             <mat-card-subtitle>{{ group.groupTypeName || group.groupTypeId }}</mat-card-subtitle>

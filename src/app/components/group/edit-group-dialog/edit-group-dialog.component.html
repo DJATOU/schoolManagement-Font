@@ -1,14 +1,32 @@
-<h2 mat-dialog-title>Modifier le Groupe</h2>
+<h2 mat-dialog-title>Modifier le groupe</h2>
 <form [formGroup]="editGroupForm" (ngSubmit)="onSave()">
   <mat-dialog-content>
+    <!-- Photo Preview et Upload -->
+    <div class="photo-section" *ngIf="photoPreview">
+      <img [src]="photoPreview" alt="Photo groupe" class="photo-preview" />
+    </div>
+
+    <mat-form-field appearance="fill" class="full-width photo-field">
+      <mat-label>Photo du groupe</mat-label>
+      <div class="upload-container">
+        <input matInput readonly [value]="selectedFile?.name" placeholder="Aucun fichier sélectionné" class="upload-input">
+        <button type="button" mat-raised-button color="accent" (click)="photoInput.click()" class="upload-button">
+          <mat-icon>add_a_photo</mat-icon> Choisir une image
+        </button>
+        <input type="file" (change)="onFileSelected($event)" accept="image/*" hidden #photoInput>
+      </div>
+    </mat-form-field>
+
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Nom du groupe</mat-label>
       <input matInput formControlName="name" />
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Description</mat-label>
-      <textarea matInput formControlName="description"></textarea>
+      <mat-label>Type de groupe</mat-label>
+      <mat-select formControlName="groupTypeId">
+        <mat-option *ngFor="let type of groupTypes" [value]="type.id">{{ type.name }}</mat-option>
+      </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="full-width">
@@ -19,27 +37,41 @@
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Type de groupe</mat-label>
-      <mat-select formControlName="groupTypeId">
-        <mat-option *ngFor="let groupType of groupTypes" [value]="groupType.id">{{ groupType.name }}</mat-option>
+      <mat-label>Matière</mat-label>
+      <mat-select formControlName="subjectId">
+        <mat-option *ngFor="let subject of subjects" [value]="subject.id">{{ subject.name }}</mat-option>
       </mat-select>
     </mat-form-field>
 
-    <!-- Ajoutez d'autres champs selon vos besoins, comme les sujets, enseignants, etc. -->
-
     <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Nombre de sessions par série</mat-label>
+      <mat-label>Nombre de séances par série</mat-label>
       <input matInput type="number" formControlName="sessionNumberPerSerie" />
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Prix</mat-label>
-      <input matInput type="number" formControlName="priceAmount" />
+      <mat-select formControlName="priceId">
+        <mat-option *ngFor="let price of prices" [value]="price.id">{{ price.price }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Enseignant</mat-label>
+      <mat-select formControlName="teacherId">
+        <mat-option *ngFor="let teacher of teachers" [value]="teacher.id">
+          {{ teacher.firstName }} {{ teacher.lastName }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description" rows="3"></textarea>
     </mat-form-field>
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">
     <button mat-button (click)="onCancel()" type="button">Annuler</button>
-    <button mat-button color="primary" type="submit">Enregistrer</button>
+    <button mat-raised-button color="primary" type="submit">Enregistrer</button>
   </mat-dialog-actions>
 </form>

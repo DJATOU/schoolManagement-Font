@@ -46,6 +46,7 @@ export class GroupProfileComponent implements OnInit {
   loadingGroup = true;
   loadingStudents = true;
   loadingSeries = true;
+  groupPhotoUrl: string = '';
 
   constructor(
     private groupService: GroupService,
@@ -74,6 +75,10 @@ export class GroupProfileComponent implements OnInit {
       next: (group) => {
         console.log('Group details:', group);  // Log pour vérifier les données reçues
         this.group = group;
+        // Générer l'URL de la photo si elle existe
+        if (this.group?.photo) {
+          this.groupPhotoUrl = this.groupService.getGroupPhotoUrl(this.group.id!);
+        }
         this.loadingGroup = false;
       },
       error: (error) => {
@@ -102,7 +107,11 @@ export class GroupProfileComponent implements OnInit {
   private loadSeries(groupId: number): void {
     this.groupService.getSeriesByGroupId(groupId).subscribe({
       next: (series) => {
-        this.series = series;
+        // Convertir les dates LocalDateTime en objets Date
+        this.series = series.map(serie => ({
+          ...serie,
+          dateCreation: this.convertLocalDateTimeToDate(serie.dateCreation)
+        }));
         this.loadingSeries = false;
       },
       error: (error) => {
@@ -110,6 +119,24 @@ export class GroupProfileComponent implements OnInit {
         this.loadingSeries = false;
       }
     });
+  }
+
+  private convertLocalDateTimeToDate(dateValue: any): Date {
+    if (!dateValue) return new Date();
+
+    // Si c'est déjà une Date, la retourner
+    if (dateValue instanceof Date) return dateValue;
+
+    // Si c'est une string, la parser
+    if (typeof dateValue === 'string') return new Date(dateValue);
+
+    // Si c'est un tableau [year, month, day, hour, minute, second, nano]
+    if (Array.isArray(dateValue)) {
+      const [year, month, day, hour = 0, minute = 0, second = 0] = dateValue;
+      return new Date(year, month - 1, day, hour, minute, second);
+    }
+
+    return new Date();
   }
 
   addStudentToGroup(): void {
@@ -139,13 +166,27 @@ export class GroupProfileComponent implements OnInit {
       data: { group: this.group },
     });
 
-    dialogRef.afterClosed().subscribe((result: Group | undefined) => {
+    dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.groupService.updateGroup(result).subscribe({
+        // result contains { group: Group, file: File | null }
+        this.groupService.updateGroup(result.group).subscribe({
           next: (updatedGroup) => {
-            this.group = updatedGroup;
-            //this.loadGroupDetails(); // Si vous avez une méthode pour recharger les détails du groupe
-            this.showSuccessMessage('Groupe mis à jour avec succès.');
+            // If a new photo was selected, upload it
+            if (result.file) {
+              this.groupService.uploadGroupPhoto(updatedGroup.id!, result.file).subscribe({
+                next: () => {
+                  this.loadGroupData(updatedGroup.id!);
+                  this.showSuccessMessage('Groupe modifié avec succès.');
+                },
+                error: (error) => {
+                  console.error('Error uploading photo:', error);
+                  this.showErrorMessage('Erreur lors du téléchargement de la photo.');
+                }
+              });
+            } else {
+              this.group = updatedGroup;
+              this.showSuccessMessage('Groupe modifié avec succès.');
+            }
           },
           error: (error) => {
             console.error('Erreur lors de la mise à jour du groupe :', error);

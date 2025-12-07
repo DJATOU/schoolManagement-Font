@@ -46,6 +46,19 @@ $delete-color: #f44336; // Rouge pour Supprimer
           }
         }
 
+        .group-photo-container {
+          margin-right: 15px;
+
+          .group-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+          }
+        }
+
         .group-name-type {
           mat-card-title {
             font-size: 26px;
@@ -274,7 +287,8 @@ $delete-color: #f44336; // Rouge pour Supprimer
     .group-info-header {
       flex-direction: column;
 
-      .group-icon-container {
+      .group-icon-container,
+      .group-photo-container {
         margin-right: 0;
         margin-bottom: 10px;
       }
@@ -334,7 +348,8 @@ $delete-color: #f44336; // Rouge pour Supprimer
     .group-info-header {
       flex-direction: column;
 
-      .group-icon-container {
+      .group-icon-container,
+      .group-photo-container {
         margin-right: 0;
         margin-bottom: 10px;
       }

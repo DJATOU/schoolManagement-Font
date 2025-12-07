@@ -16,30 +16,11 @@ export class StudentDataService {
   constructor(private http: HttpClient) { }
 
   getStudentById(id: number): Observable<Student> {
-    return this.http.get<Student>(`${this.apiUrl}/id/${id}`).pipe(
-      tap(
-        student => {
-          console.log("Student data fetched successfully getStudentById:", student);
-          console.log("Student photo URL getStudentById:", student.photo); // Log the photo URL specifically
-        },
-        error => {
-          console.error("Error fetching student by ID getStudentById:", error);
-        }
-      )
-    );
+    return this.http.get<Student>(`${this.apiUrl}/id/${id}`);
   }
 
   getGroupsForStudent(id: number): Observable<Group[]> {
-    return this.http.get<Group[]>(`${this.apiUrl2}/${id}/groups`).pipe(
-      tap(
-        groups => {
-          console.log("Groups for student fetched successfully getGroupsForStudent:", groups);
-        },
-        error => {
-          console.error("Error fetching groups for student getGroupsForStudent:", error);
-        }
-      )
-    );
+    return this.http.get<Group[]>(`${this.apiUrl2}/${id}/groups`);
   }
 
   addGroupsToStudent(studentId: number, groupIds: number[]): Observable<any> {

@@ -12,6 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
+import { EditTeacherDialogComponent } from '../edit-teacher-dialog/edit-teacher-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from '../../../../environment';
 @Component({
@@ -69,8 +70,40 @@ export class TeacherProfileComponent implements OnInit {
   }
 
   onEdit(): void {
-    // Navigate to edit page
-    this.router.navigate(['/teacher/edit', this.teacher?.id]);
+    const dialogRef = this.dialog.open(EditTeacherDialogComponent, {
+      width: '600px',
+      data: { teacher: this.teacher }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // result contains { teacher: Teacher, file: File | null }
+        this.teacherService.updateTeacher(result.teacher.id!, result.teacher).subscribe({
+          next: (updatedTeacher) => {
+            // If a new photo was selected, upload it
+            if (result.file) {
+              this.teacherService.uploadTeacherPhoto(updatedTeacher.id!, result.file).subscribe({
+                next: () => {
+                  this.getTeacherDetails(updatedTeacher.id!);
+                  this.showSuccessMessage('Enseignant modifié avec succès.');
+                },
+                error: (error) => {
+                  console.error('Error uploading photo:', error);
+                  this.showErrorMessage('Erreur lors du téléchargement de la photo.');
+                }
+              });
+            } else {
+              this.teacher = updatedTeacher;
+              this.showSuccessMessage('Enseignant modifié avec succès.');
+            }
+          },
+          error: (error) => {
+            console.error('Error updating teacher:', error);
+            this.showErrorMessage('Erreur lors de la modification de l\'enseignant.');
+          }
+        });
+      }
+    });
   }
 
   onDisable(): void {

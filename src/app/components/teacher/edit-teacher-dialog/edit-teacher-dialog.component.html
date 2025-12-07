@@ -1,0 +1,85 @@
+<h2 mat-dialog-title>Modifier l'enseignant</h2>
+<form [formGroup]="editTeacherForm" (ngSubmit)="onSave()">
+  <mat-dialog-content>
+    <!-- Photo Preview et Upload -->
+    <div class="photo-section" *ngIf="photoPreview">
+      <img [src]="photoPreview" alt="Photo enseignant" class="photo-preview" />
+    </div>
+
+    <mat-form-field appearance="fill" class="full-width photo-field">
+      <mat-label>Photo de l'enseignant</mat-label>
+      <div class="upload-container">
+        <input matInput readonly [value]="selectedFile?.name" placeholder="Aucun fichier sélectionné" class="upload-input">
+        <button type="button" mat-raised-button color="accent" (click)="photoInput.click()" class="upload-button">
+          <mat-icon>add_a_photo</mat-icon> Choisir une image
+        </button>
+        <input type="file" (change)="onFileSelected($event)" accept="image/*" hidden #photoInput>
+      </div>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Prénom</mat-label>
+      <input matInput formControlName="firstName" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Nom</mat-label>
+      <input matInput formControlName="lastName" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Numéro de téléphone</mat-label>
+      <input matInput formControlName="phoneNumber" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Date de naissance</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="dateOfBirth" />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Lieu de naissance</mat-label>
+      <input matInput formControlName="placeOfBirth" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Sexe</mat-label>
+      <mat-select formControlName="gender">
+        <mat-option value="Male">Homme</mat-option>
+        <mat-option value="Female">Femme</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Spécialisation</mat-label>
+      <input matInput formControlName="specialization" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Qualifications</mat-label>
+      <textarea matInput formControlName="qualifications" rows="3"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Années d'expérience</mat-label>
+      <input matInput type="number" formControlName="yearsOfExperience" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Préférence de communication</mat-label>
+      <input matInput formControlName="communicationPreference" />
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()" type="button">Annuler</button>
+    <button mat-raised-button color="primary" type="submit">Enregistrer</button>
+  </mat-dialog-actions>
+</form>

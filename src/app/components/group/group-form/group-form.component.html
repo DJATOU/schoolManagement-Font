@@ -12,6 +12,18 @@
           <input matInput formControlName="name" required>
         </mat-form-field>
 
+        <!-- PHASE 3A: Upload photo du groupe -->
+        <mat-form-field appearance="fill" class="photo-field">
+          <mat-label>Télécharger une photo</mat-label>
+          <div class="upload-container">
+            <input matInput readonly [value]="selectedFile?.name" placeholder="Aucun fichier sélectionné" class="upload-input">
+            <button type="button" mat-raised-button color="accent" (click)="photoInput.click()" class="upload-button">
+              <mat-icon>attach_file</mat-icon> Choisir une image
+            </button>
+            <input type="file" (change)="onFileSelected($event)" accept="image/*" hidden #photoInput>
+          </div>
+        </mat-form-field>
+
         <mat-form-field appearance="fill">
           <mat-label>Type de groupe</mat-label>
           <mat-select formControlName="groupTypeId" required>

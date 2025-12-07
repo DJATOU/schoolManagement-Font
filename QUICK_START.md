@@ -1,0 +1,1 @@
+../schoolManagement/QUICK_START.md

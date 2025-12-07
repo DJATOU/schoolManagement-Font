@@ -55,6 +55,7 @@ export class GroupFormComponent implements OnInit {
   levels: Level[] = [];
   subjects: Subject[] = [];
   teachers: Teacher[] = [];
+  selectedFile: File | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -94,6 +95,13 @@ export class GroupFormComponent implements OnInit {
     this.subjectService.getSubjects().subscribe(data => this.subjects = data);
     this.priceService.getPricings().subscribe(data => this.prices = data);
     this.teacherService.getTeachers().subscribe(data => this.teachers = data);
+  }
+
+  onFileSelected(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    if (target && target.files && target.files.length > 0) {
+      this.selectedFile = target.files[0];
+    }
   }
 
   flattenFormData(data: any, parentKey: string = ''): { label: string, value: any }[] {
@@ -151,8 +159,25 @@ export class GroupFormComponent implements OnInit {
           this.groupService.createGroup(formDataToSubmit).subscribe({
             next: (response) => {
               console.log('Group created:', response);
-              this.onClearForm();
-              this.showSuccessMessage('Group created successfully.');
+
+              // Upload photo si sélectionnée
+              if (this.selectedFile && response.id) {
+                this.groupService.uploadGroupPhoto(response.id, this.selectedFile).subscribe({
+                  next: (filename) => {
+                    console.log('Photo uploaded:', filename);
+                    this.onClearForm();
+                    this.showSuccessMessage('Group created successfully with photo.');
+                  },
+                  error: (error) => {
+                    console.error('Error uploading photo:', error);
+                    this.onClearForm();
+                    this.showErrorMessage('Group created but photo upload failed.');
+                  }
+                });
+              } else {
+                this.onClearForm();
+                this.showSuccessMessage('Group created successfully.');
+              }
             },
             error: (error) => {
               console.error('Error creating group:', error);
@@ -197,6 +222,7 @@ export class GroupFormComponent implements OnInit {
 
   onClearForm(): void {
     this.groupForm.reset();
+    this.selectedFile = null;
   }
 
   showSuccessMessage(message: string): void {

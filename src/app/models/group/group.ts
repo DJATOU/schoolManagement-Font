@@ -16,6 +16,7 @@ export interface Group {
   description?: string;
   teacherId: number;
   teacherName?: string;   // Add this field for the teacher's name
+  photo?: string;         // Photo filename
   studentIds?: Set<number>;
   pricing?: Pricing;
   catchUp?: boolean;
