@@ -3,6 +3,8 @@ import { MatCardModule } from '@angular/material/card';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
 import { environment } from '../../../../environments/environment';
 
 interface Profile {
@@ -19,7 +21,7 @@ interface Profile {
 @Component({
   selector: 'app-profile-card',
   standalone: true,
-  imports: [MatCardModule, CommonModule, MatButtonModule],
+  imports: [MatCardModule, CommonModule, MatButtonModule, MatTooltipModule, MatIconModule],
   templateUrl: './profile-card.component.html',
   styleUrls: ['./profile-card.component.scss']
 })
@@ -56,13 +58,27 @@ export class ProfileCardComponent implements OnInit {
     }
   }
 
+  /**
+   * Ouvre Gmail avec l'email pré-rempli
+   */
   sendEmail(event: Event): void {
     event.stopPropagation();
-    // Logique pour envoyer un email
+    if (this.profile?.email) {
+      window.open(`mailto:${this.profile.email}`, '_blank');
+    }
   }
 
+  /**
+   * Ouvre WhatsApp avec le numéro de téléphone
+   */
   callPhone(event: Event): void {
     event.stopPropagation();
-    // Logique pour appeler le numéro de téléphone du profil
+    if (this.profile?.phoneNumber) {
+      // Nettoyer le numéro de téléphone (enlever espaces, tirets, etc.)
+      const cleanPhone = this.profile.phoneNumber.replace(/[\s\-\(\)]/g, '');
+      // Ajouter le code pays si nécessaire (exemple: +212 pour Maroc)
+      const phoneNumber = cleanPhone.startsWith('+') ? cleanPhone : `+212${cleanPhone}`;
+      window.open(`https://wa.me/${phoneNumber}`, '_blank');
+    }
   }
 }

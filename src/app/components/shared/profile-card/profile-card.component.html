@@ -1,17 +1,27 @@
-<mat-card class="profile-card" (click)="navigateToProfile()">
-  <div class="profile-card-content">
+<mat-card class="profile-card">
+  <div class="profile-card-content" (click)="navigateToProfile()">
     <img mat-card-avatar [src]="profilePhotoUrl" alt="Profile Photo" class="profile-photo">
     <div class="profile-info">
       <mat-card-title class="profile-name">{{ profile.firstName }} {{ profile.lastName }}</mat-card-title>
       <mat-card-subtitle class="profile-subtitle">{{ profile.subtitle }}</mat-card-subtitle>
     </div>
-    <mat-card-actions class="card-actions">
-      <button mat-button class="contact-button email-button" (click)="sendEmail($event)">
-        <i class="material-icons">email</i>
-      </button>
-      <button mat-button class="contact-button phone-button" (click)="callPhone($event)">
-        <i class="material-icons">phone</i>
-      </button>
-    </mat-card-actions>
   </div>
+  <mat-card-actions class="card-actions">
+    <button mat-icon-button
+            class="contact-button email-button"
+            (click)="sendEmail($event)"
+            [disabled]="!profile.email"
+            matTooltip="Envoyer un email"
+            color="primary">
+      <mat-icon>email</mat-icon>
+    </button>
+    <button mat-icon-button
+            class="contact-button phone-button"
+            (click)="callPhone($event)"
+            [disabled]="!profile.phoneNumber"
+            matTooltip="Ouvrir WhatsApp"
+            color="accent">
+      <mat-icon>phone</mat-icon>
+    </button>
+  </mat-card-actions>
 </mat-card>

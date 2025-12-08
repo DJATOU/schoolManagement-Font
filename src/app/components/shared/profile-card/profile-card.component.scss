@@ -2,14 +2,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     width: 100%;
     min-height: 18.75rem;
     padding: 1.5rem;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     border-radius: 10px;
     background-color: #fff;
-    cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 
     &:hover {
@@ -17,67 +16,70 @@
       box-shadow: 0 8px 16px 0 rgba(0,0,0,0.3);
     }
   }
-  
+
   .profile-card-content {
     display: flex;
     flex-direction: column;
-    align-items: center; 
+    align-items: center;
+    cursor: pointer;
+    flex-grow: 1;
+
+    &:hover {
+      .profile-name {
+        color: #3f51b5;
+      }
+    }
   }
-  
+
   .profile-photo {
     border-radius: 50%;
-    width: 6.25rem; 
+    width: 6.25rem;
     height: 6.25rem;
-    margin-bottom: 0.5rem; 
+    margin-bottom: 0.5rem;
+    object-fit: cover;
   }
-  
+
   .profile-info {
-    text-align: center; 
+    text-align: center;
   }
-  
+
   .profile-name {
     font-size: 1.2em;
     font-weight: bold;
-    margin: 4px 0; 
+    margin: 4px 0;
+    transition: color 0.2s ease;
   }
-  
+
   .profile-subtitle {
     color: #666;
     font-size: 0.9em;
   }
-  
+
   .card-actions {
     display: flex;
-    justify-content: center; 
-    gap: 8px; 
-    margin-top: 12px; 
+    justify-content: center;
+    gap: 0.5rem;
+    padding-top: 0.5rem;
+    margin-top: auto;
+    border-top: 1px solid #e0e0e0;
+    width: 100%;
   }
-  
+
   .contact-button {
-    margin: 0;
-    border-radius: 50%; 
-    width: 40px; 
-    height: 40px; 
-    display: flex;
-    align-items: center; 
-    justify-content: center; 
-    text-transform: none; 
-  }
-  
-  .contact-button i.material-icons {
-    margin-right: 0; 
-  }
-  
-  .email-button {
-    color: #0d47a1;
-  }
-  
-  .phone-button {
-    color: #4caf50; 
-  }
-  
-  .contact-button:hover {
-    background-color: #e0e0e0; 
+    transition: transform 0.2s ease, background-color 0.3s ease;
+
+    &:hover:not([disabled]) {
+      transform: scale(1.15);
+    }
+
+    &[disabled] {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    mat-icon {
+      font-size: 22px;
+    }
   }
   
 
