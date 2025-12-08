@@ -6,7 +6,9 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
 import { LevelService } from '../../../services/level.service';
+import { StudentService } from '../services/student.service';
 import { Level } from '../../../models/level/level';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -25,6 +27,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatIconModule
   ],
   templateUrl: './edit-student-dialog.component.html',
   styleUrls: ['./edit-student-dialog.component.scss']
@@ -32,12 +35,15 @@ import { MatNativeDateModule } from '@angular/material/core';
 export class EditStudentDialogComponent implements OnInit {
   editStudentForm!: FormGroup;
   levels: Level[] = [];
+  selectedFile: File | null = null;
+  photoPreview: string | null = null;
 
   constructor(
     public dialogRef: MatDialogRef<EditStudentDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { student: Student },
     private fb: FormBuilder,
-    private levelService: LevelService
+    private levelService: LevelService,
+    private studentService: StudentService
   ) {}
 
   ngOnInit(): void {
@@ -61,6 +67,25 @@ export class EditStudentDialogComponent implements OnInit {
     });
 
     this.loadLevels();
+
+    // Afficher photo actuelle si elle existe
+    if (this.data.student.photo) {
+      this.photoPreview = this.studentService.getStudentPhotoUrl(this.data.student.id!);
+    }
+  }
+
+  onFileSelected(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    if (target?.files?.length) {
+      this.selectedFile = target.files[0];
+
+      // Preview de la nouvelle photo
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.photoPreview = e.target?.result as string;
+      };
+      reader.readAsDataURL(this.selectedFile);
+    }
   }
 
   loadLevels(): void {
@@ -81,6 +106,11 @@ export class EditStudentDialogComponent implements OnInit {
   onSave(): void {
     const formValues: Partial<Student> = this.editStudentForm.value;
 
+    // Convertir dateOfBirth en format ISO string si c'est un objet Date
+    if (formValues.dateOfBirth instanceof Date) {
+      formValues.dateOfBirth = formValues.dateOfBirth.toISOString() as any;
+    }
+
     const updatedStudent: Student = { ...this.data.student };
 
     (Object.keys(formValues) as Array<keyof Student>).forEach((key) => {
@@ -91,6 +121,6 @@ export class EditStudentDialogComponent implements OnInit {
     });
 
     console.log('Updated student:', updatedStudent);
-    this.dialogRef.close(updatedStudent);
+    this.dialogRef.close({ student: updatedStudent, file: this.selectedFile });
   }
 }

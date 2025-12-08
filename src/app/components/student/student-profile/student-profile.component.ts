@@ -20,7 +20,7 @@ import { ApiError, ApiResponse } from '../../../models/response';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 import { PaymentHistoryDialogComponent } from '../../payment/payment-history/payment-history-dialog/payment-history-dialog.component';
 import { AttendanceHistoryDialogComponent } from '../../attendance/attendance-history-dialog/attendance-history-dialog.component';
-import { environment } from '../../../../environment';
+import { environment } from '../../../../environments/environment';
 import { PdfGeneratorService } from '../services/pdf-generator.service';
 
 const errorMessages = {
@@ -319,13 +319,28 @@ export class StudentProfileComponent implements OnInit {
       data: { student: this.student },
     });
 
-    dialogRef.afterClosed().subscribe((result: Student | undefined) => {
+    dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.studentService.updateStudent(result).subscribe({
+        // result contains { student: Student, file: File | null }
+        this.studentService.updateStudent(result.student).subscribe({
           next: (updatedStudent) => {
-            this.student = updatedStudent;
-            this.loadStudentLevel(); // Recharger le niveau
-            this.showSuccessMessage('Étudiant mis à jour avec succès.');
+            // If a new photo was selected, upload it
+            if (result.file) {
+              this.studentService.uploadStudentPhoto(updatedStudent.id!, result.file).subscribe({
+                next: () => {
+                  this.loadStudentData(updatedStudent.id!);
+                  this.showSuccessMessage('Étudiant modifié avec succès.');
+                },
+                error: (error: any) => {
+                  console.error('Error uploading photo:', error);
+                  this.showErrorMessage('Erreur lors du téléchargement de la photo.');
+                }
+              });
+            } else {
+              this.student = updatedStudent;
+              this.loadStudentLevel();
+              this.showSuccessMessage('Étudiant modifié avec succès.');
+            }
           },
           error: (error) => {
             console.error('Error updating student:', error);

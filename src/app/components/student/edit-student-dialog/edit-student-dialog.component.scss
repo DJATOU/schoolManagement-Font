@@ -1,4 +1,43 @@
 .full-width {
-    width: 100%;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.photo-section {
+  text-align: center;
+  margin-bottom: 20px;
+
+  .photo-preview {
+    max-width: 200px;
+    max-height: 200px;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   }
-  
+}
+
+.photo-field {
+  .upload-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+
+    .upload-input {
+      flex: 1;
+    }
+
+    .upload-button {
+      flex-shrink: 0;
+    }
+  }
+}
+
+mat-dialog-content {
+  min-width: 500px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+mat-dialog-actions {
+  padding: 16px 24px;
+}

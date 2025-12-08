@@ -1,0 +1,133 @@
+/* Variables de couleur */
+$primary-color: #3f51b5;
+$accent-color: #e91e63;
+$text-color: #7f8c8d;
+$border-color: #e0e0e0;
+
+.student-card {
+  display: flex;
+  width: 100%;
+  padding: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  background-color: #fff;
+  border: 1px solid $border-color;
+
+  &:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border-color: $primary-color;
+  }
+}
+
+.student-card-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 1.5rem;
+}
+
+.student-avatar {
+  flex-shrink: 0;
+
+  .profile-photo {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid $border-color;
+  }
+}
+
+.student-info {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  h2 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: #333;
+  }
+
+  p {
+    margin: 0;
+    font-size: 1rem;
+    color: $text-color;
+  }
+}
+
+.student-contact {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  button {
+    transition: transform 0.2s ease, background-color 0.3s ease;
+
+    &:hover:not([disabled]) {
+      transform: scale(1.1);
+    }
+
+    &[disabled] {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    mat-icon {
+      font-size: 24px;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .student-card {
+    padding: 1rem;
+  }
+
+  .student-card-content {
+    gap: 1rem;
+  }
+
+  .student-avatar {
+    .profile-photo {
+      width: 60px;
+      height: 60px;
+    }
+  }
+
+  .student-info {
+    h2 {
+      font-size: 1.1rem;
+    }
+
+    p {
+      font-size: 0.9rem;
+    }
+  }
+
+  .student-contact {
+    button {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .student-card-content {
+    flex-wrap: wrap;
+  }
+
+  .student-contact {
+    width: 100%;
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+}

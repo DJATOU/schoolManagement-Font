@@ -14,18 +14,34 @@
     </button>
   </mat-toolbar>
 
-  <div class="group-view" [ngClass]="{'card-view': viewMode === 'card', 'list-view': viewMode === 'list'}">
-    <ng-container *ngIf="viewMode === 'card'">
-      <app-group-card *ngFor="let group of currentPageGroups"
-                      [group]="group"
-                      [levels]="levels"
-                      [groupTypes]="groupTypes">
-      </app-group-card>
-    </ng-container>
-    <ng-container *ngIf="viewMode === 'list'">
-      <!-- Implement list view if needed -->
-    </ng-container>
-  </div>
+  <ng-container *ngIf="!isLoading && filteredGroups.length > 0; else loadingOrEmptyState">
+    <div class="group-view" [ngClass]="{'card-view': viewMode === 'card', 'list-view': viewMode === 'list'}">
+      <ng-container *ngIf="viewMode === 'card'">
+        <app-group-card *ngFor="let group of currentPageGroups"
+                        [group]="group"
+                        [levels]="levels"
+                        [groupTypes]="groupTypes">
+        </app-group-card>
+      </ng-container>
+      <ng-container *ngIf="viewMode === 'list'">
+        <app-group-list *ngFor="let group of currentPageGroups"
+                        [group]="group"
+                        [levels]="levels"
+                        [groupTypes]="groupTypes">
+        </app-group-list>
+      </ng-container>
+    </div>
+  </ng-container>
+
+  <ng-template #loadingOrEmptyState>
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-spinner></mat-spinner>
+    </div>
+    <div *ngIf="!isLoading && filteredGroups.length === 0" class="empty-state">
+      <mat-icon class="empty-icon">group_off</mat-icon>
+      <p>Aucun groupe trouvé.</p>
+    </div>
+  </ng-template>
 
   <mat-paginator [length]="totalGroups"
                  [pageSize]="pageSize"

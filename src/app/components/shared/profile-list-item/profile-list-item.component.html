@@ -8,8 +8,19 @@
       <p>{{ profile.email }}</p>
     </div>
     <div class="student-contact">
-      <button mat-flat-button color="primary">
-        <mat-icon>email</mat-icon> Contact
+      <button mat-icon-button
+              color="primary"
+              (click)="openEmail($event)"
+              matTooltip="Envoyer un email"
+              [disabled]="!profile.email">
+        <mat-icon>email</mat-icon>
+      </button>
+      <button mat-icon-button
+              color="accent"
+              (click)="openWhatsApp($event)"
+              matTooltip="Ouvrir WhatsApp"
+              [disabled]="!profile.phoneNumber">
+        <mat-icon>phone</mat-icon>
       </button>
     </div>
   </div>

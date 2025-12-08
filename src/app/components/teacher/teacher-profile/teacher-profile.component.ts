@@ -14,7 +14,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 import { EditTeacherDialogComponent } from '../edit-teacher-dialog/edit-teacher-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { environment } from '../../../../environment';
+import { environment } from '../../../../environments/environment';
 @Component({
   selector: 'app-teacher-profile',
   standalone: true,

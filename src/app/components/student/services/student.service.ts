@@ -120,8 +120,32 @@ export class StudentService {
   }
   
 
-  
-getStudentFullHistory(studentId: number): Observable<StudentFullHistoryDTO> {
-  return this.http.get<StudentFullHistoryDTO>(`${this.apiUrl}/${studentId}/full-history`);
-}
+
+  getStudentFullHistory(studentId: number): Observable<StudentFullHistoryDTO> {
+    return this.http.get<StudentFullHistoryDTO>(`${this.apiUrl}/${studentId}/full-history`);
+  }
+
+  /**
+   * PHASE 3A: Upload photo pour un étudiant
+   * @param studentId ID de l'étudiant
+   * @param file Fichier photo à uploader
+   * @returns Observable avec le nom du fichier uploadé
+   */
+  uploadStudentPhoto(studentId: number, file: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post<string>(`${this.apiUrl}/${studentId}/photo`, formData, {
+      responseType: 'text' as 'json' // Le backend retourne un string, pas du JSON
+    });
+  }
+
+  /**
+   * PHASE 3A: Récupère l'URL de la photo d'un étudiant
+   * @param studentId ID de l'étudiant
+   * @returns URL de la photo
+   */
+  getStudentPhotoUrl(studentId: number): string {
+    return `${this.apiUrl}/${studentId}/photo`;
+  }
 }

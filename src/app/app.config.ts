@@ -2,7 +2,7 @@ import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { environment } from '../environment';
+import { environment } from '../environments/environment';
 
 /**
  * Configuration globale de l'application

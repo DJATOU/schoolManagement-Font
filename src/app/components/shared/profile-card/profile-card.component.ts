@@ -3,7 +3,7 @@ import { MatCardModule } from '@angular/material/card';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { environment } from '../../../../environment';
+import { environment } from '../../../../environments/environment';
 
 interface Profile {
   id: string;

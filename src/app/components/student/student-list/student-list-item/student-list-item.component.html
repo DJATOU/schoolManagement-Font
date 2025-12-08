@@ -1,4 +1,4 @@
-<mat-card class="student-card" (click)="navigateToStudent(student)">
+<mat-card class="student-card">
   <mat-card-content>
     <div class="student-info">
       <img mat-card-avatar [src]="studentPhotoUrl" alt="Avatar" class="student-avatar" />
@@ -6,22 +6,43 @@
         class="student-details"
         tabindex="0"
         role="button"
+        (click)="navigateToStudent(student)"
         (keyup.enter)="navigateToStudent(student)"
         (keyup.space)="navigateToStudent(student)"
       >
         <h4>{{ student.firstName }} {{ student.lastName }}</h4>
         <p>{{ student.email }}</p>
       </div>
-      <button 
-        *ngIf="showDeleteButton"
-        mat-icon-button 
-        matTooltip="Supprimer l'étudiant du groupe"
-        (click)="onDeleteStudent($event)" 
-        aria-label="Désactiver" 
-        class="disable-button" 
-       >
-      <mat-icon>block</mat-icon>
-      </button>
+      <div class="student-actions">
+        <button
+          mat-icon-button
+          color="primary"
+          matTooltip="Envoyer un email"
+          (click)="openEmail($event)"
+          [disabled]="!student.email"
+        >
+          <mat-icon>email</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          color="accent"
+          matTooltip="Ouvrir WhatsApp"
+          (click)="openWhatsApp($event)"
+          [disabled]="!student.phoneNumber"
+        >
+          <mat-icon>phone</mat-icon>
+        </button>
+        <button
+          *ngIf="showDeleteButton"
+          mat-icon-button
+          matTooltip="Supprimer l'étudiant du groupe"
+          (click)="onDeleteStudent($event)"
+          aria-label="Désactiver"
+          class="disable-button"
+        >
+          <mat-icon>block</mat-icon>
+        </button>
+      </div>
     </div>
   </mat-card-content>
 </mat-card>

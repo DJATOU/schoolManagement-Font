@@ -7,6 +7,7 @@ import { TeacherListComponent } from '../teacher-list/teacher-list.component';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
 import { SearchService } from '../../../services/SearchService ';
 @Component({
@@ -15,7 +16,7 @@ import { SearchService } from '../../../services/SearchService ';
   templateUrl: './teacher-search.component.html',
   styleUrls: ['./teacher-search.component.scss'],
   imports: [
-    CommonModule, MatToolbarModule, MatPaginatorModule, TeacherCardComponent, TeacherListComponent, MatIconModule
+    CommonModule, MatToolbarModule, MatPaginatorModule, TeacherCardComponent, TeacherListComponent, MatIconModule, MatProgressSpinnerModule
   ]
 })
 export class TeacherSearchComponent implements OnInit {
@@ -26,6 +27,7 @@ export class TeacherSearchComponent implements OnInit {
   totalTeachers: number = 0;
   pageSize: number = 8; // Adjust as needed
   pageSizeOptions: number[] = [4, 8]; // Adjust as needed
+  isLoading = true;
 
   constructor(
     private teacherService: TeacherService, 
@@ -60,10 +62,12 @@ export class TeacherSearchComponent implements OnInit {
   }
 
   loadAllTeachers(): void {
+    this.isLoading = true;
     this.teacherService.getTeachers().subscribe(teachers => {
       this.filteredTeachers = teachers;
       this.totalTeachers = teachers.length;
       this.updatePageTeachers();
+      this.isLoading = false;
     });
   }
 

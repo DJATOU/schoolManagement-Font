@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { GroupService } from '../../../services/group.service';
 import { LevelService } from '../../../services/level.service';
 import { GroupTypeService } from '../../../services/GroupTypeService';
@@ -16,6 +17,7 @@ import { Level } from '../../../models/level/level';
 import { GroupType } from '../../../models/GroupType/groupType';
 import { CommonModule } from '@angular/common';
 import { GroupCardComponent } from '../group-card/group-card.component';
+import { GroupListComponent } from '../group-list/group-list.component';
 import { SearchService } from '../../../services/SearchService ';
 
 
@@ -26,7 +28,7 @@ import { SearchService } from '../../../services/SearchService ';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    
+
 // TODO: `HttpClientModule` should not be imported into a component directly.
 // Please refactor the code to add `provideHttpClient()` call to the provider list in the
 // application bootstrap logic and remove the `HttpClientModule` import from this component.
@@ -36,8 +38,10 @@ HttpClientModule,
     MatSelectModule,
     MatPaginatorModule,
     MatToolbarModule,
+    MatProgressSpinnerModule,
     CommonModule,
-    GroupCardComponent
+    GroupCardComponent,
+    GroupListComponent
   ],
   templateUrl: './group-search.component.html',
   styleUrls: ['./group-search.component.scss']
@@ -53,6 +57,7 @@ export class GroupSearchComponent implements OnInit {
   pageSize: number = 8;
   pageSizeOptions: number[] = [4, 8];
   viewMode: 'card' | 'list' = 'card';
+  isLoading = true;
 
   constructor(
     private fb: FormBuilder,
@@ -100,10 +105,12 @@ export class GroupSearchComponent implements OnInit {
   }
 
   loadAllGroups(): void {
+    this.isLoading = true;
     this.groupService.getGroups().subscribe(groups => {
       this.filteredGroups = groups;
       this.totalGroups = groups.length;
       this.updatePageGroups();
+      this.isLoading = false;
     });
   }
 

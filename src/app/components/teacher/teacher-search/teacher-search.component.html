@@ -14,14 +14,26 @@
     </button>
   </mat-toolbar>
 
-  <div class="teacher-view" [ngClass]="{'card-view': viewMode === 'card', 'list-view': viewMode === 'list'}">
-    <ng-container *ngIf="viewMode === 'card'">
-      <app-teacher-card *ngFor="let teacher of currentPageTeachers" [teacher]="teacher" class="fade-in"></app-teacher-card>
-    </ng-container>
-    <ng-container *ngIf="viewMode === 'list'">
-      <app-teacher-list *ngFor="let teacher of currentPageTeachers" [teacher]="teacher" class="fade-in"></app-teacher-list>
-    </ng-container>
-  </div>
+  <ng-container *ngIf="!isLoading && filteredTeachers.length > 0; else loadingOrEmptyState">
+    <div class="teacher-view" [ngClass]="{'card-view': viewMode === 'card', 'list-view': viewMode === 'list'}">
+      <ng-container *ngIf="viewMode === 'card'">
+        <app-teacher-card *ngFor="let teacher of currentPageTeachers" [teacher]="teacher" class="fade-in"></app-teacher-card>
+      </ng-container>
+      <ng-container *ngIf="viewMode === 'list'">
+        <app-teacher-list *ngFor="let teacher of currentPageTeachers" [teacher]="teacher" class="fade-in"></app-teacher-list>
+      </ng-container>
+    </div>
+  </ng-container>
+
+  <ng-template #loadingOrEmptyState>
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-spinner></mat-spinner>
+    </div>
+    <div *ngIf="!isLoading && filteredTeachers.length === 0" class="empty-state">
+      <mat-icon class="empty-icon">person_off</mat-icon>
+      <p>Aucun enseignant trouvé.</p>
+    </div>
+  </ng-template>
 
   <mat-paginator [length]="totalTeachers"
                  [pageSize]="pageSize"

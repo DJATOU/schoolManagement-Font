@@ -1,6 +1,22 @@
 <h2 mat-dialog-title>Modifier l'étudiant</h2>
 <form [formGroup]="editStudentForm" (ngSubmit)="onSave()">
   <mat-dialog-content>
+    <!-- Photo Preview et Upload -->
+    <div class="photo-section" *ngIf="photoPreview">
+      <img [src]="photoPreview" alt="Photo étudiant" class="photo-preview" />
+    </div>
+
+    <mat-form-field appearance="fill" class="full-width photo-field">
+      <mat-label>Photo de l'étudiant</mat-label>
+      <div class="upload-container">
+        <input matInput readonly [value]="selectedFile?.name" placeholder="Aucun fichier sélectionné" class="upload-input">
+        <button type="button" mat-raised-button color="accent" (click)="photoInput.click()" class="upload-button">
+          <mat-icon>add_a_photo</mat-icon> Choisir une image
+        </button>
+        <input type="file" (change)="onFileSelected($event)" accept="image/*" hidden #photoInput>
+      </div>
+    </mat-form-field>
+
     <mat-form-field appearance="fill" class="full-width">
       <mat-label>Prénom</mat-label>
       <input matInput formControlName="firstName" />

@@ -1,5 +1,11 @@
 <mat-card class="profile-card" (click)="navigateToGroupProfile()">
   <div class="profile-card-content">
+    <div class="profile-photo">
+      <img *ngIf="groupPhotoUrl; else groupIcon" [src]="groupPhotoUrl" alt="Photo du groupe" class="group-photo">
+      <ng-template #groupIcon>
+        <mat-icon class="default-icon">group</mat-icon>
+      </ng-template>
+    </div>
     <div class="profile-info">
       <mat-card-title class="profile-name">
         {{ group.name || 'Unknown Group' }}
